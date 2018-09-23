@@ -204,14 +204,35 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    /**
+     * Method to check if an inputted email is valid
+     * 
+     * @param email email to be checked
+     * @return true if valid, false if invalid
+     */
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        //This regex was provided by OWASP Validation Regex Repository
+        //it will check to make sure email follows a format like so:
+        //  email :  example@email.com
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ 
+                            "[a-zA-Z0-9_+&*-]+)*@" + 
+                            "(?:[a-zA-Z0-9-]+\\.)+[a-z" + 
+                            "A-Z]{2,7}$";
+        return email.matches(emailRegex);
     }
 
+    /**
+     * Method to check if an inputted password is valid
+     * 
+     * @param password to be checked
+     * @return true if valid, false if invalid
+     */
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        //password must have a least one capital letter, one digit, and have a length between 6 and 14
+        if(!password.matches("[A-Z]") || !password.matches("[0-9]") || password.length() < 6 || password.length() > 14)
+          return false;
+        else  
+          return true;
     }
 
     /**

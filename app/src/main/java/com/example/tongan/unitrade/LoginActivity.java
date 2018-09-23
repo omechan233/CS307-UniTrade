@@ -3,6 +3,7 @@ package com.example.tongan.unitrade;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -61,6 +62,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    public LoginActivity(Context mMockContext) {
+    }
+
+    public String validate(String userName, String password) {
+        if (userName.equals("username") && password.equals("password")){
+            return "Login was successful";
+        }
+        else
+            return "Invalid login!";
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

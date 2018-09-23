@@ -67,6 +67,14 @@
           }
         },
         {
+          "client_id": "171997324644-6rtko60n07ffe8nf4etrpicpvmagup65.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tongan.unitrade",
+            "certificate_hash": "3c17b43e658dee94da7d1e7fb2aef0e6c8e8f9a1"
+          }
+        },
+        {
           "client_id": "171997324644-kusaq206jh066fh6c2lar0t2mgcicsno.apps.googleusercontent.com",
           "client_type": 3
         }

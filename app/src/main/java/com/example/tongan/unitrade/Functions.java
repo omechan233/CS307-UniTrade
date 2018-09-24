@@ -1,6 +1,10 @@
 package com.example.tongan.unitrade;
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Arrays;
+
 
 public class Functions {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -27,13 +31,27 @@ public class Functions {
         return 0;
     }
 
+    //make wishlist a arraylist
     /*
     delete item from wishlist
     use item id to get item, return 0 if it has been removed successfully,
     return 1 if do not success.
     */
+    //need to in wishlist class
+
     int delete_wishlist(int itemid, int wishlistid){
-        return 0;
+
+        CollectionReference wishlist = db.collection("users/wishlist");
+        //check if the item is already in the list
+        if(Arrays.asList(wishlist).contains(itemid)){
+            //if it exist remove the item from wishlist
+
+            return 0;
+        }else {
+            //if the item is not in the wishlist
+            wishlist.add(itemid);
+            return 0;
+        }
     }
 
     /*
@@ -42,14 +60,25 @@ public class Functions {
     return 1 if do not success.
     */
 
-    int add_wishlist(int itemid, int wishlistid){
-        return 0;
-    }
+        int add_wishlist(int itemid, int userid){
+            CollectionReference wishlist = db.collection("users/wishlist");
+            //check if the item is already in the list
+            if(Arrays.asList(wishlist).contains(itemid)){
+                //if it exist remove the item from wishlist
+                delete_wishlist(itemid,userid);
+                return 1;
+            }else {
+                //if the item is not in the wishlist
+                wishlist.add(itemid);
+                return 0;
+            }
+        }
 
 
 
 
-    //Scott!!
+
+        //Scott!!
 
 
 

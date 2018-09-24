@@ -1,9 +1,12 @@
 package com.example.tongan.unitrade;
 
+import android.support.v4.content.res.TypedArrayUtils;
+
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 public class Functions {
@@ -45,7 +48,7 @@ public class Functions {
         //check if the item is already in the list
         if(Arrays.asList(wishlist).contains(itemid)){
             //if it exist remove the item from wishlist
-
+            Arrays.asList(wishlist).remove(itemid);
             return 0;
         }else {
             //if the item is not in the wishlist

@@ -12,6 +12,7 @@
     tools:context=".LoginActivity">
 
     <!-- Login progress -->
+    <!-- login -->
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"

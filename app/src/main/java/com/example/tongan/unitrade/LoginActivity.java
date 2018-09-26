@@ -1,3 +1,6 @@
+
+
+
 package com.example.tongan.unitrade;
 
 import android.animation.Animator;
@@ -37,8 +40,11 @@ import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via username/password.
- */
+*/
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+    public LoginActivity(){
+
+    }
 
     /**
      * Id to identity READ_CONTACTS permission request.

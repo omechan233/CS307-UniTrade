@@ -13,71 +13,72 @@
         android:id="@+id/editText"
         android:layout_width="200dp"
         android:layout_height="40dp"
-        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="222dp"
         android:background="#11000000"
         android:drawableLeft="@drawable/ic_action_user"
         android:ems="10"
         android:hint="Username"
         android:inputType="textPersonName"
-        android:textSize="16dp" />
+        android:textSize="16sp" />
 
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/editText2"
         android:layout_width="200dp"
         android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="241dp"
+        android:layout_centerInParent="true"
         android:background="#11000000"
         android:drawableLeft="@drawable/ic_action_pass"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
-        android:textSize="16dp" />
-
-    <android.support.v7.widget.CardView
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        app:cardBackgroundColor="@color/colorAccent"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="10dp"
-        android:layout_marginBottom="124dp" >
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="Login"
-                android:textColor="#fff"
-                android:textSize="24sp" />
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="122dp"
-        android:layout_height="41dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="49dp"
-        android:text="Register Here"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="120dp"
-        android:layout_height="150dp"
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/editText"
+        app:srcCompat="@android:drawable/btn_star"
+        android:layout_alignParentRight="true" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="200dp"
+        android:layout_height="180dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="86dp"
+        android:layout_marginTop="30dp"
         app:srcCompat="@drawable/unitrade" />
+
+    <Button
+        android:id="@+id/button1"
+
+        android:layout_width="223dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="194dp"
+        android:background="#CC6633"
+        android:onClick="onClick1"
+        android:text="Login"
+        android:textColor="#fff"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="154dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="122dp"
+        android:background="#00000000"
+        android:text="Regiser Here"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:onClick="onClick2"/>
 
 </RelativeLayout>

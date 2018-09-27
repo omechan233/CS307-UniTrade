@@ -32,7 +32,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,26 +41,51 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via username/password.
 */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-    public LoginActivity(){
+public class LoginActivity extends AppCompatActivity  {
+    public LoginActivity() {
 
     }
 
+
+    //get user input username & password when login
+    public String getUsername() {
+        EditText editText = (EditText) findViewById(R.id.editText);
+        String username = editText.getText().toString();
+        return username;
+    }
+
+    public String getPassword() {
+        EditText editText = (EditText) findViewById(R.id.editText2);
+        String password = editText.getText().toString();
+        return password;
+    }
+
+    //authentication, check user login info
+    public boolean authentication() {
+        //check username&password
+        //if success
+        return true;
+        //if failed
+        //return false;
+    }
+}
+
+
     /**
      * Id to identity READ_CONTACTS permission request.
-     */
+
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
-     */
+
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
-     */
+
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -131,7 +156,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
             Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                    .setAction(android.R.string.ok, new OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
                         public void onClick(View v) {
@@ -146,7 +171,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * Callback received when a permissions request has been completed.
-     */
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -162,7 +187,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
-     */
+
     private void attemptLogin() {
         if (mAuthTask != null) {
             return;
@@ -215,7 +240,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * 
      * @param email email to be checked
      * @return true if valid, false if invalid
-     */
+
     private boolean isEmailValid(String email) {
         //This regex was provided by OWASP Validation Regex Repository
         //it will check to make sure email follows a format like so:
@@ -232,7 +257,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * 
      * @param password to be checked
      * @return true if valid, false if invalid
-     */
+
     private boolean isPasswordValid(String password) {
         //password must have a least one capital letter, one digit, and have a length between 6 and 14
         if(!password.matches("[A-Z]") || !password.matches("[0-9]") || password.length() < 6 || password.length() > 14)
@@ -243,7 +268,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * Shows the progress UI and hides the login form.
-     */
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -334,7 +359,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
-     */
+
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
@@ -389,3 +414,4 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 }
 
+*/

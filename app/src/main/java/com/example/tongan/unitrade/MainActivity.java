@@ -7,9 +7,13 @@ import android.content.Intent;
 
 import android.view.View;
 
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+import android.widget.ListView;
 import android.widget.Toast;
+//array of option --> ArrayAdpter --> wishlist_listview
+//listview{fav_items.xml}
 
 
 public class MainActivity extends AppCompatActivity{
@@ -20,6 +24,9 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //congifure wishlist
+        populateWishlistview();
         //btnCreateAccount = (Button) findViewById(R.id.button3);
         //initView();
        /* btnCreateAccount.setOnClickListener(new View.OnClickListener() {
@@ -30,6 +37,20 @@ fix Button functions, add page redirection
         });*/
 
 
+    }
+
+    private void populateWishlistview() {
+        //create list of items
+        //following is a test
+        String[] myitems = {"A","B","C","D"};
+
+        //build adapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,   //context
+                R.layout.wishlistitem,  //layout to use
+                myitems);   //items to display
+        //configure list view
+        ListView wishlist = (ListView) findViewById(R.id.wlistview);
+        wishlist.setAdapter(adapter);
     }
 
    /* public void initView () {

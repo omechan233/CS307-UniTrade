@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="password" type="id" />
+    <item name="email" type="id" />
+    <item name="email_sign_in_button" type="id" />
+    <item name="login_form" type="id" />
+    <item name="login_progress" type="id" />
+    <item name="input_name" type="id" />
+    <item name="input_email" type="id" />
+    <item name="input_password" type="id" />
+    <item name="btn_signup" type="id" />
+    <item name="link_login" type="id" />
+</resources>

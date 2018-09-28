@@ -7,6 +7,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -36,6 +37,9 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.widget.EditText;
+import android.widget.Toast;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -46,7 +50,13 @@ public class LoginActivity extends AppCompatActivity  {
 
     }
 
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        // setContentView(R.layout.activity_signup);
 
+        //Login to SignUp page
+    }
     //get user input username & password when login
     public String getUsername() {
         EditText editText = (EditText) findViewById(R.id.editText);
@@ -64,7 +74,8 @@ public class LoginActivity extends AppCompatActivity  {
     public boolean authentication() {
         //check username&password
         //if success
-        return true;
+        //return true;
+        return false;
         //if failed
         //return false;
     }

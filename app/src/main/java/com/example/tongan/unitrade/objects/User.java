@@ -97,7 +97,7 @@ public class User {
      * 
      * @param email new email of the user
      */
-    public setEmail(String email){
+    public void setEmail(String email){
         this.email = email;
     }
 }

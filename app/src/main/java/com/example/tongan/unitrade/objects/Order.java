@@ -2,7 +2,6 @@ package unitrade.objects;
 
 import java.util.Date;
 
-import com.sun.corba.se.impl.ior.ByteBuffer;
 
 public class Order {
     private int ID;

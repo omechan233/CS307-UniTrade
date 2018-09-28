@@ -68,7 +68,6 @@
         android:layout_below="@+id/usernameTitle"
         android:ems="10"
         android:hint="Enter your Username Here"
-        android:inputType="textPersonName"
         android:layout_alignParentLeft="true" />
 
     <EditText
@@ -79,7 +78,7 @@
         android:layout_below="@+id/emailTitle"
         android:ems="10"
         android:hint="Enter your Email Here"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         android:layout_alignParentLeft="true" />
 
     <EditText
@@ -90,7 +89,7 @@
         android:layout_below="@+id/passwordTitle"
         android:ems="10"
         android:hint="Enter your Password Here"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:layout_alignParentLeft="true" />
 
 </RelativeLayout>

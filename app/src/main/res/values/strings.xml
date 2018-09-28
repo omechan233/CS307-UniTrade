@@ -14,4 +14,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="line0">-------------------------------------------------------------------------------------</string>
+    <string name="wishlist1">Wishlist</string>
+    <string name="home">Home</string>
+    <string name="profile">PROFILE</string>
 </resources>

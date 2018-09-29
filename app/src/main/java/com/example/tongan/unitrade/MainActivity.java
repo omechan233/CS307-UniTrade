@@ -32,23 +32,8 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mAuth = FirebaseAuth.getInstance();
         createAccountBtn = (Button) findViewById(R.id.registerBtn);
-/*      createAccountBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Runnable r = new Runnable() {
-                    @Override
-                    public void run() {
-                        //redirect to SignUpActivity
-                        startActivity(new Intent(MainActivity.this, SignupActivity.class));
-                    }
-                };
-                Handler h = new Handler();
-                //run after delay
-                h.postDelayed(r, 1500);
-            }
-        });
-*/
         loginBtn = (Button) findViewById(R.id.loginBtn);
 
         //congifure wishlist
@@ -65,6 +50,28 @@ fix Button functions, add page redirection
 
     }
 
+    protected void onStart(){
+        super.onStart();
+        //check if user is already logged in, if so then forward to HomePage
+        if(isUserLoggedIn()){
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    // if you are redirecting from a fragment then use getActivity() as the context.
+                    startActivity(new Intent(MainActivity.this, HomePageActivity.class));
+                }
+            };
+            Handler h = new Handler();
+            // The Runnable will be executed after the given delay time
+            h.postDelayed(r, 1500); // will be delayed for 1.5 seconds
+        }
+    }
+
+    private boolean isUserLoggedIn(){
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        return currentUser != null;
+    }
+
     private void populateWishlistview() {
         //create list of items
         //following is a test
@@ -78,15 +85,6 @@ fix Button functions, add page redirection
         ListView wishlist = (ListView) findViewById(R.id.wlistview);
         wishlist.setAdapter(adapter);
     }
-
-   /* public void initView () {
-        //login button
-        btnLogin = (Button) findViewById(R.id.button1);
-        //Register button
-        btnRegister = (Button) findViewById(R.id.button2);
-        //Create Account button
-        btnCreateAccount = (Button) findViewById(R.id.button3);
-    }*/
 
     public void btnLogin(View view) {
         LoginActivity loginActivity = new LoginActivity();
@@ -108,129 +106,4 @@ fix Button functions, add page redirection
     }
 
 }
-
-    // setContentView(R.layout.activity_signup);
-
-        // initView();
-        //Login to SignUp page
-
-
-        //Login Button
-       /* btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoginActivity loginActivity = new LoginActivity();
-                if (loginActivity.authentication() == true) {
-                    //go to home page
-                    Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
-                    startActivity(intent);
-                }
-                //if user login failed, pop up message
-                else {
-                    Toast.makeText(getBaseContext(),
-                            "Username or Password isn't correct!", Toast.LENGTH_LONG).show();
-                    return;
-                }
-            }
-
-        });
-
-
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SignupActivity.class);
-                //intent.putExtra("name", name.getText().toString());
-                startActivity(intent);
-            }
-        });
-
-        btnCreateAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });*/
-
-
-      /*  public void onClick1 (View view){
-            //if user login success
-            LoginActivity loginActivity = new LoginActivity();
-            if (loginActivity.authentication() == true) {
-                //go to home page
-                Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
-                startActivity(intent);
-            }
-            //if user login failed, pop up message
-            else {
-                Toast.makeText(getBaseContext(),
-                        "Username or Password isn't correct!", Toast.LENGTH_LONG).show();
-                return;
-            }
-        }
-*/
-
-//Register Button
-     /*   public void onClick2 (View view){
-            Intent intent = new Intent(MainActivity.this, SignupActivity.class);
-            //intent.putExtra("name", name.getText().toString());
-            startActivity(intent);
-        } */
-
-
-        //Create Account Button
-    /*    public void onClick3 (View view){
-            Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
-            startActivity(intent);
-            // Intent intent = new Intent(MainActivity.this, SignupActivity.class);
-            //intent.putExtra("name", name.getText().toString());
-            // startActivity(intent);*/
-       /*SignupActivity signUpActivity = new SignupActivity();
-        EditText text1 = findViewById(R.id.username);
-        EditText text2 = findViewById(R.id.email);
-        EditText text3 = findViewById(R.id.password);
-        String username = text1.getText().toString();
-        String email = text2.getText().toString();
-        String password = text3.getText().toString();*/
-      /*  if (signUpActivity.authentication() == true){
-            Toast.makeText(getBaseContext(),
-                    "Success!", Toast.LENGTH_LONG).show();
-            return;
-           // Intent intent2 = new Intent(MainActivity.this, LoginActivity.class);
-           // startActivity(intent2);
-
-        }
-        else {
-            Toast.makeText(getBaseContext(),
-                    "Input format incorrect!", Toast.LENGTH_LONG).show();
-
-            //username format not correct
-            if (!signUpActivity.inputCheck(username) && signUpActivity.emailCheck(email) && signUpActivity.inputCheck(password)){
-                Toast.makeText(getBaseContext(),
-                        "Username format incorrect!", Toast.LENGTH_LONG).show();
-                return ;
-
-            }
-            //email format not correct
-            else if (signUpActivity.inputCheck(username) && !signUpActivity.emailCheck(email) && signUpActivity.inputCheck(password)){
-                Toast.makeText(getBaseContext(),
-                        "Email format incorrect!", Toast.LENGTH_LONG).show();
-                return ;
-
-            }
-            //password format not correct
-            else if (signUpActivity.inputCheck(username) && signUpActivity.emailCheck(email) && !signUpActivity.inputCheck(password)){
-                Toast.makeText(getBaseContext(),
-                        "Password format incorrect!", Toast.LENGTH_LONG).show();
-                return ;
-
-            }
-            //two or more format not correct
-
-            Toast.makeText(getBaseContext(),
-                    "Input format incorrect!", Toast.LENGTH_LONG).show();
-            return ;
-
-        }*/
-
 

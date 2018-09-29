@@ -72,6 +72,8 @@ fix Button functions, add page redirection
         return currentUser != null;
     }
 
+
+
     private void populateWishlistview() {
         //create list of items
         //following is a test

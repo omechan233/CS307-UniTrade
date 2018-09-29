@@ -2,24 +2,29 @@ package com.example.tongan.unitrade;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class HomePageActivity extends AppCompatActivity {
-    public HomePageActivity(){
+import com.google.firebase.auth.FirebaseAuth;
 
-    }
-   private Button Homebtn, clickToPost, clicktoProfile;
+public class HomePageActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+
+   private Button Homebtn, clickToPost, clickToProfile, logoutBtn;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
+        mAuth = FirebaseAuth.getInstance();
+
        // Homebtn = (Button) findViewById(R.id.Homebtn);
         clickToPost = (Button) findViewById(R.id.Postbtn);
-        clicktoProfile = (Button) findViewById(R.id.Profilebtn);
+        clickToProfile = (Button) findViewById(R.id.Profilebtn);
 
       /*  Homebtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,7 +47,7 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
-        clicktoProfile.setOnClickListener(new View.OnClickListener() {
+        clickToProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //direct to profile page and ask backend for current login user's information.
@@ -54,15 +59,23 @@ public class HomePageActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    public void btnLogout(View view){
+        //sign out from Firebase
+        mAuth.signOut();
 
-
-
-
-
-
-
-
+        //redirect to MainActivity
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                // if you are redirecting from a fragment then use getActivity() as the context.
+                startActivity(new Intent(HomePageActivity.this, MainActivity.class));
+            }
+        };
+        Handler h = new Handler();
+        // The Runnable will be executed after the given delay time
+        h.postDelayed(r, 1500); // will be delayed for 1.5 seconds
     }
 
 

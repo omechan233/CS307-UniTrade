@@ -7,12 +7,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -274,57 +272,74 @@ public class Functions {
 
     //Mia!!
 
-    /*
-    delete item from post
-    use item id to get item, return 0 if it has been removed successfully,
-    return 1 if do not success.
+    /*****************************
+     delete item from wishlist
+     ******************************/
+
+    void delete_wishlist(String itemid, String userid){
+        db.collection("profiles").document(userid)
+                .collection("wish_list").document(itemid).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+    }
+
+    /*************************
+     add item to wishlist
+     **************************/
+
+    void add_wishlist(String itemid, String userid){
+        Map<String, Object> item = new HashMap<>();
+        item.put("item_id", itemid);
+        db.collection("profiles").document(userid)
+                .collection("wish_list").document(itemid).set(item)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG,"Error writting document", e);
+                    }
+                });
+    }
+
+    /*********************
+     * get item name through item id
      */
-    int delete_post(int itemid, int postid){
-        return 0;
-    }
-
-    //make wishlist a arraylist
-    /*
-    delete item from wishlist
-    use item id to get item, return 0 if it has been removed successfully,
-    return 1 if do not success.
-    */
-    //need to in wishlist class
-
-    int delete_wishlist(int itemid, int wishlistid){
-
-        CollectionReference wishlist = db.collection("users/wishlist");
-        //check if the item is already in the list
-        if(Arrays.asList(wishlist).contains(itemid)){
-            //if it exist remove the item from wishlist
-
-            return 0;
-        }else {
-            //if the item is not in the wishlist
-            wishlist.add(itemid);
-            return 0;
-        }
-    }
-
-    /*
-    add item to wishlist
-    use item id to get item, return 0 if it has been added successfully,
-    return 1 if do not success.
-    */
-
-        int add_wishlist(int itemid, int userid){
-            CollectionReference wishlist = db.collection("profiles/wish_list");
-            //check if the item is already in the list
-            if(Arrays.asList(wishlist).contains(itemid)){
-                //if it exist remove the item from wishlist
-                delete_wishlist(itemid,userid);
-                return 1;
-            }else {
-                //if the item is not in the wishlist
-                wishlist.add(itemid);
-                return 0;
+    String[] get_item_name(String id){
+        final String[] item_name = {""};
+        final DocumentReference docRef = db.collection("items").document(id);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()){
+                        item_name[0] = (String) document.getData().get("buyer_name");
+                    } else{
+                        Log.d(TAG, "No such document");
+                    }
+                }else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
             }
-        }
+        });
+        return item_name;
+    }
+
 
 
 

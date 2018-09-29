@@ -55,7 +55,7 @@
         app:srcCompat="@drawable/unitrade" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/login_button"
 
         android:layout_width="223dp"
         android:layout_height="wrap_content"
@@ -63,13 +63,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="194dp"
         android:background="#CC6633"
-        android:text="Login"
         android:onClick="btnLogin"
+        android:text="Login"
         android:textColor="#fff"
         android:textSize="24sp" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/register_button"
         android:layout_width="154dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

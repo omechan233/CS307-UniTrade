@@ -27,7 +27,7 @@ public class Wishlist extends AppCompatActivity {
         Profilebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Wishlist.this, Profilepage.class);
+                Intent intent = new Intent(Wishlist.this, ProfileActivity.class);
                 //intent.putExtra("name", name.getText().toString());
                 startActivity(intent);
             }

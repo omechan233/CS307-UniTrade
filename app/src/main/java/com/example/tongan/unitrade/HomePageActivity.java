@@ -48,7 +48,7 @@ public class HomePageActivity extends AppCompatActivity {
                 //direct to profile page and ask backend for current login user's information.
                 Toast.makeText(getBaseContext(),
                         "Profile!!!", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(HomePageActivity.this, Profilepage.class);
+                Intent intent = new Intent(HomePageActivity.this, ProfileActivity.class);
                 //intent.putExtra("name", name.getText().toString());
                 startActivity(intent);
 

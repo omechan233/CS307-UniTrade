@@ -1,5 +1,6 @@
 package com.example.tongan.unitrade;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -12,6 +13,9 @@ import android.widget.Button;
 
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 //array of option --> ArrayAdpter --> wishlist_listview
 //listview{fav_items.xml}
 
@@ -19,14 +23,36 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity{
         //private Button btnLogin, btnRegister,btnCreateAccount;
        // Button btnCreateAccount;
+    private FirebaseAuth mAuth;
+    private Button createAccountBtn;
+    private Button loginBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_main);
+
+        createAccountBtn = (Button) findViewById(R.id.registerBtn);
+/*      createAccountBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Runnable r = new Runnable() {
+                    @Override
+                    public void run() {
+                        //redirect to SignUpActivity
+                        startActivity(new Intent(MainActivity.this, SignupActivity.class));
+                    }
+                };
+                Handler h = new Handler();
+                //run after delay
+                h.postDelayed(r, 1500);
+            }
+        });
+*/
+        loginBtn = (Button) findViewById(R.id.loginBtn);
 
         //congifure wishlist
-        populateWishlistview();
+       //populateWishlistview();
         //btnCreateAccount = (Button) findViewById(R.id.button3);
         //initView();
        /* btnCreateAccount.setOnClickListener(new View.OnClickListener() {
@@ -64,16 +90,14 @@ fix Button functions, add page redirection
 
     public void btnLogin(View view) {
         LoginActivity loginActivity = new LoginActivity();
-        if (loginActivity.authentication() == true) {
+        if (loginActivity.authentication()) {
             //go to home page
             Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
             startActivity(intent);
         }
         //if user login failed, pop up message
         else {
-            Toast.makeText(getBaseContext(),
-                    "Username or Password isn't correct!", Toast.LENGTH_LONG).show();
-
+            Toast.makeText(getBaseContext(), "Username or Password isn't correct!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -83,13 +107,7 @@ fix Button functions, add page redirection
         startActivity(intent);
     }
 
-  /*  public void btnCreateAccount(View view) {
-        Toast.makeText(getBaseContext(),
-                "Username or Password isn't correct!", Toast.LENGTH_LONG).show();
-
-    }*/
 }
-
 
     // setContentView(R.layout.activity_signup);
 
@@ -135,11 +153,6 @@ fix Button functions, add page redirection
         });*/
 
 
-
-
-
-
-
       /*  public void onClick1 (View view){
             //if user login success
             LoginActivity loginActivity = new LoginActivity();
@@ -163,19 +176,6 @@ fix Button functions, add page redirection
             //intent.putExtra("name", name.getText().toString());
             startActivity(intent);
         } */
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         //Create Account Button

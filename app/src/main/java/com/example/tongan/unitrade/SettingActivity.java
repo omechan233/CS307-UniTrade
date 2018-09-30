@@ -38,7 +38,7 @@ public class SettingActivity extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
+                Intent intent = new Intent(SettingActivity.this, MainActivity.class);
                 //intent.putExtra("name", name.getText().toString());
                 startActivity(intent);
             }

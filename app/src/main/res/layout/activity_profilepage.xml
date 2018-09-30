@@ -127,6 +127,7 @@
         android:layout_height="30dp"
         android:text="Edit"
         android:textColor="#365fd1"
+        android:id="@+id/edit_profile"
         android:textStyle="bold"
         android:textSize="15sp"
         android:layout_marginLeft="70dp"
@@ -161,7 +162,7 @@
         android:layout_height="20dp"
         android:layout_toRightOf="@id/home_page_icon"
         android:layout_alignParentBottom="true"
-        android:text="Back to Home Page"
+        android:text="Back"
         android:textSize="15sp"
         android:textStyle="bold"
         android:layout_marginLeft="5dp"/>

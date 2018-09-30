@@ -47,7 +47,7 @@
         android:layout_toRightOf="@+id/wishlist_setting_icon"
         android:layout_below="@id/title"
         android:layout_marginTop="30dp"
-        android:layout_marginLeft="65dp"
+        android:layout_marginLeft="55dp"
         android:src="@mipmap/profile_icon"
         android:id="@+id/profile_setting_icon"
         android:scaleType="fitCenter"/>
@@ -61,7 +61,7 @@
         android:layout_toRightOf="@id/wishlist_setting_icon"
         android:textStyle="bold"
         android:id="@+id/profile_text"
-        android:layout_marginLeft="65dp"/>
+        android:layout_marginLeft="55dp"/>
 
     <ImageButton
         android:layout_width="100dp"
@@ -95,7 +95,7 @@
         android:layout_below="@id/profile_text"
         android:layout_marginTop="35dp"
         android:id="@+id/myOrder_setting_icon"
-        android:layout_marginLeft="65dp"
+        android:layout_marginLeft="55dp"
         android:layout_toRightOf="@id/noti_setting_icon"/>
 
     <TextView
@@ -107,7 +107,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:id="@+id/myOrder_text"
-        android:layout_marginLeft="65dp"/>
+        android:layout_marginLeft="55dp"/>
 
     <ImageButton
         android:layout_width="100dp"
@@ -140,7 +140,7 @@
         android:id="@+id/home_page_icon"
         android:layout_marginTop="30dp"
         android:layout_toRightOf="@id/logout_setting_icon"
-        android:layout_marginLeft="65dp" />
+        android:layout_marginLeft="55dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -150,6 +150,6 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_toRightOf="@+id/logout_setting_icon"
-        android:layout_marginLeft="65dp"/>
+        android:layout_marginLeft="55dp"/>
 
 </RelativeLayout>

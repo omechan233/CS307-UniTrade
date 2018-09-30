@@ -8,50 +8,162 @@
     android:background="@drawable/gradient"
     tools:context=".HomePageActivity">
 
-    <Button
-        android:id="@+id/Homebtn"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="Home"
-        android:background="@drawable/roundbutton"
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#FF9900"
+        android:text="Profile"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:id="@+id/profile_title"
         />
 
-    <Button
-        android:id="@+id/Wishlistbtn"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="135dp"
-        android:text="Wishlist"
-        android:background="@drawable/roundbutton"
-
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="135dp" />
-
-    <Button
-        android:id="@+id/Settingbtn"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="30dp"
-        android:text="Setting"
-        android:background="@drawable/roundbutton"
-
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp" />
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/profile_title"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/profile_icon"
+        android:scaleType="fitCenter"
+        android:id="@+id/user_image"/>
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="199dp"
-        android:layout_height="81dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="234dp"
-        android:text="Profile page"
-        android:textSize="25sp" />
+        android:layout_width="90dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/profile_title"
+        android:layout_toRightOf="@id/user_image"
+        android:layout_marginTop="63dp"
+        android:layout_marginLeft="20dp"
+        android:text="Username:"
+        android:textStyle="bold"
+        android:id="@+id/username_text"
+        android:textSize="18sp"/>
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@id/username_text"
+        android:layout_below="@id/profile_title"
+        android:layout_marginTop="50dp"
+        android:textSize="18sp"
+        android:inputType="text"
+        android:id="@+id/input_username" />
+
+    <TextView
+        android:layout_width="57dp"
+        android:layout_height="30dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_toRightOf="@id/user_image"
+        android:layout_below="@id/username_text"
+        android:layout_marginLeft="20dp"
+        android:text="Phone:"
+        android:id="@+id/phone_text"
+        android:layout_marginTop="20dp"/>
+
+    <EditText
+        android:layout_width="1890dp"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@id/phone_text"
+        android:layout_below="@id/input_username"
+        android:layout_marginTop="16dp"
+        android:inputType="phone"
+        android:id="@+id/input_phone"/>
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/user_image"
+        android:text="Change Icon"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:layout_marginLeft="28dp"
+        android:textColor="#365fd1"
+        android:id="@+id/change_icon" />
+
+    <TextView
+        android:layout_width="75dp"
+        android:layout_height="30dp"
+        android:text="Address:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_below="@id/change_icon"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/address_text"/>
+
+    <EditText
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:id="@+id/input_address"
+        android:inputType="text"
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/input_phone"
+        android:layout_toRightOf="@id/address_text"/>
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:text="Email:"
+        android:textSize="18dp"
+        android:layout_below="@id/address_text"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:id="@+id/email_text"
+        android:layout_marginLeft="28dp" />
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:id="@+id/input_email"
+        android:layout_toRightOf="@id/email_text"
+        android:layout_below="@id/input_address"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:text="Edit"
+        android:textColor="#365fd1"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="10dp"/>
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/home_page_icon"
+        android:layout_alignParentBottom="true"
+        android:src="@mipmap/home_page_icon"
+        android:scaleType="fitCenter"
+        android:background="@null" />
+
+    <ScrollView
+        android:id="@+id/comment_area"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_above="@id/home_page_icon"
+        android:layout_below="@id/input_email">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="*\n*\n*\n*View for comment here\n*\n*\n*\n*\n*\n*\n*"
+            android:textSize="20sp"/>
+
+    </ScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_toRightOf="@id/home_page_icon"
+        android:layout_alignParentBottom="true"
+        android:text="Back to Home Page"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="5dp"/>
+
 </RelativeLayout>

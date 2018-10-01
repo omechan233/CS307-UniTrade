@@ -18,4 +18,7 @@
     <string name="wishlist1">Wishlist</string>
     <string name="home">Home</string>
     <string name="profile">PROFILE</string>
+    <string name="todo">TODO</string>
+    <string name="seller">seller</string>
+    <string name="name">name</string>
 </resources>

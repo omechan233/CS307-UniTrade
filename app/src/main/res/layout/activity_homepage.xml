@@ -6,19 +6,64 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
-    tools:context=".MainActivity">
+    tools:context=".HomePageActivity">
 
 
     <RadioButton
         android:id="@+id/radioButton"
         android:layout_width="217dp"
         android:layout_height="132dp"
+        android:layout_centerInParent="true"
+        android:text="HomePage"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/Homebtn"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/roundbutton"
+        android:text="Home"
+        android:layout_alignParentLeft="true" />
+
+    <Button
+        android:id="@+id/Postbtn"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="128dp"
+        android:text="Post"
+        android:background="@drawable/roundbutton"
+
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="128dp" />
+
+    <Button
+        android:id="@+id/Profilebtn"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="219dp"
-        android:layout_marginEnd="73dp"
-        android:text="HomePage"
-        android:textSize="24sp"
+        android:layout_marginEnd="46dp"
+        android:text="Profile"
+        android:background="@drawable/roundbutton"
+
         android:layout_alignParentRight="true"
-        android:layout_marginRight="73dp" />
+        android:layout_marginRight="46dp" />
+
+    <Button
+        android:id="@+id/logout_btn"
+        android:onClick="btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        android:text="Log Out" />
+
 </RelativeLayout>

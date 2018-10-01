@@ -16,11 +16,19 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 //array of option --> ArrayAdpter --> wishlist_listview
 //listview{fav_items.xml}
 
 
 public class MainActivity extends AppCompatActivity{
+    public static void main(String[] args){
+        System.out.println(11);
+        Functions f1 = new Functions();
+       // f1.add_wishlist("TongAn12:03:5909212019", "KennyPiggy");
+    }
         //private Button btnLogin, btnRegister,btnCreateAccount;
        // Button btnCreateAccount;
     private FirebaseAuth mAuth;
@@ -77,12 +85,15 @@ fix Button functions, add page redirection
     private void populateWishlistview() {
         //create list of items
         //following is a test
-        String[] myitems = {"A","B","C","D"};
+        List<String> itemname = new ArrayList<>();
+        //put itemname into an array list
+
+
 
         //build adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,   //context
                 R.layout.wishlistitem,  //layout to use
-                myitems);   //items to display
+                itemname);   //items to display
         //configure list view
         ListView wishlist = (ListView) findViewById(R.id.wlistview);
         wishlist.setAdapter(adapter);

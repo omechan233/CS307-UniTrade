@@ -396,7 +396,7 @@ public class Functions {
                 if(task.isSuccessful()){
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()){
-                        item_name[0] = (String) document.getData().get("buyer_name");
+                        item_name[0] = (String) document.getData().get("name");
                     } else{
                         Log.d(TAG, "No such document");
                     }

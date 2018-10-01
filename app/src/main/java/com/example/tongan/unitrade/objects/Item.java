@@ -1,11 +1,37 @@
-package unitrade.objects;
+package com.example.tongan.unitrade.objects;
+//package unitrade.objects;
 
 public class Item {
-    private int ID;
+    //private int ID;
+    private String ID;
     private double price;
+    private String category;
+    private String title;
+    private String seller_name;
+    private String posted_time;
+    private int status;
+    //private String location;
     // private Image picture; 
-    private int SellerID;
+    //private int SellerID;
     private String description;
+
+    /******** AT:
+     * Updated the constructor, because having both post and item class seems redundant
+     * Our project will not use the posts structure in Firestore anymore
+     * But it is still not deleted because I'm afraid there is any code related to the post structure
+
+     * Updated constructor:
+     * Item name will be seller_name(add)posted_time instead of item int ID
+     * category as String variable
+     * title as String variable to store the title of item
+     * posted time as String variable for now to make it easy to store
+     * seller_name as String (changed from seller_ID)
+     * location as String but left blank till Sprint
+     * status as int transferred from post class to here
+     * status 0 as available, 1 as sold, other codes undetermined
+     */
+
+
 
     /**
      * Constructor; initialize ID, price, SellerID, and description
@@ -15,11 +41,21 @@ public class Item {
      * @param SellerID Item's seller's UserID
      * @param description Item's description
      */
-    public Item(int ID, double price, int SellerID, String description){
-        this.ID = ID;
+    public Item(String category, String title, String seller_name, String posted_time, double price, String description, String location, int status){
+        //this.ID = ID;
+        this.ID=seller_name+posted_time;
+        this.category=category;
+        this.title=title;
+        this.posted_time=posted_time;
+        this.seller_name=seller_name;
+        this.status=status;
         this.price = price;
-        this.SellerID = SellerID;
+        //this.SellerID = SellerID;
         this.description = description;
+
+
+
+
     }
 
     /**
@@ -27,45 +63,29 @@ public class Item {
      * 
      * @return Item's ID
      */
-    public int getID(){
-        return this.ID;
+    public String getTitle(){
+        return this.title;
     }
-
-    /**
-     * Getter method for Item's price
-     * 
-     * @return Item's price
-     */
+    public String getID(){return this.ID; }
+    public String getCategory() {
+        return category;
+    }
+    public String getSeller_name() {
+        return seller_name;
+    }
     public double getPrice(){
         return this.price;
     }
-
-    /**
-     * Getter method for Item's Seller's ID
-     * 
-     * @return Seller's UserID
-     */
-    public int getSellerID(){
-        return this.SellerID;
+    public int getStatus() {
+        return status;
     }
-
-    /**
-     * Getter method for Item's description
-     * 
-     * @return Item's description
-     */
+    public String getPosted_time() {
+        return posted_time;
+    }
     public String getDescription(){
         return this.description;
     }
-    
-    /**
-     * Setter method for Item's ID
-     * 
-     * @param ID Item's new ID
-     */
-    public void setID(int ID){
-        this.ID = ID;
-    }
+
 
     /**
      * Setter method for Item's price
@@ -77,15 +97,6 @@ public class Item {
     }
 
     /**
-     * Setter method for Seller's ID
-     * 
-     * @param SellerID Item's new SellerID
-     */
-    public void setSellerID(int SellerID){
-        this.SellerID = SellerID;
-    }
-
-    /**
      * Setter method for Description
      * 
      * @param description Item's new description
@@ -93,4 +104,18 @@ public class Item {
     public void setDescription(String description){
         this.description = description;
     }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
 }
+

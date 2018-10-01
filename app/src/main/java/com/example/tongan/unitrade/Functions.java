@@ -3,6 +3,7 @@ package com.example.tongan.unitrade;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.tongan.unitrade.objects.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -128,14 +129,23 @@ public class Functions {
      // 1 for available
      // 2 for someone bought it
      *************************************/
-    public int create_post(String username, String posted_time, double price, String category, String address, String description,int status){
+    public int create_post(String title,String username, String posted_time, double price, String category, String address, String description,int status){
+
+        /******  AT:
+         * There is a simpler way to add post, at the bottom of this function
+         *
+         */
+        /*
         Map<String, Object> item_doc = new HashMap<>();
         item_doc.put("description", description);
         item_doc.put("price", price);
         item_doc.put("seller_name", username);
         item_doc.put("category", category);
-
-
+        item_doc.put("title", title);
+        item_doc.put("posted_time", posted_time);
+        item_doc.put("status", status);
+        item_doc.put("location", address);
+        */
         //error number 2 for invalid input price
         if(price<=0){
             return 2;
@@ -144,11 +154,6 @@ public class Functions {
         if(category == null || category.equals("")){
             return 3;
         }
-
-        Map<String, Object> post_doc = new HashMap<>();
-        post_doc.put("post_date", posted_time);
-        post_doc.put("status", status);
-        post_doc.put("address", address);
 
         //error number 0 for invalid status input
         // initially seller can only choose 0 or 1
@@ -161,7 +166,7 @@ public class Functions {
         // 2 for someone bought it
 
 
-        final int[] error = {1};
+        //final int[] error = {1};
 
         /***********************************
          * I made the unique ID of course to be username+posted_time
@@ -171,7 +176,7 @@ public class Functions {
          *  so that the item will contain all the structures
          *************************************/
 
-
+        /*
         db.collection("items").document(username+posted_time)
                 .set(item_doc)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -189,6 +194,14 @@ public class Functions {
 
                 });
 
+                        if (error[0]==-1){
+            return -1;
+        }
+
+                */
+
+        /*
+        Map<String, Object> post_doc = new HashMap<>();
         db.collection("posts").document(username+posted_time)
                 .set(post_doc)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -206,10 +219,17 @@ public class Functions {
 
                 });
 
+        */
 
-        if (error[0]==-1){
-            return -1;
-        }
+
+
+        /****
+         * Or using the item java class, which is simpler!
+         */
+
+        Item item = new Item(category, title, username, posted_time, price, description, address, status);
+        db.collection("items").document(item.getID()).set(item);
+
 
         return 1;
     }
@@ -262,6 +282,26 @@ public class Functions {
         });
 
         return result[0];
+    }
+
+    public Item get_Item_by_Item_ID(String item_ID){
+        final DocumentReference item_doc = db.collection("items").document(item_ID);
+        final Item[] result = {null};
+        item_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()){
+                    result[0] = (Item) document.getData();
+                    Log.e(TAG, "Item found");
+
+                }else{
+                    Log.e(TAG,"Item not Exits");
+                }
+            }
+        });
+        return result[0];
+
     }
 
 

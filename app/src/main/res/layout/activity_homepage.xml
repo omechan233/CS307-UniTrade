@@ -41,29 +41,16 @@
         android:layout_marginLeft="128dp" />
 
     <Button
-        android:id="@+id/Profilebtn"
+        android:id="@+id/Settingbtn"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="46dp"
-        android:text="Profile"
+        android:text="Settinng"
         android:background="@drawable/roundbutton"
 
         android:layout_alignParentRight="true"
         android:layout_marginRight="46dp" />
-
-    <Button
-        android:id="@+id/logout_btn"
-        android:onClick="btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="13dp"
-        android:layout_marginRight="13dp"
-        android:text="Log Out" />
 
 </RelativeLayout>

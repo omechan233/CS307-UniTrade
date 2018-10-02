@@ -3,6 +3,7 @@ package com.example.tongan.unitrade;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,8 +13,13 @@ import android.widget.Toast;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import io.opencensus.common.Function;
 
 
 public class SignupActivity extends AppCompatActivity {
@@ -21,6 +27,7 @@ public class SignupActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser fUser;
     private static final String TAG = "SignupActivity";
+    Functions f = new Functions();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,11 +37,30 @@ public class SignupActivity extends AppCompatActivity {
         //get shared instance of FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
 
+        /*********************************
+         * AT:
+         * Change the authenticate() function return type from bool to int
+         * So that the app can show the exact error message
+         * when it fails to create a user.
+         *
+         * Also Create an user when it successes.
+         *
+         * Status code:
+         * -1, firebase authentication error
+         * 0, success.
+         * 1, username invalid
+         * 2, email invalid
+         * 3, password invalid
+         ***********************************/
+
         Button btnCreateAccount = (Button) findViewById(R.id.register_createAccount_btn);
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (authentication()) {
+                int auth_result = authentication();
+                if (auth_result==0) {
+                    int create_user = f.create_user(getUsername(),getEmail(),getPassword(),"",2,"",0,"","");
+                    System.out.println("Create User status: "+create_user);
                     Toast.makeText(getBaseContext(),
                             "Success!", Toast.LENGTH_LONG).show();
                     Runnable r = new Runnable() {
@@ -47,9 +73,23 @@ public class SignupActivity extends AppCompatActivity {
                     Handler h = new Handler();
                     // The Runnable will be executed after the given delay time
                     h.postDelayed(r, 1500); // will be delayed for 1.5 seconds
-                } else {
+                }
+
+                else if(auth_result==-1){
                     Toast.makeText(getBaseContext(),
-                            "Username, Email, or Password was invalid!", Toast.LENGTH_LONG).show();
+                            "Firestore Authentication failed!", Toast.LENGTH_LONG).show();
+                }
+                else if(auth_result==1){
+                    Toast.makeText(getBaseContext(),
+                            "Username was invalid!", Toast.LENGTH_LONG).show();
+                }
+                else if(auth_result==2){
+                    Toast.makeText(getBaseContext(),
+                            "User email was invalid!", Toast.LENGTH_LONG).show();
+                }
+                else if(auth_result==3){
+                    Toast.makeText(getBaseContext(),
+                            "User password was invalid!", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -87,9 +127,12 @@ public class SignupActivity extends AppCompatActivity {
 
     private boolean isUsernameValid(String username) {
         //check if is empty
-        if (TextUtils.isEmpty(username)) {
+        // AT: Check if the user name is already used
+        // Check if username exists is currently unavailable.
+        if (TextUtils.isEmpty(username) || f.username_exists(username)) {
             return false;
         }
+
         // username must be at least 5 characters
         return username.length() > 1;
     }
@@ -124,13 +167,53 @@ public class SignupActivity extends AppCompatActivity {
     }
 
 
+
+    /*********************************
+     * AT:
+     * Change the authenticate() function return type from bool to int
+     * So that the app can show the exact error message
+     * when it fails to create a user.
+     *
+     * Status code:
+     * -1, firebase authentication error
+     * 0, success.
+     * 1, username invalid
+     * 2, email invalid
+     * 3, password invalid
+     ***********************************/
+
+
     //authentication:
-    public boolean authentication() {
+    public int authentication() {
         //get text field inputs
         String username = getUsername();
         String email = getEmail();
         String password = getPassword();
+        if (!isUsernameValid(username)){
+            return 1;
+        }
+        if (!isEmailValid(email)){
+            return 2;
+        }
+        if (!isPasswordValid(password)){
+            return 3;
+        }
 
+        final int result[] ={0};
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            result[0]=-1;
+                        }
+                        else {
+                            result[0]=0;
+                        }
+                    }
+                });
+
+        /*
         //if all the input format is correct, do authentication with backend
         if (isUsernameValid(username) && isEmailValid(email) && isPasswordValid(password)) {
             //send username, email, password to database and return true.
@@ -149,11 +232,8 @@ public class SignupActivity extends AppCompatActivity {
                         }
                     });
 */
-            return true;
-        }
-        else{
-            return false;
-        }
+
+        return result[0];
     }
 }
 

@@ -30,7 +30,7 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".Wishlist" />
         <activity android:name=".SettingActivity" />
-
+        <activity android:name=".NewPostActivity" />
 
     </application>
 

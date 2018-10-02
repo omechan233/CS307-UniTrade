@@ -13,43 +13,19 @@ public class HomePageActivity extends AppCompatActivity {
     public HomePageActivity(){
 
     }
-   private Button Homebtn, clickToPost, clicktoProfile;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
-       // Homebtn = (Button) findViewById(R.id.Homebtn);
-        clickToPost = (Button) findViewById(R.id.Postbtn);
-        Button clickToSetting = (Button) findViewById(R.id.Settingbtn);
-
-      /*  Homebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomePageActivity.this, HomePageActivity.class);
-                //intent.putExtra("name", name.getText().toString());
-                startActivity(intent);
-            }
-        });*/
-
-
-        clickToPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //direct to post item page and ask user to enter items information.
-                Toast.makeText(getBaseContext(),
-                        "Post!!!", Toast.LENGTH_LONG).show();
-
-
-            }
-        });
+        Button clickToPost = (Button) findViewById(R.id.home_post_btn);
+        Button clickToSetting = (Button) findViewById(R.id.home_settings_btn);
 
         clickToSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //direct to profile page and ask backend for current login user's information.
                 Intent intent = new Intent(HomePageActivity.this, SettingActivity.class);
-                //intent.putExtra("name", name.getText().toString());
                 startActivity(intent);
 
             }
@@ -58,15 +34,10 @@ public class HomePageActivity extends AppCompatActivity {
         clickToPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomePageActivity.this, NewPost.class);
+                Intent intent = new Intent(HomePageActivity.this, NewPostActivity.class);
                 startActivity(intent);
             }
         });
 
-    }
-
-
-    public void setClickToPost(Button clickToPost) {
-        this.clickToPost = clickToPost;
     }
 }

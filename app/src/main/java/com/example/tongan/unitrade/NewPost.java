@@ -42,6 +42,7 @@ public class NewPost extends AppCompatActivity {
                 //check if the user input is empty
                 if (!itemName.equals("") && !description.equals("") && !price_edit.getText().toString().equals("")) {
 
+                    price = Double.parseDouble(price_edit.getText().toString());
                     //todo : store the itemName, description and price to database here
 
                     //back to homepage

@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-//array of option --> ArrayAdpter --> wishlist_listview
-//listview{fav_items.xml}
 
 
 public class MainActivity extends AppCompatActivity{
@@ -164,31 +162,5 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    private void populateWishitem() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        //get a list of wishitem id
-        List<String> wishitem_id = new ArrayList<>();
-        List<Item> wishlist = new ArrayList<>();
-        wishitem_id = f1.get_itemid_list(currentUser.getUid());
-        //use id to get a list of item
-        wishlist = f1.get_wanted_item(wishitem_id);
-    }
-
-    private void populateWishlistview() {
-        //create list of items
-        //following is a test
-        List<String> itemname = new ArrayList<>();
-        //put itemname into an array list
-
-
-
-        //build adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,   //context
-                R.layout.wishlistitem,  //layout to use
-                itemname);   //items to display
-        //configure list view
-        ListView wishlist = (ListView) findViewById(R.id.wlistview);
-        wishlist.setAdapter(adapter);
-    }
 }
 

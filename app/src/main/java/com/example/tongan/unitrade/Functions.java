@@ -412,9 +412,10 @@ public class Functions {
 
     /*****
      * get a list of wanted item
+     * @input: userid, a list of itemid
      * @retrutn: list<Item>
      */
-    List<Item> get_wanted_item(String userid, List<String> items){
+    List<Item> get_wanted_item(List<String> items){
         List<Item> wishlist = new ArrayList<>();
         String itemid = "";
         //loop through wishlist in profile

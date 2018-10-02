@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.tongan.unitrade.objects.Item;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -24,9 +25,9 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity{
+    Functions f1 = new Functions();
     public static void main(String[] args){
         System.out.println(11);
-        Functions f1 = new Functions();
        // f1.add_wishlist("TongAn12:03:5909212019", "KennyPiggy");
     }
         //private Button btnLogin, btnRegister,btnCreateAccount;
@@ -45,7 +46,9 @@ public class MainActivity extends AppCompatActivity{
         loginBtn = (Button) findViewById(R.id.loginBtn);
 
         //congifure wishlist
-       //populateWishlistview();
+        populateWishitem();
+        populateWishlistview();
+
         //btnCreateAccount = (Button) findViewById(R.id.button3);
         //initView();
        /* btnCreateAccount.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +84,16 @@ fix Button functions, add page redirection
     }
 
 
+
+    private void populateWishitem() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        //get a list of wishitem id
+        List<String> wishitem_id = new ArrayList<>();
+        List<Item> wishlist = new ArrayList<>();
+        wishitem_id = f1.get_itemid_list(currentUser.getUid());
+        //use id to get a list of item
+        wishlist = f1.get_wanted_item(wishitem_id);
+    }
 
     private void populateWishlistview() {
         //create list of items

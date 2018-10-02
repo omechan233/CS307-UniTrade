@@ -137,7 +137,7 @@
         android:src="@mipmap/home_page_icon"
         android:scaleType="fitCenter"
         android:layout_below="@id/myOrder_text"
-        android:id="@+id/home_page_icon"
+        android:id="@+id/settings_home_page_icon"
         android:layout_marginTop="30dp"
         android:layout_toRightOf="@id/logout_setting_icon"
         android:layout_marginLeft="55dp" />
@@ -146,7 +146,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:text=" Home Page"
-        android:layout_below="@+id/home_page_icon"
+        android:layout_below="@+id/settings_home_page_icon"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_toRightOf="@+id/logout_setting_icon"

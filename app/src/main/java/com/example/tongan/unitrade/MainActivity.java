@@ -1,39 +1,47 @@
 package com.example.tongan.unitrade;
 
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.content.Intent;
 
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 //array of option --> ArrayAdpter --> wishlist_listview
 //listview{fav_items.xml}
 
 
 public class MainActivity extends AppCompatActivity{
+    /*
     public static void main(String[] args){
         System.out.println(11);
         Functions f1 = new Functions();
        // f1.add_wishlist("TongAn12:03:5909212019", "KennyPiggy");
     }
-        //private Button btnLogin, btnRegister,btnCreateAccount;
-       // Button btnCreateAccount;
+    */
     private FirebaseAuth mAuth;
-    private Button createAccountBtn;
-    private Button loginBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +49,27 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        createAccountBtn = (Button) findViewById(R.id.registerBtn);
-        loginBtn = (Button) findViewById(R.id.loginBtn);
+
+        Button loginBtn = (Button) findViewById(R.id.login_login_btn);
+        Button registerBtn = (Button) findViewById(R.id.login_register_btn);
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                authentication();
+            }
+        });
+
+        registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SignupActivity.class));
+            }
+        });
 
         //congifure wishlist
        //populateWishlistview();
-        //btnCreateAccount = (Button) findViewById(R.id.button3);
         //initView();
-       /* btnCreateAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-fix Button functions, add page redirection
-            }
-        });*/
-
-
     }
 
     protected void onStart(){
@@ -71,7 +85,7 @@ fix Button functions, add page redirection
             };
             Handler h = new Handler();
             // The Runnable will be executed after the given delay time
-            h.postDelayed(r, 1500); // will be delayed for 1.5 seconds
+            h.postDelayed(r, 500); // will be delayed for 0.5 seconds
         }
     }
 
@@ -80,7 +94,75 @@ fix Button functions, add page redirection
         return currentUser != null;
     }
 
+    //get user input username & password when login
+    private String getEmail() {
+        EditText editText = (EditText) findViewById(R.id.login_email_input);
+        String email = editText.getText().toString();
+        return email;
+    }
 
+    private String getPassword() {
+        EditText editText = (EditText) findViewById(R.id.login_password_input);
+        String password = editText.getText().toString();
+        return password;
+    }
+
+    private boolean isEmailValid(String email) {
+        //check if is empty
+        if (TextUtils.isEmpty(email)) {
+            return false;
+        }
+        //This regex was provided by OWASP Validation Regex Repository
+        //it will check to make sure email follows a format like so:
+        //  email :  example@email.com
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email.matches(emailRegex);
+    }
+
+    private boolean isPasswordValid(String password){
+        //check if is empty
+        if (TextUtils.isEmpty(password)){
+            return false;
+        }
+
+        //password must have a least one capital letter, one digit, and have a length between 6 and 20
+        String regex = "^(?=.*[A-Z])(?=.*\\d)";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(password);
+
+        if(!m.find() || password.length() < 6 || password.length() > 20)
+            return false;
+
+        return true;
+    }
+
+    //authentication, check user login info
+    private void authentication() {
+        String email = getEmail();
+        String password = getPassword();
+        if(isEmailValid(email) && isPasswordValid(password)) {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, re-direct to homepage
+                                Toast.makeText(MainActivity.this, "Login Successful!",
+                                        Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(MainActivity.this, HomePageActivity.class));
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Toast.makeText(MainActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        } else {
+            // If sign in fails, display a message to the user.
+            Toast.makeText(MainActivity.this, "Authentication failed. Invalid Username or Password given.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void populateWishlistview() {
         //create list of items
@@ -98,25 +180,5 @@ fix Button functions, add page redirection
         ListView wishlist = (ListView) findViewById(R.id.wlistview);
         wishlist.setAdapter(adapter);
     }
-
-    public void btnLogin(View view) {
-        LoginActivity loginActivity = new LoginActivity();
-        if (loginActivity.authentication()) {
-            //go to home page
-            Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
-            startActivity(intent);
-        }
-        //if user login failed, pop up message
-        else {
-            Toast.makeText(getBaseContext(), "Username or Password isn't correct!", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void btnRegister(View view) {
-        Intent intent = new Intent(MainActivity.this, SignupActivity.class);
-        //intent.putExtra("name", name.getText().toString());
-        startActivity(intent);
-    }
-
 }
 

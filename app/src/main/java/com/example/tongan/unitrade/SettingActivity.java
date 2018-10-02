@@ -4,8 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -18,9 +19,7 @@ public class SettingActivity extends AppCompatActivity {
         wishListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SettingActivity.this, Wishlist.class);
-                //intent.putExtra("name", name.getText().toString());
-                startActivity(intent);
+                startActivity(new Intent(SettingActivity.this, Wishlist.class));
             }
         });
 
@@ -28,9 +27,7 @@ public class SettingActivity extends AppCompatActivity {
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SettingActivity.this, Profilepage.class);
-                //intent.putExtra("name", name.getText().toString());
-                startActivity(intent);
+                startActivity(new Intent(SettingActivity.this, ProfileActivity.class));
             }
         });
 
@@ -38,19 +35,17 @@ public class SettingActivity extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SettingActivity.this, MainActivity.class);
-                //intent.putExtra("name", name.getText().toString());
-                startActivity(intent);
+                //logout user from Firebase
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(SettingActivity.this, MainActivity.class));
             }
         });
 
-        ImageButton homePageBtn = (ImageButton)findViewById(R.id.home_page_icon);
+        ImageButton homePageBtn = (ImageButton)findViewById(R.id.settings_home_page_icon);
         homePageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SettingActivity.this, HomePageActivity.class);
-                //intent.putExtra("name", name.getText().toString());
-                startActivity(intent);
+                startActivity(new Intent(SettingActivity.this, HomePageActivity.class));
             }
         });
 

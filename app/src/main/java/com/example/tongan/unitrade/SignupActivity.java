@@ -3,24 +3,21 @@ package com.example.tongan.unitrade;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
 public class SignupActivity extends AppCompatActivity {
 
-    private Button btnCreateAccount;
     private FirebaseAuth mAuth;
     private FirebaseUser fUser;
     private static final String TAG = "SignupActivity";
@@ -33,7 +30,7 @@ public class SignupActivity extends AppCompatActivity {
         //get shared instance of FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
 
-        btnCreateAccount = (Button) findViewById(R.id.profileBtn);
+        Button btnCreateAccount = (Button) findViewById(R.id.register_createAccount_btn);
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,23 +67,48 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
+    private String getEmail() {
+        EditText editText = (EditText) findViewById(R.id.register_email_input);
+        String email = editText.getText().toString();
+        return email;
+    }
+
+    private String getPassword() {
+        EditText editText = (EditText) findViewById(R.id.register_password_input);
+        String password = editText.getText().toString();
+        return password;
+    }
+
+    private String getUsername() {
+        EditText editText = (EditText) findViewById(R.id.register_username_input);
+        String username = editText.getText().toString();
+        return username;
+    }
+
     private boolean isUsernameValid(String username) {
         //check if is empty
         if (TextUtils.isEmpty(username)) {
             return false;
         }
-        // username, password needs to be at least 1 character adn no more than 8 char.
-        return (username.length() < 1 || username.length() > 8);
-
+        // username must be at least 5 characters
+        return username.length() > 1;
     }
 
-    private boolean isPasswordValid(String password) {
-        if (TextUtils.isEmpty(password))
+    private boolean isPasswordValid(String password){
+        //check if is empty
+        if (TextUtils.isEmpty(password)){
+            return false;
+        }
+
+        //password must have a least one capital letter, one digit, and have a length between 6 and 20
+        String regex = "^(?=.*[A-Z])(?=.*\\d)";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(password);
+
+        if(!m.find() || password.length() < 6 || password.length() > 20)
             return false;
 
-        //password must have a least one capital letter, one digit, and have a length between 6 and 14
-        return (!password.matches("[A-Z]") || !password.matches("[0-9]") || password.length() < 6 || password.length() > 14);
-
+        return true;
     }
 
     private boolean isEmailValid(String email) {
@@ -104,21 +126,16 @@ public class SignupActivity extends AppCompatActivity {
 
     //authentication:
     public boolean authentication() {
-        //get user entered information:
-        EditText text1 = findViewById(R.id.username_input);
-        EditText text2 = findViewById(R.id.email_input);
-        EditText text3 = findViewById(R.id.password_input);
-
-        //convert to strings we can use
-        String username = text1.getText().toString();
-        String email = text2.getText().toString();
-        String password = text3.getText().toString();
+        //get text field inputs
+        String username = getUsername();
+        String email = getEmail();
+        String password = getPassword();
 
         //if all the input format is correct, do authentication with backend
         if (isUsernameValid(username) && isEmailValid(email) && isPasswordValid(password)) {
             //send username, email, password to database and return true.
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            mAuth.createUserWithEmailAndPassword(email, password);
+ /*                   .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
@@ -131,9 +148,12 @@ public class SignupActivity extends AppCompatActivity {
                             }
                         }
                     });
+*/
             return true;
         }
-        else return false;
+        else{
+            return false;
+        }
     }
 }
 

@@ -29,6 +29,8 @@
         <activity android:name=".SignupActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".Wishlist" />
+        <activity android:name=".SettingActivity" />
+
 
     </application>
 

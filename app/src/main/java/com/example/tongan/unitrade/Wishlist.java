@@ -7,15 +7,14 @@ import android.view.View;
 import android.widget.Button;
 
 public class Wishlist extends AppCompatActivity {
-    private Button Homebtn, Profilebtn;
-    protected void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wishlist);
 
-        Homebtn = (Button) findViewById(R.id.Homebtn);
-        Profilebtn = (Button) findViewById(R.id.profileBtn);
+        Button homebtn = (Button) findViewById(R.id.wishlist_home_btn);
+        Button profilebtn = (Button) findViewById(R.id.wishlist_profile_btn);
 
-        Homebtn.setOnClickListener(new View.OnClickListener() {
+        homebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Wishlist.this, HomePageActivity.class);
@@ -24,7 +23,7 @@ public class Wishlist extends AppCompatActivity {
             }
         });
 
-        Profilebtn.setOnClickListener(new View.OnClickListener() {
+        profilebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Wishlist.this, ProfileActivity.class);

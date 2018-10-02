@@ -134,19 +134,19 @@
         android:layout_marginTop="10dp"/>
 
     <ImageButton
+        android:id="@+id/profile_home_page_icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/home_page_icon"
         android:layout_alignParentBottom="true"
-        android:src="@mipmap/home_page_icon"
+        android:background="@null"
         android:scaleType="fitCenter"
-        android:background="@null" />
+        android:src="@mipmap/home_page_icon" />
 
     <ScrollView
         android:id="@+id/comment_area"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_above="@id/home_page_icon"
+        android:layout_above="@id/settings_home_page_icon"
         android:layout_below="@id/input_email">
 
         <TextView
@@ -160,7 +160,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_toRightOf="@id/home_page_icon"
+        android:layout_toRightOf="@id/settings_home_page_icon"
         android:layout_alignParentBottom="true"
         android:text="Back"
         android:textSize="15sp"
@@ -168,7 +168,7 @@
         android:layout_marginLeft="5dp"/>
 
     <Button
-        android:id="@+id/Wishlistbtn"
+        android:id="@+id/profile_wishlist_btn"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_alignTop="@+id/edit_profile"

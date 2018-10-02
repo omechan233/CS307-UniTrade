@@ -18,39 +18,44 @@
         android:textSize="24sp" />
 
     <Button
-        android:id="@+id/Homebtn"
+        android:id="@+id/home_logout_btn"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:background="@drawable/roundbutton"
-        android:text="Home"
-        android:layout_alignParentLeft="true" />
-
-    <Button
-        android:id="@+id/Postbtn"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="128dp"
-        android:text="Post"
-        android:background="@drawable/roundbutton"
-
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="128dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/roundbutton"
+        android:text="Logout" />
 
     <Button
-        android:id="@+id/Settingbtn"
+        android:id="@+id/home_post_btn"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="46dp"
-        android:text="Settinng"
-        android:background="@drawable/roundbutton"
+        android:layout_marginStart="159dp"
+        android:layout_marginLeft="159dp"
 
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/roundbutton"
+        android:text="Post" />
+
+    <Button
+        android:id="@+id/home_settings_btn"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="46dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="18dp"
+        android:layout_marginRight="18dp"
+
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/roundbutton"
+        android:text="Settings" />
 
 </RelativeLayout>

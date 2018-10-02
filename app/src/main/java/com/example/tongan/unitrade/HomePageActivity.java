@@ -9,64 +9,53 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class HomePageActivity extends AppCompatActivity {
-    public HomePageActivity(){
 
-    }
-   private Button Homebtn, clickToPost, clickToSetting;
+    private FirebaseAuth mAuth;
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_homepage);
+   public void onCreate(Bundle savedInstanceState) {
+       super.onCreate(savedInstanceState);
+       setContentView(R.layout.activity_homepage);
 
-       // Homebtn = (Button) findViewById(R.id.Homebtn);
-        clickToPost = (Button) findViewById(R.id.Postbtn);
-        clickToSetting = (Button) findViewById(R.id.Settingbtn);
+       //get Firebase instance
+       mAuth = FirebaseAuth.getInstance();
 
-      /*  Homebtn.setOnClickListener(new View.OnClickListener() {
+       Button clickToPost = (Button) findViewById(R.id.home_post_btn);
+       Button clickToSetting = (Button) findViewById(R.id.home_settings_btn);
+       Button logoutBtn = (Button) findViewById(R.id.home_logout_btn);
+
+       clickToPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomePageActivity.this, HomePageActivity.class);
-                //intent.putExtra("name", name.getText().toString());
-                startActivity(intent);
-            }
-        });*/
+               //direct to post item page and ask user to enter items information.
+               Toast.makeText(getBaseContext(),
+                       "Post!!!", Toast.LENGTH_LONG).show();
 
 
-        clickToPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //direct to post item page and ask user to enter items information.
-                Toast.makeText(getBaseContext(),
-                        "Post!!!", Toast.LENGTH_LONG).show();
-
-
-            }
+        }
         });
 
-        clickToSetting.setOnClickListener(new View.OnClickListener() {
+       clickToSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //direct to profile page and ask backend for current login user's information.
                 Intent intent = new Intent(HomePageActivity.this, SettingActivity.class);
-                //intent.putExtra("name", name.getText().toString());
                 startActivity(intent);
 
             }
         });
 
-
-
-
-
-
-
-
-
-    }
-
-
-    public void setClickToPost(Button clickToPost) {
-        this.clickToPost = clickToPost;
+       logoutBtn.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               //sign out user from Firebase
+               mAuth.signOut();
+               //direct user back to login page
+               startActivity(new Intent(HomePageActivity.this, MainActivity.class));
+           }
+       });
     }
 }

@@ -9,7 +9,28 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.tongan.unitrade.objects.Profile;
+
 public class Profilepage extends AppCompatActivity {
+    Profile profile;
+
+    public int getUserId(){
+        int userId = profile.getUserID();
+        return userId;
+    }
+
+    public String getPhoneNumber(){
+        String phoneNumber = profile.getPhoneNumber();
+        return phoneNumber;
+    }
+
+    public String getAddress(){
+        String address = profile.getAddress();
+        return address;
+    }
+
+    //Todo: write a method to get comment from user input
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +58,13 @@ public class Profilepage extends AppCompatActivity {
         String email = "";
         //todo: get username, email, phone, address from backend, and store it into the variables above
         //todo: during registration set new user's phone, address to empty string
+
+        phone = getPhoneNumber();
+        address = getAddress();
+        LoginActivity loginActivity = new LoginActivity();
+        email = loginActivity.getEmail();
+
+
 
         username_edit.setText(username);
         phone_edit.setText(phone);
@@ -85,6 +113,9 @@ public class Profilepage extends AppCompatActivity {
                 }
             }
         });
+
+
+
 
     }
 

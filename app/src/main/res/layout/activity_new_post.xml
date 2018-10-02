@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    tools:context="com.example.tongan.unitrade.NewPost">
+
+
+    <TextView
+        android:id="@+id/title_new_post"
+        android:text="New Post"
+        android:textSize="20sp"
+        android:background="#FF9900"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+    <ImageView
+        android:contentDescription="ItemImage"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/item_image"
+        android:layout_below="@id/title_new_post"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/poi_test_src"/>
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/item_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp"
+        android:text="Upload Image"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:id="@+id/upload_image"
+        android:textColor="#365fd1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:textStyle="bold"
+        android:text="Item Name"
+        android:textSize="18sp"
+        android:layout_below="@id/upload_image"
+        android:layout_marginLeft="30dp"
+        android:id="@+id/item_name_text"/>
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/item_name_text"
+        android:layout_marginLeft="30dp"
+        android:inputType="text"
+        android:lines="1"
+        android:id="@+id/item_name_input"
+        android:hint="Enter your item name here"/>
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:textStyle="bold"
+        android:text="Price"
+        android:textSize="18sp"
+        android:layout_below="@id/item_name_input"
+        android:layout_marginTop="1dp"
+        android:id="@+id/price_text"
+        android:layout_marginLeft="30dp" />
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/price_text"
+        android:lines="1"
+        android:layout_marginLeft="30dp"
+        android:inputType="numberDecimal"
+        android:hint="Enter the item price here"
+        android:id="@+id/price_input"/>
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:textStyle="bold"
+        android:text="Description"
+        android:textSize="18sp"
+        android:layout_below="@id/price_input"
+        android:layout_marginTop="1dp"
+        android:id="@+id/desc_text"
+        android:layout_marginLeft="30dp" />
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:background="@drawable/message_box"
+        android:layout_below="@id/desc_text"
+        android:layout_marginLeft="30dp"
+        android:inputType="textMultiLine"
+        android:gravity="top"
+        android:hint=" Enter your item description here"
+        android:id="@+id/desc_input"/>
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:text="SUBMIT"
+        android:layout_below="@id/desc_input"
+        android:layout_marginLeft="30dp"
+        android:id="@+id/submit_btn"/>
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:text="CANCEL"
+        android:layout_below="@id/desc_input"
+        android:layout_marginLeft="190dp"
+        android:id="@+id/cancel_btn"/>
+
+</RelativeLayout>

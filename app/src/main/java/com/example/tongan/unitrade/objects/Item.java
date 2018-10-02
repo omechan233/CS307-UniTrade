@@ -9,7 +9,7 @@ public class Item {
     private String seller_name;
     private String posted_time;
     private int status;
-    //private String location;
+    private String location;
     // private Image picture; 
     //private int SellerID;
     private String description;
@@ -34,11 +34,7 @@ public class Item {
 
     /**
      * Constructor; initialize ID, price, SellerID, and description
-     * 
-     * @param ID Item's ID
-     * @param price Item's price
-     * @param SellerID Item's seller's UserID
-     * @param description Item's description
+     *
      */
     public Item(String category, String title, String seller_name, String posted_time, double price, String description, String location, int status){
         //this.ID = ID;
@@ -49,6 +45,7 @@ public class Item {
         this.seller_name=seller_name;
         this.status=status;
         this.price = price;
+        this.location=location;
         //this.SellerID = SellerID;
         this.description = description;
 
@@ -84,7 +81,9 @@ public class Item {
     public String getDescription(){
         return this.description;
     }
-
+    public String getLocation() {
+        return location;
+    }
 
     /**
      * Setter method for Item's price
@@ -114,6 +113,10 @@ public class Item {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public void setLocation(String location){
+        this.location=location;
     }
 
 }

@@ -11,12 +11,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +27,9 @@ import java.util.Map;
 public class Functions {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "Functions";
-    Functions functions = new Functions();
+
+
+
     //AT!!
 
     /**************************************
@@ -72,6 +76,8 @@ public class Functions {
         profile_doc.put("description", description);
         profile_doc.put("address",address);
         profile_doc.put("real_name",real_name);
+        profile_doc.put("user_name", user_name);
+        profile_doc.put("my_items", Arrays.asList(""));
 
         db.collection("users").document(user_name)
                 .set(user_doc)
@@ -135,7 +141,8 @@ public class Functions {
      // 1 for available
      // 2 for someone bought it
      *************************************/
-    public int create_post(String title,String username, String posted_time, double price, String category, String address, String description,int status){
+    public int create_post(String title,String username, String posted_time, double price,
+                           String category, String address, String description,int status){
 
         /******  AT:
          * There is a simpler way to add post, at the bottom of this function
@@ -236,6 +243,9 @@ public class Functions {
         Item item = new Item(category, title, username, posted_time, price, description, address, status);
         db.collection("items").document(item.getID()).set(item);
 
+        // Adding the item to my_items list
+        final DocumentReference user_doc = db.collection("profiles").document(username);
+        user_doc.update("my_items", FieldValue.arrayUnion(item.getID()));
 
         return 1;
     }
@@ -295,24 +305,31 @@ public class Functions {
      ****************************************/
     public boolean username_exists(String user_name){
         DocumentReference user_doc = db.collection("users").document(user_name);
-        final boolean[] result = {true};
+        final boolean[] result = {false};
         user_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot documentSnapshot = task.getResult();
-                if (documentSnapshot.exists()){
-                    result[0] = true;
-                    Log.e(TAG, "Exits");
-
-                }else{
-                    Log.e(TAG,"Not Exits");
-                    result[0] = false;
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //System.out.println("HEREEEEEEEEEEEEEEEEEEEE");
+                        result[0]=true;
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
                 }
             }
         });
-
+        //System.out.println("RESULT!!!!!!!!!!+"+result[0]);
         return result[0];
     }
+
+    /*********** AT:
+     * Get Item by its unique ID
+     *
+     */
 
     public Item get_Item_by_Item_ID(String item_ID){
         final DocumentReference item_doc = db.collection("items").document(item_ID);
@@ -333,6 +350,121 @@ public class Functions {
         return result[0];
 
     }
+
+    /***************** AT:
+     * Edit profile
+     *
+     **************************/
+    public void edit_post(String item_id, String title, double price,
+                          String category, String address, String description,int status){
+        Item item = get_Item_by_Item_ID(item_id);
+        if(!category.equals(item.getCategory())) {
+            item.setCategory(category);
+        }
+        if(!title.equals(item.getTitle())){
+            item.setTitle(title);
+        }
+        if(price!=item.getPrice()){
+            item.setPrice(price);
+        }
+        if(!address.equals(item.getLocation())){
+            item.setLocation(address);
+        }
+        if(!description.equals(item.getDescription())){
+            item.setDescription(description);
+        }
+        if(status!=item.getStatus()){
+            item.setStatus(status);
+        }
+
+        db.collection("items").document(item_id)
+                .set(item)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+    }
+
+
+
+
+    /***************** AT:
+     * Edit profile
+     *
+     **************************/
+    public void update_profile(String user_name, String phone, int gender,
+                               String description, String real_name, String address){
+        Map<String, Object> profile_doc = new HashMap<>();
+        profile_doc.put("phone_number", phone);
+        profile_doc.put("gender", gender);
+        profile_doc.put("description", description);
+        profile_doc.put("address",address);
+        profile_doc.put("real_name",real_name);
+
+        db.collection("profiles").document(user_name)
+                .set(profile_doc)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+    }
+
+
+    /**********
+     * AT:
+     * Get my items list, return a list of string
+     *
+     * I am VERY UNCERTAIN about this function!
+     *
+     */
+    public String[] get_my_item(String user_name){
+        final DocumentReference user_doc = db.collection("profiles").document(user_name);
+        final Object result[] = new Object[1];
+
+        user_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()){
+                    result[0] = document.get("my_items");
+                    //result[0] = (String[])document.getData().get("my_items");
+                    Log.e(TAG, "my item list found");
+
+                }else{
+                    Log.e(TAG,"my item list not found");
+                }
+            }
+        });
+
+        String[] items = ((List<String>)result[0]).toArray(new String[0]);
+
+        return items;
+    }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -421,7 +553,7 @@ public class Functions {
         //loop through wishlist in profile
         for(int i = 0; i < items.size(); i ++){
             itemid = items.get(i);
-            Item item = functions.get_Item_by_Item_ID(itemid);
+            Item item = get_Item_by_Item_ID(itemid);
             wishlist.add(item);
 
         }
@@ -450,15 +582,6 @@ public class Functions {
                 });
         return itemid_list;
     }
-
-
-
-
-
-
-    //Scott!!
-
-
 
 
 }

@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.example.tongan.unitrade.objects.Item;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -35,13 +36,11 @@ import java.util.regex.Pattern;
 public class MainActivity extends AppCompatActivity{
     /*
     public static void main(String[] args){
-        System.out.println(11);
-        Functions f1 = new Functions();
        // f1.add_wishlist("TongAn12:03:5909212019", "KennyPiggy");
     }
     */
     private FirebaseAuth mAuth;
-
+    private Functions f1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +48,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+        //f1 = new Functions();
 
         Button loginBtn = (Button) findViewById(R.id.login_login_btn);
         Button registerBtn = (Button) findViewById(R.id.login_register_btn);
@@ -162,6 +162,16 @@ public class MainActivity extends AppCompatActivity{
             Toast.makeText(MainActivity.this, "Authentication failed. Invalid Username or Password given.",
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void populateWishitem() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        //get a list of wishitem id
+        List<String> wishitem_id = new ArrayList<>();
+        List<Item> wishlist = new ArrayList<>();
+        wishitem_id = f1.get_itemid_list(currentUser.getUid());
+        //use id to get a list of item
+        wishlist = f1.get_wanted_item(wishitem_id);
     }
 
     private void populateWishlistview() {

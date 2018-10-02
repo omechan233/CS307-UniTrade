@@ -16,14 +16,16 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 public class Functions {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "Functions";
-
+    Functions functions = new Functions();
     //AT!!
 
     /**************************************
@@ -408,12 +410,53 @@ public class Functions {
         return item_name;
     }
 
+    /*****
+     * get a list of wanted item
+     * @input: userid, a list of itemid
+     * @retrutn: list<Item>
+     */
+    List<Item> get_wanted_item(List<String> items){
+        List<Item> wishlist = new ArrayList<>();
+        String itemid = "";
+        //loop through wishlist in profile
+        for(int i = 0; i < items.size(); i ++){
+            itemid = items.get(i);
+            Item item = functions.get_Item_by_Item_ID(itemid);
+            wishlist.add(item);
+
+        }
+
+        return  wishlist;
+    }
+
+    /***
+     * put all itemid in an list
+     */
+    List<String> get_itemid_list(String userid){
+        final List<String> itemid_list = new ArrayList<String>();
+        db.collection("profiles").document(userid).collection("wish_list")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                itemid_list.add(document.getId());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        return itemid_list;
+    }
 
 
 
 
 
-        //Scott!!
+
+    //Scott!!
 
 
 

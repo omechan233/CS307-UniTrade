@@ -1,4 +1,4 @@
-package unitrade.objects;
+package com.example.tongan.unitrade.objects;
 
 /**
  * User class for defining a user's name, email, and ID

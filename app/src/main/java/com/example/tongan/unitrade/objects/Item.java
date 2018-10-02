@@ -1,5 +1,4 @@
 package com.example.tongan.unitrade.objects;
-//package unitrade.objects;
 
 public class Item {
     //private int ID;

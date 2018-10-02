@@ -1,4 +1,4 @@
-package unitrade.objects;
+package com.example.tongan.unitrade.objects;
 
 import java.util.Date;
 

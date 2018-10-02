@@ -13,7 +13,7 @@ public class HomePageActivity extends AppCompatActivity {
     public HomePageActivity(){
 
     }
-   private Button Homebtn, clickToPost, clicktoProfile;
+   private Button Homebtn, clickToPost, clickToSetting;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +21,7 @@ public class HomePageActivity extends AppCompatActivity {
 
        // Homebtn = (Button) findViewById(R.id.Homebtn);
         clickToPost = (Button) findViewById(R.id.Postbtn);
-        Button clickToSetting = (Button) findViewById(R.id.Settingbtn);
+        clickToSetting = (Button) findViewById(R.id.Settingbtn);
 
       /*  Homebtn.setOnClickListener(new View.OnClickListener() {
             @Override

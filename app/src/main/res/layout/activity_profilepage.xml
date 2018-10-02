@@ -167,4 +167,16 @@
         android:textStyle="bold"
         android:layout_marginLeft="5dp"/>
 
+    <Button
+        android:id="@+id/Wishlistbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_alignTop="@+id/edit_profile"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="-10dp"
+        android:layout_marginEnd="11dp"
+        android:layout_marginRight="11dp"
+        android:text="Wishlist" />
+
 </RelativeLayout>

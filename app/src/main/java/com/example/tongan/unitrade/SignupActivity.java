@@ -33,7 +33,7 @@ public class SignupActivity extends AppCompatActivity {
         //get shared instance of FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
 
-        btnCreateAccount = (Button) findViewById(R.id.createAccountButton);
+        btnCreateAccount = (Button) findViewById(R.id.profileBtn);
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

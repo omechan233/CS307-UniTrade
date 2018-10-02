@@ -13,7 +13,7 @@ public class Wishlist extends AppCompatActivity {
         setContentView(R.layout.activity_wishlist);
 
         Homebtn = (Button) findViewById(R.id.Homebtn);
-        Profilebtn = (Button) findViewById(R.id.Profilebtn);
+        Profilebtn = (Button) findViewById(R.id.profileBtn);
 
         Homebtn.setOnClickListener(new View.OnClickListener() {
             @Override

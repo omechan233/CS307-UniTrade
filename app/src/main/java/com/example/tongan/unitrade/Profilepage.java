@@ -60,11 +60,9 @@ public class Profilepage extends AppCompatActivity {
 
         phone = getPhoneNumber();
         address = getAddress();
-        LoginActivity loginActivity = new LoginActivity();
-        email = loginActivity.getEmail();
-
-
-
+        MainActivity ma = new MainActivity();
+        email = ma.getEmail();
+        
         username_edit.setText(username);
         phone_edit.setText(phone);
         address_edit.setText(address);

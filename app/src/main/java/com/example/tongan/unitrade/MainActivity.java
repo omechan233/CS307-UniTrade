@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     //get user input username & password when login
-    private String getEmail() {
+    protected String getEmail() {
         EditText editText = (EditText) findViewById(R.id.login_email_input);
         String email = editText.getText().toString();
         return email;

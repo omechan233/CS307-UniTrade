@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    tools:context=".ItemDetail">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#FF9900"
+        android:text=" Item Detail"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:id="@+id/detail_title" />
+    
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/detail_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/poi_test_src"
+        android:id="@+id/detail_image" 
+        android:contentDescription="ItemImage"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_title"
+        android:text="Back"
+        android:id="@+id/detail_previous_page"
+        android:textSize="15sp"
+        android:textStyle="bold"/>
+    
+    <EditText
+        android:inputType="text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_image"
+        android:layout_centerHorizontal="true"
+        android:text="ITEM NAME"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:id="@+id/detail_item_name"/>
+    
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_item_name"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/detail_price"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="price"
+        android:inputType="numberDecimal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_price"
+        android:id="@+id/description_text"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:text="DESCRIPTION"
+        android:layout_marginLeft="20dp" />
+
+    <EditText
+        android:inputType="textMultiLine"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/description_text"
+        android:id="@+id/description_content"
+        android:layout_marginLeft="20dp"
+        android:maxLines="5"
+        android:background="@null"
+        android:textSize="18sp"
+        android:text="1\n2\n3\n4\n5\n6\n7\n8\n9"/>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/description_content"
+        android:text="Seller :"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/detail_seller"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="5dp"
+        android:textColor="#365fd1"
+        android:id="@+id/detail_edit"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/detail_edit"
+        android:id="@+id/detail_delete"
+        android:text="Delete"
+        android:visibility="invisible"
+        android:layout_marginTop="5dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"
+        android:textColor="#ed233e"/>
+    
+</RelativeLayout>

@@ -28,6 +28,8 @@ public class Wishlist extends AppCompatActivity {
 
         Button homebtn = (Button) findViewById(R.id.wishlist_home_btn);
         Button profilebtn = (Button) findViewById(R.id.wishlist_profile_btn);
+        populateWishitem();
+        populateWishlistview();
 
         homebtn.setOnClickListener(new View.OnClickListener() {
             @Override

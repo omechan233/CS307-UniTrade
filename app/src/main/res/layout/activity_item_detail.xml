@@ -113,5 +113,12 @@
         android:textStyle="bold"
         android:layout_marginLeft="10dp"
         android:textColor="#ed233e"/>
-    
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_previous_page"
+        android:text="+wishList"
+        android:id="@+id/detail_wishlist"/>
+
 </RelativeLayout>

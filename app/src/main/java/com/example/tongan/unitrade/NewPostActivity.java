@@ -1,6 +1,9 @@
 package com.example.tongan.unitrade;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,12 +12,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+
 public class NewPostActivity extends AppCompatActivity {
+    SharedPreferences shared;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_post);
+
+        shared=getSharedPreferences("app", Context.MODE_PRIVATE);
 
         Button cancel = (Button) findViewById(R.id.cancel_btn);
         Button submit = (Button) findViewById(R.id.submit_btn);
@@ -48,12 +56,18 @@ public class NewPostActivity extends AppCompatActivity {
                 // 0 for currently unavailable
                 // 1 for available
                 // 2 for someone bought it
-                int status = 2;
-                Functions f = new Functions();
-                MainActivity mainActivity = new MainActivity();
-                String email = mainActivity.Email;
+                int status = 1;
+
+
                 //get username by email
-                username = f.get_username_by_email(email);
+                Functions f1 = new Functions();
+                String email=shared.getString("email","");
+
+                System.out.println("EMAIL!!!!!!!!!!"+email);
+
+                username = f1.get_username_by_email(email);
+
+                Functions f = new Functions();
 
                 //check if the user input is empty
                 if (!itemName.equals("") && !description.equals("") && !price_edit.getText().toString().equals("")) {
@@ -61,7 +75,7 @@ public class NewPostActivity extends AppCompatActivity {
                     price = Double.parseDouble(price_edit.getText().toString());
                     //todo : store the itemName, description and price to database here
 
-                    f.create_post(itemName, username, postedtime, price,category,address, description,status);
+                    System.out.println(itemName +" : "+ username +" : "+ postedtime +" : "+ price+" : "+category+" : "+address+" : "+ description+" : "+status);
 
                     //back to homepage
                     Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();

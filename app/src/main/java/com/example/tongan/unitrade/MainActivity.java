@@ -1,5 +1,7 @@
 package com.example.tongan.unitrade;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -21,12 +23,20 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.opencensus.common.Function;
+
 
 public class MainActivity extends AppCompatActivity{
-
+    SharedPreferences shared;
     private FirebaseAuth mAuth;
 //    private Button sendEmailLinkBtn;
 //    private TextView sendEmailLinkTxt;
@@ -39,6 +49,10 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+
+        shared=getSharedPreferences("app", Context.MODE_PRIVATE);
+
+
 
         Button loginBtn = (Button) findViewById(R.id.login_login_btn);
         Button registerBtn = (Button) findViewById(R.id.login_register_btn);
@@ -133,6 +147,12 @@ public class MainActivity extends AppCompatActivity{
         EditText editText = (EditText) findViewById(R.id.login_email_input);
         String email = editText.getText().toString();
         this.Email = email;
+
+        SharedPreferences.Editor edit = shared.edit();
+        edit.putString("email",email);
+        edit.commit();
+
+
         return email;
     }
 

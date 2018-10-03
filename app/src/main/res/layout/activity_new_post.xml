@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
-    tools:context="com.example.tongan.unitrade.NewPost">
+    tools:context="com.example.tongan.unitrade.NewPostActivity">
 
 
     <TextView
@@ -18,36 +18,46 @@
         android:layout_height="40dp" />
 
     <ImageView
-        android:contentDescription="ItemImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
         android:id="@+id/item_image"
-        android:layout_below="@id/title_new_post"
-        android:layout_marginTop="15dp"
-        android:layout_centerHorizontal="true"
-        android:src="@mipmap/poi_test_src"/>
+        android:layout_width="132dp"
+        android:layout_height="123dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/title_new_post"
+        android:contentDescription="ItemImage"
+        android:src="@mipmap/poi_test_src"
+        android:layout_alignParentLeft="true" />
 
     <TextView
+        android:id="@+id/upload_image"
         android:layout_width="100dp"
         android:layout_height="30dp"
-        android:layout_below="@id/item_image"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="3dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/item_image"
         android:text="Upload Image"
+        android:textColor="#365fd1"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:id="@+id/upload_image"
-        android:textColor="#365fd1"/>
+        android:layout_alignParentLeft="true" />
 
     <TextView
+        android:id="@+id/item_name_text"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:textStyle="bold"
-        android:text="Item Name"
-        android:textSize="18sp"
         android:layout_below="@id/upload_image"
         android:layout_marginLeft="30dp"
-        android:id="@+id/item_name_text"/>
+        android:text="Item Name"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/item_name_text2"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/upload_image"
+        android:layout_marginLeft="30dp"
+        android:text="Item Name"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="300dp"
@@ -92,30 +102,80 @@
         android:layout_marginLeft="30dp" />
 
     <EditText
-        android:layout_width="300dp"
-        android:layout_height="80dp"
+        android:id="@+id/desc_input"
+        android:layout_width="340dp"
+        android:layout_height="142dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="89dp"
         android:background="@drawable/message_box"
-        android:layout_below="@id/desc_text"
-        android:layout_marginLeft="30dp"
-        android:inputType="textMultiLine"
         android:gravity="top"
         android:hint=" Enter your item description here"
-        android:id="@+id/desc_input"/>
+        android:inputType="textMultiLine" />
 
     <Button
+        android:id="@+id/submit_btn"
         android:layout_width="150dp"
         android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/item_name_text"
+        android:layout_marginBottom="32dp"
         android:text="SUBMIT"
-        android:layout_below="@id/desc_input"
-        android:layout_marginLeft="30dp"
-        android:id="@+id/submit_btn"/>
+        android:layout_alignLeft="@+id/item_name_text" />
 
     <Button
+        android:id="@+id/cancel_btn"
         android:layout_width="150dp"
         android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/submit_btn"
+        android:layout_marginEnd="35dp"
         android:text="CANCEL"
-        android:layout_below="@id/desc_input"
-        android:layout_marginLeft="190dp"
-        android:id="@+id/cancel_btn"/>
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="35dp" />
+
+    <TextView
+        android:id="@+id/item_posted_time"
+        android:layout_width="162dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/title_new_post"
+        android:layout_toEndOf="@+id/item_image"
+        android:text="Post Time"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/item_image" />
+
+    <EditText
+        android:id="@+id/post_time_input"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/item_posted_time"
+        android:layout_toEndOf="@+id/item_image"
+        android:ems="10"
+        android:hint="Enter your post time here"
+        android:inputType="textPersonName"
+        android:layout_toRightOf="@+id/item_image" />
+
+    <TextView
+        android:id="@+id/category_text"
+        android:layout_width="162dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/post_time_input"
+        android:layout_toEndOf="@+id/item_image"
+        android:text="Category"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/item_image" />
+
+    <EditText
+        android:id="@+id/category_input"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/category_text"
+        android:layout_toEndOf="@+id/item_image"
+        android:ems="10"
+        android:hint="Enter your item's category here"
+        android:inputType="textPersonName"
+        android:layout_toRightOf="@+id/item_image" />
 
 </RelativeLayout>

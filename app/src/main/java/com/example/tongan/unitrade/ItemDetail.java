@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class ItemDetail extends AppCompatActivity {
 
     @Override
@@ -131,12 +134,40 @@ public class ItemDetail extends AppCompatActivity {
                 if (wishListBtn.getText().toString().equals("+wishList")) {
 
                     //todo : add to wishList
+                    //get current user
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        // User is signed in
+                        Functions f = new Functions();
+                        String userid = user.getUid();
+                        f.add_wishlist(item_id, userid);
+                        Toast.makeText(getBaseContext(), "item is added to wishlist!", Toast.LENGTH_LONG).show();
+                        finish();
+                    } else {
+                        // No user is signed in
+                        Toast.makeText(getBaseContext(), "please signin first!", Toast.LENGTH_LONG).show();
+                }
+
 
                     String remove = "-wishList";
                     wishListBtn.setText(remove);
                 } else {
 
                     //todo : delete from wishList
+                    //get current user
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        // User is signed in
+                        Functions f = new Functions();
+                        String userid = user.getUid();
+                        f.delete_wishlist(item_id, userid);
+                        Toast.makeText(getBaseContext(), "item removed!", Toast.LENGTH_LONG).show();
+                        finish();
+                    } else {
+                        // No user is signed in
+                        Toast.makeText(getBaseContext(), "please signin first!", Toast.LENGTH_LONG).show();
+                    }
+
                     String add = "+wishList";
                     wishListBtn.setText(add);
                 }

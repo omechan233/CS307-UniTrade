@@ -48,6 +48,14 @@ public class SettingActivity extends AppCompatActivity {
                 startActivity(new Intent(SettingActivity.this, HomePageActivity.class));
             }
         });
+        
+        ImageButton orderListBtn = (ImageButton)findViewById(R.id.myOrder_setting_icon);
+        orderListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingActivity.this, OrderList.class));
+            }
+        });
 
     }
 }

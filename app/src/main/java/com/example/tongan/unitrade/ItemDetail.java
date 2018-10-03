@@ -42,6 +42,7 @@ public class ItemDetail extends AppCompatActivity {
         final Double price = -999.0;
         String description = "TEST INFORMATION";
         String seller = "TEST SELLER";
+        final String item_id = "TongAn12:03:5909212019";
 
         //todo : get above values from backend and store into variables
 
@@ -108,7 +109,8 @@ public class ItemDetail extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
 
                                 //todo : delete post function
-
+                                Functions f = new Functions();
+                                f.delete_post(item_id);
                                 Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();
                                 finish();
                             }

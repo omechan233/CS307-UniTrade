@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity{
 //    private Button sendEmailLinkBtn;
 //    private TextView sendEmailLinkTxt;
 
+    private Functions f1;
+    public String Email = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +132,7 @@ public class MainActivity extends AppCompatActivity{
     protected String getEmail() {
         EditText editText = (EditText) findViewById(R.id.login_email_input);
         String email = editText.getText().toString();
+        this.Email = email;
         return email;
     }
 

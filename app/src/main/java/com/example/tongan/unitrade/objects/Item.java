@@ -1,6 +1,10 @@
 package com.example.tongan.unitrade.objects;
 
 public class Item {
+    //constructor
+    public Item(){
+
+    }
     //private int ID;
     private String ID;
     private double price;

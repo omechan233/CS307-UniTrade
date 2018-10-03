@@ -326,6 +326,32 @@ public class Functions {
         return result[0];
     }
 
+    /**
+     * Checks if the email already exists in the database
+     * @param user_email email under question
+     * @return true if username already exists in the database
+     */
+    public boolean email_exists(String user_email){
+        DocumentReference user_doc = db.collection("users").document(user_email);
+        final boolean[] result = {false};
+        user_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        result[0]=true;
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        return result[0];
+    }
+
     /*********** AT:
      * Get Item by its unique ID
      *

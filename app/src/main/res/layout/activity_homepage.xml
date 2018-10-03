@@ -18,27 +18,14 @@
         android:textSize="24sp" />
 
     <Button
-        android:id="@+id/home_logout_btn"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginBottom="0dp"
-        android:background="@drawable/roundbutton"
-        android:text="Logout" />
-
-    <Button
         android:id="@+id/home_post_btn"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="159dp"
-        android:layout_marginLeft="159dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginLeft="17dp"
 
         android:layout_marginBottom="0dp"
         android:background="@drawable/roundbutton"

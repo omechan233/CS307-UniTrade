@@ -80,4 +80,22 @@
         android:textColor="#000000"
         android:textSize="20sp" />
 
+    <!-- Saving this for the next spring
+    <Button
+        android:id="@+id/login_sendEmailLink_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="4dp"
+        android:text="send it again" />
+
+    <TextView
+        android:id="@+id/login_emailLink_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/login_sendEmailLink_btn"
+        android:layout_alignParentStart="true"
+        android:text="Not seeing our email?" />
+    -->
 </RelativeLayout>

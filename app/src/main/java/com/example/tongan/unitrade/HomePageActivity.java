@@ -10,9 +10,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class HomePageActivity extends AppCompatActivity {
-    public HomePageActivity(){
 
-    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +36,7 @@ public class HomePageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
 
     }
 }

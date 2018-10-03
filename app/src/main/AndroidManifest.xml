@@ -26,11 +26,20 @@
             </intent-filter>
         </activity>
         <activity android:name=".HomePageActivity" />
-        <activity android:name=".SignupActivity" />
+        <activity android:name=".SignupActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="com.example.tongan.unitrade" android:scheme="http"/>
+                <data android:host="com.example.tongan.unitrade" android:scheme="https"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".ProfileActivity" />
         <activity android:name=".Wishlist" />
         <activity android:name=".SettingActivity" />
         <activity android:name=".NewPostActivity" />
+
 
     </application>
 

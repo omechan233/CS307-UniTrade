@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,9 +16,13 @@ import java.util.regex.Pattern;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.ProviderQueryResult;
+import com.google.firebase.auth.SignInMethodQueryResult;
 
 import io.opencensus.common.Function;
 
@@ -25,9 +30,8 @@ import io.opencensus.common.Function;
 public class SignupActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private FirebaseUser fUser;
     private static final String TAG = "SignupActivity";
-    Functions f = new Functions();
+    private Functions f = new Functions();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +47,7 @@ public class SignupActivity extends AppCompatActivity {
          * So that the app can show the exact error message
          * when it fails to create a user.
          *
-         * Also Create an user when it successes.
+         * Also Create an user when successful.
          *
          * Status code:
          * -1, firebase authentication error
@@ -62,17 +66,19 @@ public class SignupActivity extends AppCompatActivity {
                     int create_user = f.create_user(getUsername(),getEmail(),getPassword(),"",2,"",0,"","");
                     System.out.println("Create User status: "+create_user);
                     Toast.makeText(getBaseContext(),
-                            "Success!", Toast.LENGTH_LONG).show();
+                            "Success! Check your email for a verification link", Toast.LENGTH_LONG).show();
+
                     Runnable r = new Runnable() {
                         @Override
                         public void run() {
                             // if you are redirecting from a fragment then use getActivity() as the context.
-                            startActivity(new Intent(SignupActivity.this, HomePageActivity.class));
+                            startActivity(new Intent(SignupActivity.this, MainActivity.class));
                         }
                     };
                     Handler h = new Handler();
                     // The Runnable will be executed after the given delay time
-                    h.postDelayed(r, 1500); // will be delayed for 1.5 seconds
+                    h.postDelayed(r, 1000); // will be delayed for 1.0 second
+
                 }
 
                 else if(auth_result==-1){
@@ -85,7 +91,7 @@ public class SignupActivity extends AppCompatActivity {
                 }
                 else if(auth_result==2){
                     Toast.makeText(getBaseContext(),
-                            "User email was invalid!", Toast.LENGTH_LONG).show();
+                            "User email was invalid or may already exist!", Toast.LENGTH_LONG).show();
                 }
                 else if(auth_result==3){
                     Toast.makeText(getBaseContext(),
@@ -100,7 +106,7 @@ public class SignupActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         //check if user is already signed in
-        fUser = mAuth.getCurrentUser();
+        FirebaseUser fUser = mAuth.getCurrentUser();
         if (fUser != null) {
             Toast.makeText(SignupActivity.this, "Sign out first before registering another account!",
                     Toast.LENGTH_SHORT).show();
@@ -156,7 +162,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private boolean isEmailValid(String email) {
         //check if is empty
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(email) || f.email_exists(email)) {
             return false;
         }
         //This regex was provided by OWASP Validation Regex Repository
@@ -182,13 +188,12 @@ public class SignupActivity extends AppCompatActivity {
      * 3, password invalid
      ***********************************/
 
-
-    //authentication:
     public int authentication() {
         //get text field inputs
         String username = getUsername();
         String email = getEmail();
         String password = getPassword();
+
         if (!isUsernameValid(username)){
             return 1;
         }
@@ -200,40 +205,67 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         final int result[] ={0};
-        mAuth.createUserWithEmailAndPassword(email, password)
+          mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (!task.isSuccessful()) {
-                            result[0]=-1;
+                        if (task.isSuccessful()) {
+                            result[0]=0;
+                            try{
+                                throw task.getException();
+                            }
+                            catch (FirebaseAuthUserCollisionException existsEmail){
+                                Log.d(TAG, "onComplete: email exists in authentication");
+                                result[0] = 2; //it failed! not sure why task.isSuccessful returned true though...
+                            }
+                            catch (Exception e){
+                                Log.d(TAG, "onComplete: " + e.getMessage());
+                            }
+                            sendEmailVerification();
                         }
                         else {
-                            result[0]=0;
+                            result[0]=-1;
+                            try{
+                                throw task.getException();
+                            }
+                            catch (FirebaseAuthUserCollisionException existsEmail){
+                                Log.d(TAG, "onComplete: email exists in authentication");
+                            }
+                            catch (Exception e){
+                                Log.d(TAG, "onComplete: " + e.getMessage());
+                            }
                         }
                     }
                 });
 
-        /*
-        //if all the input format is correct, do authentication with backend
-        if (isUsernameValid(username) && isEmailValid(email) && isPasswordValid(password)) {
-            //send username, email, password to database and return true.
-            mAuth.createUserWithEmailAndPassword(email, password);
- /*                   .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d(TAG, "createUserWithEmail:success");
-                                fUser = mAuth.getCurrentUser();
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            }
-                        }
-                    });
-*/
-
         return result[0];
     }
+
+    private void sendEmailVerification() {
+        // Send verification email
+        final FirebaseUser user = mAuth.getCurrentUser();
+        if(user == null){
+            System.out.println("SIGNUP ACTVITIY: No User found!!");
+            return;
+        }
+        user.sendEmailVerification()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(SignupActivity.this,
+                                    "Verification email sent to " + user.getEmail(),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.e(TAG, "sendEmailVerification", task.getException());
+                            Toast.makeText(SignupActivity.this,
+                                    "Failed to send verification email.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+
 }
 

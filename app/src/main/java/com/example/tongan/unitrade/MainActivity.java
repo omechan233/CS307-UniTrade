@@ -8,37 +8,28 @@ import android.os.Bundle;
 import android.content.Intent;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.example.tongan.unitrade.objects.Item;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity{
-    /*
-    public static void main(String[] args){
-       // f1.add_wishlist("TongAn12:03:5909212019", "KennyPiggy");
-    }
-    */
+
     private FirebaseAuth mAuth;
-    private Functions f1;
+//    private Button sendEmailLinkBtn;
+//    private TextView sendEmailLinkTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +37,22 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        //f1 = new Functions();
 
         Button loginBtn = (Button) findViewById(R.id.login_login_btn);
         Button registerBtn = (Button) findViewById(R.id.login_register_btn);
+//        sendEmailLinkBtn = (Button) findViewById(R.id.login_sendEmailLink_btn);
+//        sendEmailLinkTxt = (TextView) findViewById(R.id.login_emailLink_txt);
+
+        //hide these until we know user has not been verified
+//        sendEmailLinkTxt.setVisibility(View.GONE);
+//        sendEmailLinkBtn.setVisibility(View.GONE);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                authentication();
+                if(isEmailVerified()) { //only authenticate if the email is verified
+                    authentication();
+                }
             }
         });
 
@@ -65,15 +63,28 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        //congifure wishlist
-       //populateWishlistview();
-        //initView();
+ /*       sendEmailLinkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mAuth.getCurrentUser() != null){
+                    mAuth.getCurrentUser().sendEmailVerification(); //send email verification again
+
+                    Toast.makeText(MainActivity.this, "Another email has been sent to your address!",
+                            Toast.LENGTH_SHORT).show();
+
+                    //hide these again
+                    sendEmailLinkTxt.setVisibility(View.GONE);
+                    sendEmailLinkBtn.setVisibility(View.GONE);
+                }
+            }
+        });
+*/
     }
 
     protected void onStart(){
         super.onStart();
         //check if user is already logged in, if so then forward to HomePage
-        if(isUserLoggedIn()){
+        if(isUserLoggedIn() && isEmailVerified()){
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
@@ -84,6 +95,29 @@ public class MainActivity extends AppCompatActivity{
             Handler h = new Handler();
             // The Runnable will be executed after the given delay time
             h.postDelayed(r, 500); // will be delayed for 0.5 seconds
+        }
+    }
+
+    private boolean isEmailVerified(){
+        mAuth = FirebaseAuth.getInstance(); //reload Instance
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null) {
+            System.out.println("MAIN: Could not find current user! Assume they already verified after registering...");
+            return true;
+        }
+        currentUser.reload(); //reload user in case they still have the app open when they get verified
+
+        if(currentUser.isEmailVerified()){
+            return true;
+        }
+        else{
+            Toast.makeText(MainActivity.this, "Make sure to verify your email before logging in!",
+                    Toast.LENGTH_SHORT).show();
+
+            //have these appear
+//            sendEmailLinkBtn.setVisibility(View.VISIBLE);
+//            sendEmailLinkTxt.setVisibility(View.VISIBLE);
+            return false;
         }
     }
 
@@ -148,16 +182,17 @@ public class MainActivity extends AppCompatActivity{
                                 Toast.makeText(MainActivity.this, "Login Successful!",
                                         Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(MainActivity.this, HomePageActivity.class));
+                                finish();
                             } else {
                                 // If sign in fails, display a message to the user.
-                                Toast.makeText(MainActivity.this, "Authentication failed.",
+                                Toast.makeText(MainActivity.this, "Authentication failed. Email or Password is incorrect.",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
         } else {
             // If sign in fails, display a message to the user.
-            Toast.makeText(MainActivity.this, "Authentication failed. Invalid Username or Password given.",
+            Toast.makeText(MainActivity.this, "Cannot Authenticate. Invalid Username or Password given.",
                     Toast.LENGTH_SHORT).show();
         }
     }

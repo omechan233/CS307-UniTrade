@@ -123,6 +123,25 @@ public class ItemDetail extends AppCompatActivity {
                         .show();
             }
         });
+        
+        final Button wishListBtn = (Button) findViewById(R.id.detail_wishlist);
+        wishListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (wishListBtn.getText().toString().equals("+wishList")) {
+
+                    //todo : add to wishList
+
+                    String remove = "-wishList";
+                    wishListBtn.setText(remove);
+                } else {
+
+                    //todo : delete from wishList
+                    String add = "+wishList";
+                    wishListBtn.setText(add);
+                }
+            }
+        });
 
     }
 

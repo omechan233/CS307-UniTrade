@@ -33,14 +33,13 @@ public class NewPostActivity extends AppCompatActivity {
                 EditText itemName_edit = (EditText) findViewById(R.id.item_name_input);
                 EditText price_edit = (EditText) findViewById(R.id.price_input);
                 EditText description_edit = (EditText) findViewById(R.id.desc_input);
-                EditText post_time_edit = (EditText) findViewById(R.id.post_time_input);
                 EditText category_edit = (EditText) findViewById(R.id.category_input);
 
                 //get input in edittext
                 String itemName = itemName_edit.getText().toString();
                 String description = description_edit.getText().toString();
                 String username = "";
-                String postedtime =post_time_edit.getText().toString();
+                String postedtime ="";
                 String address ="";
                 String category = category_edit.getText().toString();
                 Double price = -1.0;

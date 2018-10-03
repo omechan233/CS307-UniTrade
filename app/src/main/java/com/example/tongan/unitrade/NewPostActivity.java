@@ -51,7 +51,7 @@ public class NewPostActivity extends AppCompatActivity {
                 int status = 2;
                 Functions f = new Functions();
                 MainActivity mainActivity = new MainActivity();
-                String email = mainActivity.getEmail();
+                String email = mainActivity.Email;
                 //get username by email
                 username = f.get_username_by_email(email);
 

@@ -48,13 +48,18 @@
     </LinearLayout>
 
     <ScrollView
-        android:id="@+id/list_area"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/list_title"
         android:layout_above="@id/buttons">
 
+        <LinearLayout
+            android:id="@+id/list_area"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+        </LinearLayout>
 
     </ScrollView>
 

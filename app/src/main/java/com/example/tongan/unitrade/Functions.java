@@ -41,8 +41,8 @@ public class Functions {
     /**************************************
      * Change notification
      *********************************/
-    void change_notification(String user_name, int setting){
-        DocumentReference user_doc = db.collection("users").document(user_name);
+    void change_notification(String user_email, int setting){
+        DocumentReference user_doc = db.collection("users").document(user_email);
         user_doc.update("notification", setting)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

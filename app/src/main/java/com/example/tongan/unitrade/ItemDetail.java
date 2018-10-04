@@ -47,6 +47,8 @@ public class ItemDetail extends AppCompatActivity {
         final EditText desc_edit = (EditText) findViewById(R.id.description_content);
         final EditText name_edit = (EditText) findViewById(R.id.detail_item_name);
         final EditText price_edit = (EditText) findViewById(R.id.detail_price);
+        final EditText time_edit = (EditText) findViewById(R.id.detail_posttime);
+
         desc_edit.setTextIsSelectable(false);
         name_edit.setTextIsSelectable(false);
         price_edit.setTextIsSelectable(false);
@@ -66,8 +68,10 @@ public class ItemDetail extends AppCompatActivity {
                 String description = item.getDescription();
                 String seller = item.getSeller_name();
                 final String item_id = itemid;
+                String time = item.getPosted_time();
 
                 desc_edit.setText(description);
+                time_edit.setText(time);
                 name_edit.setText(item_name);
                 TextView seller_name = (TextView) findViewById(R.id.detail_seller);
                 seller = "Seller : " + seller;

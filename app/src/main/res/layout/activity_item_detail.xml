@@ -120,5 +120,16 @@
         android:layout_below="@id/detail_previous_page"
         android:text="+wishList"
         android:id="@+id/detail_wishlist"/>
+    
+    
+    <EditText
+        android:id="@+id/detail_posttime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/description_text"
+        android:layout_alignStart="@+id/description_text"
+        android:layout_below="@+id/detail_seller"
+        android:text="Posted Time:"
+        android:textSize="18sp" />
 
 </RelativeLayout>

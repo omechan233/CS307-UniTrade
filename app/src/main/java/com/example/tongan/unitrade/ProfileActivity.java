@@ -29,7 +29,7 @@ public class ProfileActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
 
 
-        ImageButton homebtn = (ImageButton) findViewById(R.id.profile_home_page_icon);
+        ImageButton homebtn = (ImageButton) findViewById(R.id.profile_back_icon);
         Button wishlistbtn = (Button) findViewById(R.id.profile_wishlist_btn);
 
         final EditText username_edit = (EditText)findViewById(R.id.input_username);
@@ -97,9 +97,9 @@ public class ProfileActivity extends AppCompatActivity {
         homebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, HomePageActivity.class);
-                //intent.putExtra("name", name.getText().toString());
-                startActivity(intent);
+             /*   Intent intent = new Intent(ProfileActivity.this, HomePageActivity.class);
+                startActivity(intent);*/
+                finish();
             }
         });
 

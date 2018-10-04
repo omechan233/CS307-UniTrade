@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity{
 
         Button loginBtn = (Button) findViewById(R.id.login_login_btn);
         Button registerBtn = (Button) findViewById(R.id.login_register_btn);
+        Button resetPasswd = (Button) findViewById(R.id.login_resetPasswd_btn);
 //        sendEmailLinkBtn = (Button) findViewById(R.id.login_sendEmailLink_btn);
 //        sendEmailLinkTxt = (TextView) findViewById(R.id.login_emailLink_txt);
 
@@ -76,6 +77,17 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, SignupActivity.class));
+            }
+        });
+
+        resetPasswd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Todo: generated a random passwd and update the database, then send the random passwd to user's email.
+
+                //pop up message for success
+                Toast.makeText(getBaseContext(),
+                        "Success! Check your email for the random password!", Toast.LENGTH_LONG).show();
             }
         });
 

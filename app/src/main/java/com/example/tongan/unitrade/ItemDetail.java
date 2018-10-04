@@ -1,7 +1,9 @@
 package com.example.tongan.unitrade;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,9 +18,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class ItemDetail extends AppCompatActivity {
+    SharedPreferences shared;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        shared = getSharedPreferences("app", Context.MODE_PRIVATE);
+        final String email = shared.getString("email","");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
 
@@ -46,7 +52,7 @@ public class ItemDetail extends AppCompatActivity {
         String description = "TEST INFORMATION";
         String seller = "TEST SELLER";
         final String item_id = "TongAn12:03:5909212019";
-        final String user_id ="guo361@purdue.edu";
+        //final String user_id ="guo361@purdue.edu";
 
         //todo : get above values from backend and store into variables
 
@@ -135,13 +141,10 @@ public class ItemDetail extends AppCompatActivity {
                 if (wishListBtn.getText().toString().equals("+wishList")) {
 
                     //todo : add to wishList
-                    //get current user
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null) {
+                    if (email != null) {
                         // User is signed in
                         Functions f = new Functions();
-                        String userid = user.getUid();
-                        f.add_wishlist(item_id, userid);
+                        f.add_wishlist(item_id, email);
                         Toast.makeText(getBaseContext(), "item is added to wishlist!", Toast.LENGTH_LONG).show();
                         finish();
                     } else {
@@ -156,7 +159,7 @@ public class ItemDetail extends AppCompatActivity {
 
                     //todo : delete from wishList
                     Functions f = new Functions();
-                    f.delete_wishlist(item_id, user_id);
+                    f.delete_wishlist(item_id, email);
                     Toast.makeText(getBaseContext(), "item removed!", Toast.LENGTH_LONG).show();
                     finish();
                     //get current user

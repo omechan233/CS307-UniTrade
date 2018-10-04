@@ -14,8 +14,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tongan.unitrade.objects.Item;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ItemDetail extends AppCompatActivity {
     SharedPreferences shared;
@@ -25,6 +30,8 @@ public class ItemDetail extends AppCompatActivity {
 
         shared = getSharedPreferences("app", Context.MODE_PRIVATE);
         final String email = shared.getString("email","");
+        final String itemid = shared.getString("itemid","");
+        final String item_id = itemid;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
 
@@ -47,6 +54,33 @@ public class ItemDetail extends AppCompatActivity {
         name_edit.setFocusable(false);
         price_edit.setFocusable(false);
 
+
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference item_doc = db.collection("items").document(itemid);
+        item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Item item = documentSnapshot.toObject(Item.class);
+                String item_name = item.getTitle();
+                final Double price = item.getPrice();
+                String description = item.getDescription();
+                String seller = item.getSeller_name();
+                final String item_id = itemid;
+
+                desc_edit.setText(description);
+                name_edit.setText(item_name);
+                TextView seller_name = (TextView) findViewById(R.id.detail_seller);
+                seller = "Seller : " + seller;
+                seller_name.setText(seller);
+                String temp = price + "";
+                price_edit.setText(temp);
+
+
+
+            }
+        });
+
+        /*
         String item_name = "TEST NAME";
         final Double price = -999.0;
         String description = "TEST INFORMATION";
@@ -63,6 +97,7 @@ public class ItemDetail extends AppCompatActivity {
         seller_name.setText(seller);
         String temp = price + "";
         price_edit.setText(temp);
+        */
 
         final TextView editBtn = (TextView) findViewById(R.id.detail_edit);
         final TextView delBtn = (TextView) findViewById(R.id.detail_delete);
@@ -133,7 +168,7 @@ public class ItemDetail extends AppCompatActivity {
                         .show();
             }
         });
-        
+
         final Button wishListBtn = (Button) findViewById(R.id.detail_wishlist);
         wishListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,7 +185,7 @@ public class ItemDetail extends AppCompatActivity {
                     } else {
                         // No user is signed in
                         Toast.makeText(getBaseContext(), "please signin first!", Toast.LENGTH_LONG).show();
-                }
+                    }
 
 
                     String remove = "-wishList";

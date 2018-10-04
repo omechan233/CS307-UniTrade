@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class NewPostActivity extends AppCompatActivity {
     SharedPreferences shared;
@@ -45,10 +47,11 @@ public class NewPostActivity extends AppCompatActivity {
                 EditText category_edit = (EditText) findViewById(R.id.category_input);
 
                 //get input in edittext
+                Date currentTime = Calendar.getInstance().getTime();
                 String itemName = itemName_edit.getText().toString();
                 String description = description_edit.getText().toString();
                 //String username = "";
-                String postedtime ="Time";
+                String postedtime =currentTime.toString();
                 String address ="[not implemented yet]";
                 String category = category_edit.getText().toString();
                 Double price = -1.0;

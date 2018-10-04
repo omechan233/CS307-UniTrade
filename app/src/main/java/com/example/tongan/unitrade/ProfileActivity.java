@@ -4,18 +4,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private String TAG = "ProfileActivity";
     private FirebaseAuth mAuth;
+    FirebaseFirestore db;
     private SharedPreferences sharedPreferences;
     private Functions f;
 
@@ -25,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         //initialize fields
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         f = new Functions();
         sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
 
@@ -49,7 +61,27 @@ public class ProfileActivity extends AppCompatActivity {
         email_edit.setTextIsSelectable(false);
 
         String email = sharedPreferences.getString("email", null);
-        String username = getUserNameFromFirestore(email);
+        String username = "";
+
+        DocumentReference docRef = db.collection("users").document(email);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        username_edit.setText(doc.get("user_name").toString());
+                        Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
+                    }else{
+                        Log.d(TAG, "No such document...");
+                    }
+                }
+                else{
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
         String phone = "";
         String address = "";
         //todo: get username, email, phone, address from backend, and store it into the variables above
@@ -120,5 +152,31 @@ public class ProfileActivity extends AppCompatActivity {
         return ret;
     }
 
+    public String get_username_by_email(String email){
+        final String[] result = {""};
+        final Task<DocumentSnapshot> task = db.collection("users").document(email).get();
+        task.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot snapshot) {
+                result[0] = task.getResult().toString();
+                Log.d(TAG, "get_username_by_email: onSuccess: found result: " + result[0], task.getException());
+            }
+        });
+        task.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "get_username_by_email: onFailure: did not find result ", task.getException());
+            }
+        });
 
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(result[0].isEmpty())
+            System.out.println("OOOOOOOOOOOOF?");
+        return result[0];
+    }
 }

@@ -46,6 +46,7 @@ public class ItemDetail extends AppCompatActivity {
         String description = "TEST INFORMATION";
         String seller = "TEST SELLER";
         final String item_id = "TongAn12:03:5909212019";
+        final String user_id ="guo361@purdue.edu";
 
         //todo : get above values from backend and store into variables
 
@@ -154,19 +155,23 @@ public class ItemDetail extends AppCompatActivity {
                 } else {
 
                     //todo : delete from wishList
+                    Functions f = new Functions();
+                    f.delete_wishlist(item_id, user_id);
+                    Toast.makeText(getBaseContext(), "item removed!", Toast.LENGTH_LONG).show();
+                    finish();
                     //get current user
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null) {
-                        // User is signed in
-                        Functions f = new Functions();
-                        String userid = user.getUid();
-                        f.delete_wishlist(item_id, userid);
-                        Toast.makeText(getBaseContext(), "item removed!", Toast.LENGTH_LONG).show();
-                        finish();
-                    } else {
-                        // No user is signed in
-                        Toast.makeText(getBaseContext(), "please signin first!", Toast.LENGTH_LONG).show();
-                    }
+//                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                    if (user != null) {
+//                        // User is signed in
+//                        Functions f = new Functions();
+//                        String userid = user.getUid();
+//                        f.delete_wishlist(item_id, userid);
+//                        Toast.makeText(getBaseContext(), "item removed!", Toast.LENGTH_LONG).show();
+//                        finish();
+//                    } else {
+//                        // No user is signed in
+//                        Toast.makeText(getBaseContext(), "please signin first!", Toast.LENGTH_LONG).show();
+//                    }
 
                     String add = "+wishList";
                     wishListBtn.setText(add);

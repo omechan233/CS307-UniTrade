@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    tools:context="com.example.tongan.unitrade.Notification">
+
+    <Switch
+        android:id="@+id/notifi_switch"
+        android:layout_width="281dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="115dp"
+        android:text="Switch"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/notifi_back"
+        android:layout_width="147dp"
+        android:layout_height="78dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="109dp"
+        android:layout_marginStart="97dp"
+        android:text="Back"
+        android:textSize="20sp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="97dp" />
+</RelativeLayout>

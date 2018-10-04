@@ -57,5 +57,14 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+        ImageButton notificationBtn = (ImageButton) findViewById(R.id.noti_setting_icon);
+        notificationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingActivity.this, Notification.class));
+
+            }
+        });
+
     }
 }

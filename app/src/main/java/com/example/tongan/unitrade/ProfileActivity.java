@@ -61,15 +61,23 @@ public class ProfileActivity extends AppCompatActivity {
         email_edit.setTextIsSelectable(false);
 
         String email = sharedPreferences.getString("email", null);
-        String username = "";
+        final String username = "";
+        String phone = "";
+        String address = "";
 
-        DocumentReference docRef = db.collection("users").document(email);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        /*
+         * Retrieving data from the database to fill in EditText fields. Documents are specific to Firestore,
+         * DO NOT CHANGE doc.get("[document]")
+         */
+        //retrieve username from user document
+        DocumentReference userDocRef = db.collection("users").document(email);
+        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
+                        //update text boxes with user info from database
                         username_edit.setText(doc.get("user_name").toString());
                         Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
                     }else{
@@ -81,9 +89,29 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+        //retrieve data from profile document
+        DocumentReference profileDocRef = db.collection("profiles").document(email);
+        profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        //update text boxes with user info from database
+                        address_edit.setText(doc.get("address").toString());
+                        phone_edit.setText(doc.get("phone_number").toString());
+                        Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
+                    }else{
+                        Log.d(TAG, "No such document...");
+                    }
+                }
+                else{
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
 
-        String phone = "";
-        String address = "";
+
         //todo: get username, email, phone, address from backend, and store it into the variables above
         //todo: during registration set new user's phone, address to empty string
         
@@ -111,6 +139,8 @@ public class ProfileActivity extends AppCompatActivity {
                 } else {
 
                     //todo: use xxx_edit.getText().toString() to get updated input and update it into backend
+                    f.update_profile(email_edit.getText().toString(), phone_edit.getText().toString(), 1, "", "", address_edit.getText().toString());
+
 
                     username_edit.setFocusable(false);
                     address_edit.setFocusable(false);

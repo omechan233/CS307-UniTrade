@@ -146,7 +146,7 @@ public class Functions {
      // 1 for available
      // 2 for someone bought it
      *************************************/
-    public int create_post(String title,String username, String posted_time, double price,
+    public int create_post(String title,String email, String posted_time, double price,
                            String category, String address, String description,int status){
 
         /******  AT:
@@ -433,7 +433,7 @@ public class Functions {
      * Edit profile
      *
      **************************/
-    public void update_profile(String user_name, String phone, int gender,
+    public void update_profile(String email, String phone, int gender,
                                String description, String real_name, String address){
         Map<String, Object> profile_doc = new HashMap<>();
         profile_doc.put("phone_number", phone);
@@ -442,7 +442,7 @@ public class Functions {
         profile_doc.put("address",address);
         profile_doc.put("real_name",real_name);
 
-        db.collection("profiles").document(user_name)
+        db.collection("profiles").document(email)
                 .set(profile_doc)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

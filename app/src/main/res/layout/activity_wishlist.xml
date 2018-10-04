@@ -9,30 +9,13 @@
     tools:context=".Wishlist">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:id="@+id/wishlist_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="20sp"
+        android:background="#FF9900"
+        android:textStyle="bold"
         android:text="@string/wishlist1" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="33dp"
-        android:text="@string/line0" />
 
     <Button
         android:id="@+id/wishlist_home_btn"
@@ -62,16 +45,20 @@
         android:layout_marginBottom="0dp"
         android:text="@string/profile" />
 
-    <ListView
-        android:id="@+id/wlistview"
-        android:layout_width="wrap_content"
-        android:layout_height="473dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="43dp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/wishlist_profile_btn"
+        android:layout_below="@id/wishlist_title" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/wlistview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

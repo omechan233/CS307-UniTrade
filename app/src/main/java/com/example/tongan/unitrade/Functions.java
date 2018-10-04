@@ -77,6 +77,7 @@ public class Functions {
         profile_doc.put("real_name",real_name);
         profile_doc.put("user_name", user_name);
         profile_doc.put("my_items", Arrays.asList(""));
+        profile_doc.put("wish_list", Arrays.asList(""));
 
         db.collection("users").document(email)
                 .set(user_doc)
@@ -140,6 +141,8 @@ public class Functions {
      // 1 for available
      // 2 for someone bought it
      *************************************/
+
+
     public int create_post(String title,String username, String posted_time, double price,
                            String category, String address, String description,int status){
 
@@ -520,22 +523,25 @@ public class Functions {
      **************************/
 
     void add_wishlist(String itemid, String userid){
-        Map<String, Object> item = new HashMap<>();
-        item.put("item_id", itemid);
-        db.collection("profiles").document(userid)
-                .collection("wish_list").document(itemid).set(item)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG,"Error writting document", e);
-                    }
-                });
+        final DocumentReference user_doc = db.collection("profiles").document(userid);
+        user_doc.update("my_items", FieldValue.arrayUnion(itemid));
+
+//        Map<String, Object> item = new HashMap<>();
+//        item.put("item_id", itemid);
+//        db.collection("profiles").document(userid)
+//                .collection("wish_list").document(itemid).set(item)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(TAG, "DocumentSnapshot successfully written!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG,"Error writting document", e);
+//                    }
+//                });
     }
 
     /*********************

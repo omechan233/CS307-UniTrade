@@ -64,6 +64,7 @@ public class OrderList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 LinearLayout linearLayout = (LinearLayout) findViewById(R.id.list_area);
+                linearLayout.removeAllViews();
                 for (int i = 0; i < test_list.size(); i++) {
                     LinearLayout item = new LinearLayout(getBaseContext());
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(400, 200);

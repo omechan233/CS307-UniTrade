@@ -435,6 +435,21 @@ public class Functions {
      **************************/
     public void update_profile(String email, String phone, int gender,
                                String description, String real_name, String address){
+
+        if(!phone.equals("")){
+            db.collection("profiles").document(email)
+                    .update("phone_number",phone);
+        }
+        if(!description.equals("")){
+            db.collection("profiles").document(email)
+                    .update("description",description);
+        }
+        if(!address.equals("")){
+            db.collection("profiles").document(email)
+                    .update("address",address);
+        }
+
+        /*
         Map<String, Object> profile_doc = new HashMap<>();
         profile_doc.put("phone_number", phone);
         profile_doc.put("gender", gender);
@@ -456,6 +471,7 @@ public class Functions {
                         Log.w(TAG, "Error writing document", e);
                     }
                 });
+                */
     }
 
 

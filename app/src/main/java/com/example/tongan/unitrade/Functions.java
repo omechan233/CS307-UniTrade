@@ -68,7 +68,6 @@ public class Functions {
         user_doc.put("notification",notification);
         user_doc.put("user_email", email);
         user_doc.put("user_name", user_name);
-        user_doc.put("user_password", password);  //should be deleted for security...
 
         Map<String, Object> profile_doc = new HashMap<>();
         profile_doc.put("phone_number", phone);
@@ -79,7 +78,7 @@ public class Functions {
         profile_doc.put("user_name", user_name);
         profile_doc.put("my_items", Arrays.asList(""));
 
-        db.collection("users").document(user_name)
+        db.collection("users").document(email)
                 .set(user_doc)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

@@ -39,7 +39,7 @@ import io.opencensus.common.Function;
 
 
 public class MainActivity extends AppCompatActivity{
-    SharedPreferences shared;
+    private SharedPreferences shared;
     private FirebaseAuth mAuth;
 //    private Button sendEmailLinkBtn;
 //    private TextView sendEmailLinkTxt;
@@ -191,9 +191,10 @@ public class MainActivity extends AppCompatActivity{
         String email = editText.getText().toString();
         this.Email = email;
 
+        //save email in SharedPreferences object
         SharedPreferences.Editor edit = shared.edit();
-        edit.putString("email",email);
-        edit.commit();
+        edit.putString("email", email);
+        edit.apply();
 
 
         return email;

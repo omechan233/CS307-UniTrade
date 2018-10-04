@@ -47,9 +47,9 @@ public class NewPostActivity extends AppCompatActivity {
                 //get input in edittext
                 String itemName = itemName_edit.getText().toString();
                 String description = description_edit.getText().toString();
-                String username = "";
-                String postedtime ="";
-                String address ="";
+                //String username = "";
+                String postedtime ="Time";
+                String address ="[not implemented yet]";
                 String category = category_edit.getText().toString();
                 Double price = -1.0;
 
@@ -58,14 +58,9 @@ public class NewPostActivity extends AppCompatActivity {
                 // 2 for someone bought it
                 int status = 1;
 
-
                 //get username by email
                 Functions f1 = new Functions();
                 String email=shared.getString("email","");
-
-                System.out.println("EMAIL!!!!!!!!!!"+email);
-
-                username = f1.get_username_by_email(email);
 
                 Functions f = new Functions();
 
@@ -75,7 +70,7 @@ public class NewPostActivity extends AppCompatActivity {
                     price = Double.parseDouble(price_edit.getText().toString());
                     //todo : store the itemName, description and price to database here
 
-                    System.out.println(itemName +" : "+ username +" : "+ postedtime +" : "+ price+" : "+category+" : "+address+" : "+ description+" : "+status);
+                    int ret = f.create_post(itemName,email,postedtime,price,category,address,description,status);
 
                     //back to homepage
                     Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();

@@ -61,7 +61,7 @@ public class Functions {
      * There are some issues mentions below:
      * 1. return error code
      *******************************************/
-    public int create_user(String user_name, String email, String password, String phone,
+    public int create_user(String user_name, String email, String phone,
                            int gender, String description, int notification, String real_name,
                            String address){
         Map<String, Object> user_doc = new HashMap<>();
@@ -93,7 +93,7 @@ public class Functions {
                     }
                 });
 
-        db.collection("profiles").document(user_name)
+        db.collection("profiles").document(email)
                 .set(profile_doc)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -238,14 +238,14 @@ public class Functions {
         /****
          * Or using the item java class, which is simpler!
          */
-
+/*
         Item item = new Item(category, title, username, posted_time, price, description, address, status);
         db.collection("items").document(item.getID()).set(item);
 
         // Adding the item to my_items list
         final DocumentReference user_doc = db.collection("profiles").document(username);
         user_doc.update("my_items", FieldValue.arrayUnion(item.getID()));
-
+*/
         return 1;
     }
 

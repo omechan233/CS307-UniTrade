@@ -63,7 +63,7 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int auth_result = authentication();
                 if (auth_result==0) {
-                    int create_user = f.create_user(getUsername(),getEmail(),getPassword(),"",2,"",0,"","");
+                    int create_user = f.create_user(getUsername(),getEmail(),"",2,"",0,"","");
                     System.out.println("Create User status: "+create_user);
                     Toast.makeText(getBaseContext(),
                             "Success! Check your email for a verification link", Toast.LENGTH_LONG).show();

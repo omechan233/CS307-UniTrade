@@ -196,7 +196,6 @@ public class MainActivity extends AppCompatActivity{
         edit.putString("email", email);
         edit.apply();
 
-
         return email;
     }
 

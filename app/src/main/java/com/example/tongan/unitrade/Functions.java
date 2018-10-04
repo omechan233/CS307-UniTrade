@@ -624,22 +624,24 @@ public class Functions {
      * delete post
      * use itemid to find the document and delete it from firebase
      */
-     void delete_post(String itemid){
-         db.collection("items").document(itemid)
-                 .delete()
-                 .addOnSuccessListener(new OnSuccessListener<Void>() {
-                     @Override
-                     public void onSuccess(Void aVoid) {
-                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                     }
-                 })
-                 .addOnFailureListener(new OnFailureListener() {
-                     @Override
-                     public void onFailure(@NonNull Exception e) {
-                         Log.w(TAG, "Error deleting document", e);
-                     }
-                 });
+    void delete_post(String itemid, String userid){
+        db.collection("items").document(itemid)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+        final DocumentReference item_doc = db.collection("profiles").document(userid);
+        item_doc.update("my_items", FieldValue.arrayRemove(itemid));
 
-     }
+    }
 
 }

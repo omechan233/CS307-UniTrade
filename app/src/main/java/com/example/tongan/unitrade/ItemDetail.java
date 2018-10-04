@@ -155,7 +155,7 @@ public class ItemDetail extends AppCompatActivity {
 
                                 //todo : delete post function
                                 Functions f = new Functions();
-                                f.delete_post(item_id);
+                                f.delete_post(item_id,email);
                                 Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();
                                 finish();
                             }

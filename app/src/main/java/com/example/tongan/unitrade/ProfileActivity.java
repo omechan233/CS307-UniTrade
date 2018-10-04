@@ -1,6 +1,8 @@
 package com.example.tongan.unitrade;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,13 +11,23 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.tongan.unitrade.objects.Profile;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+    private SharedPreferences sharedPreferences;
+    private Functions f;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profilepage);
+
+        //initialize fields
+        mAuth = FirebaseAuth.getInstance();
+        f = new Functions();
+        sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
+
 
         ImageButton homebtn = (ImageButton) findViewById(R.id.profile_home_page_icon);
         Button wishlistbtn = (Button) findViewById(R.id.profile_wishlist_btn);
@@ -36,10 +48,10 @@ public class ProfileActivity extends AppCompatActivity {
         email_edit.setFocusable(false);
         email_edit.setTextIsSelectable(false);
 
-        String username = "";
+        String email = sharedPreferences.getString("email", null);
+        String username = getUserNameFromFirestore(email);
         String phone = "";
         String address = "";
-        String email = "";
         //todo: get username, email, phone, address from backend, and store it into the variables above
         //todo: during registration set new user's phone, address to empty string
         
@@ -100,10 +112,13 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
 
+    private  String getUserNameFromFirestore(String email){
+        String ret = "";
+        ret = f.get_username_by_email(email);
+        return ret;
+    }
 
 
 }

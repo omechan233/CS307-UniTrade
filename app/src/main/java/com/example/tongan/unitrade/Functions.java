@@ -1,7 +1,10 @@
 package com.example.tongan.unitrade;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,10 +26,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.android.gms.flags.impl.SharedPreferencesFactory.getSharedPreferences;
+
 
 public class Functions {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "Functions";
+
 
 
 
@@ -279,23 +285,31 @@ public class Functions {
      */
 
     public String get_username_by_email(String email){
-        CollectionReference userRef = db.collection("users");
-        final Query query = userRef.whereEqualTo("email", email);
-        final String result[]={""};
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        final String[] result = {""};
+        final Task<DocumentSnapshot> task = db.collection("users").document(email).get();
+        task.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData().get("user_name"));
-                        result[0]= (String) document.getData().get("user_name");
-                    }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
+            public void onSuccess(DocumentSnapshot snapshot) {
+                result[0] = task.getResult().toString();
+
+                Log.d(TAG, "get_username_by_email: onSuccess: found result: " + result[0], task.getException());
+            }
+        });
+        task.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "get_username_by_email: onFailure: did not find result ", task.getException());
             }
         });
 
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(result[0].isEmpty())
+            System.out.println("OOOOOOOOOOOOF?");
         return result[0];
     }
 

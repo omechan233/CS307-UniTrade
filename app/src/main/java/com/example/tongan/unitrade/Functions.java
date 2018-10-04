@@ -512,20 +512,22 @@ public class Functions {
      ******************************/
 
     void delete_wishlist(String itemid, String userid){
-        db.collection("profiles").document(userid)
-                .collection("wish_list").document(itemid).delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error deleting document", e);
-                    }
-                });
+        final DocumentReference wish_doc = db.collection("profiles").document(userid);
+        wish_doc.update("wish_list", FieldValue.arrayRemove(itemid));
+//        db.collection("profiles").document(userid)
+//                .collection("wish_list").document(itemid).delete()
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG, "Error deleting document", e);
+//                    }
+//                });
     }
 
     /*************************
@@ -533,22 +535,25 @@ public class Functions {
      **************************/
 
     void add_wishlist(String itemid, String userid){
-        Map<String, Object> item = new HashMap<>();
-        item.put("item_id", itemid);
-        db.collection("profiles").document(userid)
-                .collection("wish_list").document(itemid).set(item)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG,"Error writting document", e);
-                    }
-                });
+        final DocumentReference wish_doc = db.collection("profiles").document(userid);
+        wish_doc.update("wish_list", FieldValue.arrayUnion(itemid));
+
+//        Map<String, Object> item = new HashMap<>();
+//        item.put("item_id", itemid);
+//        db.collection("profiles").document(userid)
+//                .collection("wish_list").document(itemid).set(item)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(TAG, "DocumentSnapshot successfully written!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG,"Error writting document", e);
+//                    }
+//                });
     }
 
     /*********************

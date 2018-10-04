@@ -35,11 +35,14 @@
                 <data android:host="com.example.tongan.unitrade" android:scheme="https"/>
             </intent-filter>
         </activity>
+        <activity android:name=".HomePageActivity" />
+        <activity android:name=".SignupActivity" />
         <activity android:name=".ProfileActivity" />
+        <activity android:name=".Profilepage"/>
         <activity android:name=".Wishlist" />
         <activity android:name=".SettingActivity" />
         <activity android:name=".NewPostActivity" />
-        <activity android:name=".OrderList" />
+        <activity android:name=".OrderList"/>
 
 
     </application>

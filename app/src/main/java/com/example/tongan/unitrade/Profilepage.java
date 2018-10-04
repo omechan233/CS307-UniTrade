@@ -11,25 +11,6 @@ import android.widget.TextView;
 import com.example.tongan.unitrade.objects.Profile;
 
 public class Profilepage extends AppCompatActivity {
-    Profile profile;
-
-    public int getUserId(){
-        int userId = profile.getUserID();
-        return userId;
-    }
-
-    public String getPhoneNumber(){
-        String phoneNumber = profile.getPhoneNumber();
-        return phoneNumber;
-    }
-
-    public String getAddress(){
-        String address = profile.getAddress();
-        return address;
-    }
-
-    //Todo: write a method to get comment from user input
-
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,23 +38,17 @@ public class Profilepage extends AppCompatActivity {
         String email = "";
         //todo: get username, email, phone, address from backend, and store it into the variables above
         //todo: during registration set new user's phone, address to empty string
-
-        phone = getPhoneNumber();
-        address = getAddress();
-        MainActivity ma = new MainActivity();
-        email = ma.getEmail();
         
         username_edit.setText(username);
         phone_edit.setText(phone);
         address_edit.setText(address);
         email_edit.setText(email);
 
-        ImageButton homePageBtn = (ImageButton)findViewById(R.id.settings_home_page_icon);
+        ImageButton homePageBtn = (ImageButton)findViewById(R.id.profile_home_page_icon);
         homePageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Profilepage.this, SettingActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 

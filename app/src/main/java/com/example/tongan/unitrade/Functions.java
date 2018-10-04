@@ -247,14 +247,13 @@ public class Functions {
         /****
          * Or using the item java class, which is simpler!
          */
-/*
-        Item item = new Item(category, title, username, posted_time, price, description, address, status);
-        db.collection("items").document(item.getID()).set(item);
+        Item item = new Item(category, title, email, posted_time, price, description, address, status);
+        db.collection("items").document(item.getid()).set(item);
 
         // Adding the item to my_items list
-        final DocumentReference user_doc = db.collection("profiles").document(username);
-        user_doc.update("my_items", FieldValue.arrayUnion(item.getID()));
-*/
+        final DocumentReference user_doc = db.collection("profiles").document(email);
+        user_doc.update("my_items", FieldValue.arrayUnion(item.getid()));
+
         return 1;
     }
 

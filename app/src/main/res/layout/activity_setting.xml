@@ -99,15 +99,16 @@
         android:layout_toRightOf="@id/noti_setting_icon"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:text="   My Order"
-        android:layout_toRightOf="@+id/noti_setting_icon"
-        android:layout_below="@+id/myOrder_setting_icon"
-        android:textSize="18sp"
-        android:textStyle="bold"
         android:id="@+id/myOrder_text"
-        android:layout_marginLeft="55dp"/>
+        android:layout_width="151dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/myOrder_setting_icon"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="1dp"
+        android:layout_toRightOf="@+id/noti_setting_icon"
+        android:text="Items and Orders"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <ImageButton
         android:layout_width="100dp"

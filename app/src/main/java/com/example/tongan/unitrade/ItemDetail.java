@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +16,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Item;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ItemDetail extends AppCompatActivity {
@@ -126,8 +130,26 @@ public class ItemDetail extends AppCompatActivity {
                     name_edit.setFocusable(true);
                     price_edit.setFocusable(true);
                 } else {
+                    final DocumentReference item_doc = db.collection("items").document(item_id);
+                    item_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot doc = task.getResult();
+                            if(doc.exists()){
+                                Item item = doc.toObject(Item.class);
+                                double price = Double.parseDouble(price_edit.getText().toString());
+                                Functions f = new Functions();
+                                item.setDescription(desc_edit.getText().toString());
+                                item.setPrice(price);
+                                item.setTitle(name_edit.getText().toString());
+                                f.delete_post(item_id,email);
+                                db.collection("items").document(item.getid()).set(item);
 
-                    //todo : use textView.getText().toString() to get new information from user input and update database
+                                final DocumentReference user_doc = db.collection("profiles").document(email);
+                                user_doc.update("my_items", FieldValue.arrayUnion(item.getid()));
+                            }
+                        }
+                    });
 
                     String EDIT_TEXT = "Edit";
                     desc_edit.setBackgroundResource(0);

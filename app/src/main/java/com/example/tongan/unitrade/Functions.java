@@ -254,9 +254,10 @@ public class Functions {
         return 1;
     }
 
-    /**************************************
-     * Find buyer by input the order
-     ****************************************/
+
+        /**************************************
+         * Find buyer by input the order
+         ****************************************/
     public String view_buyer(String itemplustime) {
         DocumentReference order_doc = db.collection("orders").document(itemplustime);
         final String[] result = {""};
@@ -489,17 +490,6 @@ public class Functions {
 
         return items;
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

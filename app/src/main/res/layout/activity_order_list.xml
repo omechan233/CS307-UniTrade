@@ -9,13 +9,13 @@
     tools:context=".ItemDetail">
 
     <TextView
+        android:id="@+id/list_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#FF9900"
-        android:text=" Posted Item and Order"
+        android:text="Posted Items and Orders"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:id="@+id/list_title" />
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/buttons"
@@ -25,18 +25,18 @@
         android:weightSum="3">
 
         <Button
+            android:id="@+id/show_posted_item"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
-            android:text="posted item"
-            android:id="@+id/show_posted_item"/>
+            android:layout_weight="1"
+            android:text="My Posts" />
 
         <Button
+            android:id="@+id/show_my_order"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:text="my order"
-            android:id="@+id/show_my_order"/>
+            android:text="my orders" />
 
         <Button
             android:layout_width="0dp"

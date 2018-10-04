@@ -9,13 +9,13 @@
     tools:context=".ItemDetail">
 
     <TextView
+        android:id="@+id/detail_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#FF9900"
-        android:text=" Item Detail"
+        android:text=" Item Details"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:id="@+id/detail_title" />
+        android:textStyle="bold" />
     
     <ImageView
         android:layout_width="200dp"

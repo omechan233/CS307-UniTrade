@@ -43,11 +43,8 @@ public class OrderList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_list);
-        Functions f = new Functions();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        shared=getSharedPreferences("app", Context.MODE_PRIVATE);
 
-        //todo : get my_items from backend
+        shared=getSharedPreferences("app", Context.MODE_PRIVATE);
 
         Button back = (Button)findViewById(R.id.posted_item_back);
         final Button myItem = (Button)findViewById(R.id.show_posted_item);
@@ -58,20 +55,6 @@ public class OrderList extends AppCompatActivity {
                 finish();
             }
         });
-
-        //todo :Get the list of posted items, the ArrayList below is hard code for test display only
-
-        Item test1 = new Item("Test Category1", "POI", "Yudachi", "1996-5-5", 2.33,
-                "This is the content of description\nYou don't need to look at it at all\nsince this description is totally meaningless!\nlol", "ass", 0);
-        Item test2 = new Item("Test Category2", "POII", "Yudachi_2", "1996-5-6", 3.33,
-                "Yep, this description is still meaningless!\nthe good thing is that it is shorter than previous one", "ass", 0);
-        Item test3 = new Item("Test Category3", "POIII", "Yudachi_3", "1996-5-7", 4.33,
-                "Emmmm.......\nI have to write something here for test right?", "ass", 0);
-        final ArrayList<Item> test_list = new ArrayList<Item>();
-        test_list.add(test1);
-        test_list.add(test2);
-        test_list.add(test3);
-
 
         myItem.setOnClickListener(new View.OnClickListener() {
             @Override

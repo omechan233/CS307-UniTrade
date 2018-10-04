@@ -71,7 +71,6 @@ public class NewPostActivity extends AppCompatActivity {
                 if (!itemName.equals("") && !description.equals("") && !price_edit.getText().toString().equals("")) {
 
                     price = Double.parseDouble(price_edit.getText().toString());
-                    //todo : store the itemName, description and price to database here
 
                     int ret = f.create_post(itemName,email,postedtime,price,category,address,description,status);
 

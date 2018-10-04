@@ -647,6 +647,13 @@ public class Functions {
                 });
         final DocumentReference item_doc = db.collection("profiles").document(userid);
         item_doc.update("my_items", FieldValue.arrayRemove(itemid));
+        
+        try {
+            item_doc.update("wish_list", FieldValue.arrayRemove(itemid));
+        }catch (Exception e){
+            System.out.println("Cannot find the item in the wish_list, no worry");
+        }
+
 
     }
 

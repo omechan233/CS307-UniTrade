@@ -135,8 +135,6 @@ public class OrderList extends AppCompatActivity {
 
                                         }
                                     });
-
-
                                 }
                             }
                             //result[0] = (String[])document.getData().get("my_items");

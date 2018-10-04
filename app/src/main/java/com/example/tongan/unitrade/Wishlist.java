@@ -29,8 +29,7 @@ public class Wishlist extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wishlist);
 
-        Button homebtn = (Button) findViewById(R.id.wishlist_home_btn);
-        Button profilebtn = (Button) findViewById(R.id.wishlist_profile_btn);
+        Button backbtn = (Button) findViewById(R.id.wishlist_back_btn);
 
         Item test1 = new Item("Test Category1", "POI", "Yudachi", "1996-5-5", 2.33,
                 "This is the content of description\nYou don't need to look at it at all\nsince this description is totally meaningless!\nlol", "ass", 0);
@@ -70,21 +69,10 @@ public class Wishlist extends AppCompatActivity {
             linearLayout.addView(item);
         }
 
-        homebtn.setOnClickListener(new View.OnClickListener() {
+        backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Wishlist.this, HomePageActivity.class);
-                //intent.putExtra("name", name.getText().toString());
-                startActivity(intent);
-            }
-        });
-
-        profilebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Wishlist.this, ProfileActivity.class);
-                //intent.putExtra("name", name.getText().toString());
-                startActivity(intent);
+                finish();
             }
         });
     }

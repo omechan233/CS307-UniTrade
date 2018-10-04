@@ -1,14 +1,17 @@
 package com.example.tongan.unitrade;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.content.Intent;
 
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -83,11 +86,39 @@ public class MainActivity extends AppCompatActivity{
         resetPasswd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Todo: generated a random passwd and update the database, then send the random passwd to user's email.
+                AlertDialog.Builder reset_pswd_dialog = new AlertDialog.Builder(MainActivity.this);
+                reset_pswd_dialog.setTitle("Reset Password");
 
-                //pop up message for success
-                Toast.makeText(getBaseContext(),
-                        "Success! Check your email for the random password!", Toast.LENGTH_LONG).show();
+                //set input
+                final EditText input = new EditText(MainActivity.this);
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                reset_pswd_dialog.setView(input);
+
+                reset_pswd_dialog.setPositiveButton("SEND EMAIL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String resetPwdEmail = input.getText().toString();
+                        mAuth.sendPasswordResetEmail(resetPwdEmail)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful());{
+                                            Toast.makeText(MainActivity.this, "Email was sent to the given address",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                });
+
+                reset_pswd_dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                reset_pswd_dialog.show();
             }
         });
 

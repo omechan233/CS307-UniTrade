@@ -135,32 +135,11 @@
         android:layout_marginRight="35dp" />
 
     <TextView
-        android:id="@+id/item_posted_time"
-        android:layout_width="162dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/title_new_post"
-        android:layout_toEndOf="@+id/item_image"
-        android:text="Post Time"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_toRightOf="@+id/item_image" />
-
-    <EditText
-        android:id="@+id/post_time_input"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/item_posted_time"
-        android:layout_toEndOf="@+id/item_image"
-        android:ems="10"
-        android:hint="Enter your post time here"
-        android:inputType="textPersonName"
-        android:layout_toRightOf="@+id/item_image" />
-
-    <TextView
         android:id="@+id/category_text"
         android:layout_width="162dp"
         android:layout_height="30dp"
-        android:layout_below="@+id/post_time_input"
+        android:layout_above="@+id/category_input"
+        android:layout_marginBottom="-97dp"
         android:layout_toEndOf="@+id/item_image"
         android:text="Category"
         android:textSize="18sp"
@@ -169,13 +148,16 @@
 
     <EditText
         android:id="@+id/category_input"
-        android:layout_width="300dp"
+        android:layout_width="250dp"
         android:layout_height="40dp"
-        android:layout_below="@+id/category_text"
-        android:layout_toEndOf="@+id/item_image"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="102dp"
         android:ems="10"
         android:hint="Enter your item's category here"
         android:inputType="textPersonName"
-        android:layout_toRightOf="@+id/item_image" />
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="12dp" />
 
 </RelativeLayout>

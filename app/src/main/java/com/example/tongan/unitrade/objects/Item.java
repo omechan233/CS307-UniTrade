@@ -6,7 +6,7 @@ public class Item {
 
     }
     //private int ID;
-    private String ID;
+    private String id;
     private double price;
     private String category;
     private String title;
@@ -42,7 +42,7 @@ public class Item {
      */
     public Item(String category, String title, String seller_name, String posted_time, double price, String description, String location, int status){
         //this.ID = ID;
-        this.ID=seller_name+posted_time;
+        this.id=seller_name+posted_time;
         this.category=category;
         this.title=title;
         this.posted_time=posted_time;
@@ -66,7 +66,7 @@ public class Item {
     public String getTitle(){
         return this.title;
     }
-    public String getID(){return this.ID; }
+    public String getid(){return this.id; }
     public String getCategory() {
         return category;
     }

@@ -359,17 +359,12 @@ public class Functions {
     public Item get_Item_by_Item_ID(String item_ID){
         final DocumentReference item_doc = db.collection("items").document(item_ID);
         final Item[] result = {null};
-        item_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()){
-                    result[0] = (Item) document.getData();
-                    Log.e(TAG, "Item found");
-
-                }else{
-                    Log.e(TAG,"Item not Exits");
-                }
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                result[0] = documentSnapshot.toObject(Item.class);
+                System.out.println(result[0].getSeller_name());
+                System.out.println("Is this working!!!!!!!!!!?????????");
             }
         });
         return result[0];

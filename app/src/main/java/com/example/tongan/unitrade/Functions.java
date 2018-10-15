@@ -82,7 +82,6 @@ public class Functions {
         profile_doc.put("address",address);
         profile_doc.put("real_name",real_name);
         profile_doc.put("user_name", user_name);
-        profile_doc.put("my_items", Arrays.asList(""));
 
         db.collection("users").document(email)
                 .set(user_doc)
@@ -634,8 +633,6 @@ public class Functions {
      * Previous version only deleted the item in current user's wishlist
      * Now (hopefully) it deletes item in every user's wishlist
      */
-
-
     void delete_post(final String itemid, String userid){
         db.collection("items").document(itemid)
                 .delete()
@@ -653,6 +650,9 @@ public class Functions {
                 });
 
         CollectionReference profile_ref = db.collection("profiles");
+        DocumentReference profiles_doc = db.collection("profiles").document(userid);
+        profiles_doc.update("my_items", FieldValue.arrayRemove(itemid));
+
         Query query= profile_ref.whereArrayContains("wish_list", itemid);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

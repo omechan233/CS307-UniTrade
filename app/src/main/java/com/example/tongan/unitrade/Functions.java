@@ -629,8 +629,14 @@ public class Functions {
     /****
      * delete post
      * use itemid to find the document and delete it from firebase
+     *
+     * Updated by AT:
+     * Previous version only deleted the item in current user's wishlist
+     * Now (hopefully) it deletes item in every user's wishlist
      */
-    void delete_post(String itemid, String userid){
+
+
+    void delete_post(final String itemid, String userid){
         db.collection("items").document(itemid)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -645,14 +651,27 @@ public class Functions {
                         Log.w(TAG, "Error deleting document", e);
                     }
                 });
-        final DocumentReference item_doc = db.collection("profiles").document(userid);
-        item_doc.update("my_items", FieldValue.arrayRemove(itemid));
-        
-        try {
-            item_doc.update("wish_list", FieldValue.arrayRemove(itemid));
-        }catch (Exception e){
-            System.out.println("Cannot find the item in the wish_list, no worry");
-        }
+
+        CollectionReference profile_ref = db.collection("profiles");
+        Query query= profile_ref.whereArrayContains("wish_list", itemid);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document: task.getResult()) {
+                        if (document.exists()) {
+                            String current_user = document.getId();
+                            DocumentReference current_profile = db.collection("profiles").document(current_user);
+                            current_profile.update("wish_list", FieldValue.arrayRemove(itemid));
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
 
 
     }

@@ -10,11 +10,13 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class HomePageActivity extends AppCompatActivity {
-
+    private Functions f;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+
+        f = new Functions();
 
         Button clickToPost = (Button) findViewById(R.id.home_post_btn);
         Button clickToSetting = (Button) findViewById(R.id.home_settings_btn);
@@ -36,7 +38,6 @@ public class HomePageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
     }
 }

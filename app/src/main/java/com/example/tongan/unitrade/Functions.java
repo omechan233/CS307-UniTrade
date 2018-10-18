@@ -2,6 +2,7 @@ package com.example.tongan.unitrade;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.health.SystemHealthManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -307,8 +308,7 @@ public class Functions {
             e.printStackTrace();
         }
 
-        if(result[0].isEmpty())
-            System.out.println("OOOOOOOOOOOOF?");
+
         return result[0];
     }
 
@@ -516,7 +516,7 @@ public class Functions {
      delete item from wishlist
      ******************************/
 
-    void delete_wishlist(String itemid, String userid){
+    public void delete_wishlist(String itemid, String userid){
         final DocumentReference wish_doc = db.collection("profiles").document(userid);
         wish_doc.update("wish_list", FieldValue.arrayRemove(itemid));
 //        db.collection("profiles").document(userid)
@@ -539,7 +539,7 @@ public class Functions {
      add item to wishlist
      **************************/
 
-    void add_wishlist(String itemid, String userid){
+    public void add_wishlist(String itemid, String userid){
         final DocumentReference wish_doc = db.collection("profiles").document(userid);
         wish_doc.update("wish_list", FieldValue.arrayUnion(itemid));
 
@@ -564,7 +564,7 @@ public class Functions {
     /*********************
      * get item name through item id
      */
-    String[] get_item_name(String id){
+    public String[] get_item_name(String id){
         final String[] item_name = {""};
         final DocumentReference docRef = db.collection("items").document(id);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -587,10 +587,10 @@ public class Functions {
 
     /*****
      * get a list of wanted item
-     * @input: userid, a list of itemid
-     * @retrutn: list<Item>
+     * @param items  a list of itemIDs
+     * @return List<Item> list of Items corresponding to List of itemIDs
      */
-    List<Item> get_wanted_item(List<String> items){
+    public List<Item> get_wanted_item(List<String> items){
         List<Item> wishlist = new ArrayList<>();
         String itemid = "";
         //loop through wishlist in profile
@@ -605,9 +605,9 @@ public class Functions {
     }
 
     /***
-     * put all itemid in an list
+     * put all itemid into a list
      */
-    List<String> get_itemid_list(String userid){
+    public List<String> get_itemid_list(String userid){
         final List<String> itemid_list = new ArrayList<String>();
         db.collection("profiles").document(userid).collection("wish_list")
                 .get()
@@ -633,7 +633,7 @@ public class Functions {
      * Previous version only deleted the item in current user's wishlist
      * Now (hopefully) it deletes item in every user's wishlist
      */
-    void delete_post(final String itemid, String userid){
+    public void delete_post(final String itemid, String userid){
         db.collection("items").document(itemid)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -676,4 +676,58 @@ public class Functions {
 
     }
 
+
+    /*** Scott's Work ***/
+
+    /**
+     * Function for calling all items to be displayed on the HomePageActivity
+     *
+     * @param criterion option for sorting the list, can be "all", "posting date", or "price"
+     * @return List of all Items pulled from Firestore
+     */
+    public ArrayList<Item> getHomePageList(String criterion){
+        final ArrayList<Item> allItems = new ArrayList<Item>();  //2D ArrayList to hold all posted items from all users
+
+        System.out.println("FUNCTIONS: ATTEMPTING TO RETRIEVE ITEMS FOR HOMEPAGE");
+
+        CollectionReference Items = db.collection("items");
+        Items.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot doc : task.getResult()){
+                                //Log.d(TAG, doc.getId() + "=> " + doc.getData());
+                                //Get Map of Item
+                                Map<String, Object> itemMap = doc.getData();
+                                System.out.println("MAP STRING: " + itemMap.toString());
+                                try {
+                                    //Construct Item Object from each DocSnapshot
+
+                                    //trouble getting these values from itemMap, using other functions
+                                    int status = doc.getDouble("status").intValue();
+                                    double price = doc.getDouble("price");
+
+                                    Item itemObj = new Item((String) itemMap.get("category"), (String) itemMap.get("title"), (String) itemMap.get("seller_name"),
+                                            (String) itemMap.get("posted_time"), price, (String) itemMap.get("description"),
+                                            (String) itemMap.get("location"), status);
+
+                                    //add item to list
+                                    allItems.add(itemObj);
+
+                                    //test to make sure item was received
+                                    //System.out.println(itemObj.toString());
+                                }catch(NullPointerException e){
+                                    System.out.println("Null Doc Found: " + e.getLocalizedMessage());
+                                }
+                            }
+                        }
+                        else{
+                            Log.d(TAG, "Error getting Item documents: ", task.getException());
+                        }
+                    }
+                });
+        System.out.println(allItems.toString());
+        return allItems;
+    }
 }

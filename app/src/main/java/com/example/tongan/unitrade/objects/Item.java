@@ -58,11 +58,7 @@ public class Item {
 
     }
 
-    /**
-     * Getter method for Item's ID
-     * 
-     * @return Item's ID
-     */
+    /** Getter Methods **/
     public String getTitle(){
         return this.title;
     }
@@ -89,38 +85,41 @@ public class Item {
         return location;
     }
 
-    /**
-     * Setter method for Item's price
-     * 
-     * @param price Item's new price
-     */
+
+    /** Setter Methods **/
     public void setPrice(double price){
         this.price = price;
     }
-
-    /**
-     * Setter method for Description
-     * 
-     * @param description Item's new description
-     */
     public void setDescription(String description){
         this.description = description;
     }
-
     public void setCategory(String category) {
         this.category = category;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
-
     public void setStatus(int status) {
         this.status = status;
     }
-
     public void setLocation(String location){
         this.location=location;
+    }
+
+    @Override
+    /**
+     * Override for toString Method, prints fields of the Item in orderly fashion
+     */
+    public String toString(){
+        return "Item ID: " + getid() +
+                "\nTitle: " + getTitle() +
+                "\nCategory: " + getCategory() +
+                "\nSeller Name: " + getSeller_name() +
+                "\nPrice: " + getPrice() +
+                "\nPosted Time: " + getPosted_time() +
+                "\nLocation: " + getLocation() +
+                "\nDescription: " + getDescription() +
+                "\nStatus: " + getStatus();
     }
 
 }

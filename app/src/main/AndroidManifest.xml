@@ -42,6 +42,8 @@
         <activity android:name=".OrderList"/>
         <activity android:name=".ItemDetail"/>
         <activity android:name=".Notification"/>
+        <activity android:name=".Purchase"/>
+
 
 
     </application>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    tools:context=".ItemDetail">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="13dp"
+        android:text="Purchase Page"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="343dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="84dp"
+        android:text="Please Choose your Payment Method:"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/radio"
+        android:layout_width="336dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/textView"
+        android:layout_marginTop="181dp"
+        android:layout_alignLeft="@+id/textView">
+
+        <RadioButton
+            android:id="@+id/purchase_faceToface"
+            android:layout_width="211dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Face-to-Face"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/purchase_onlinePay"
+            android:layout_width="211dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Online Payment"
+            android:textSize="18sp" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/purchase_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="191dp"
+        android:text="Submit"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/purchase_GoToOrder"
+        android:layout_width="152dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="65dp"
+        android:text="My Order"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

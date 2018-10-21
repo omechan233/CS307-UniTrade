@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.tongan.unitrade.objects.Comment;
 import com.example.tongan.unitrade.objects.Item;
 import com.example.tongan.unitrade.objects.Order;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -89,6 +90,9 @@ public class Functions {
         profile_doc.put("address", address);
         profile_doc.put("real_name", real_name);
         profile_doc.put("user_name", user_name);
+        profile_doc.put("rating_number", 0);
+        profile_doc.put("rating", (double)0);
+
 
         db.collection("users").document(email)
                 .set(user_doc)
@@ -584,14 +588,10 @@ public class Functions {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     Order current_order = new Order();
                                     current_order = documentSnapshot.toObject(Order.class);
-
                                     //Todo: combine with front end
-
                                 }
                             });
                         }
-
-
                     }
                     //result[0] = (String[])document.getData().get("my_items");
                     Log.e(TAG, "my item list found");
@@ -601,10 +601,43 @@ public class Functions {
                 }
             }
         });
+    }
 
 
+    public void create_comment(String item_name, String buyeremail, String content, int rating, String posted_time){
+        Comment comment = new Comment(buyeremail,content,item_name,rating,posted_time);
+        db.collection("comments").document(buyeremail+posted_time).set(comment);
 
+        // add the comment to profile
+        final DocumentReference user_doc = db.collection("profiles").document(buyeremail);
+        user_doc.update("my_comments", FieldValue.arrayUnion(buyeremail+posted_time));
 
+        final int rate = rating;
+        //update average rating
+        user_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        int rating_number = (int) document.get("rating_number");
+                        if(rating_number!=0) {
+                            double prev_rate = (double) document.get("rating");
+                            user_doc.update("rating",(prev_rate*(double)rating_number)+(double)rate/(rating_number+1));
+                            user_doc.update("rating_number",rating_number+1);
+                        }
+                        else{
+                            user_doc.update("rating",rate);
+                            user_doc.update("rating_number",1);
+                        }
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
 

@@ -2,16 +2,16 @@ package com.example.tongan.unitrade.objects;
 
 public class Comment {
     private String content;
-    private String item_ID;
+    private String item_name;
     private int rating;
     private String buyer_email;
     private String posted_time;
 
     public Comment(){}
-    public Comment(String buyer_email, String content,String item_ID, int rating, String posted_time){
+    public Comment(String buyer_email, String content,String item_name, int rating, String posted_time){
         this.buyer_email=buyer_email;
         this.content=content;
-        this.item_ID=item_ID;
+        this.item_name=item_name;
         this.rating=rating;
         this.posted_time=posted_time;
     }
@@ -28,8 +28,8 @@ public class Comment {
         return content;
     }
 
-    public String getItem_ID() {
-        return item_ID;
+    public String getItem_name() {
+        return item_name;
     }
 
     public String getPosted_time() {

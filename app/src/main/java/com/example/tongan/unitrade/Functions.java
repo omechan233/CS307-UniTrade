@@ -687,6 +687,8 @@ public class Functions {
      * once that is done. Currently it is able to retrieve all of the items but returns before the data
      * is actually received :(
      *
+     * NOTE 2: Functionality moved to HomePageActivity, may still use this function for sorting
+     *
      * @param criterion option for sorting the list, can be "all", "posting date", or "price"
      * @return List of all Items pulled from Firestore
      */
@@ -705,7 +707,7 @@ public class Functions {
                                 //Log.d(TAG, doc.getId() + "=> " + doc.getData());
                                 //Get Map of Item
                                 Map<String, Object> itemMap = doc.getData();
-                                System.out.println("MAP STRING: " + itemMap.toString());
+                                //System.out.println("MAP STRING: " + itemMap.toString());
                                 try {
                                     //Construct Item Object from each DocSnapshot
 

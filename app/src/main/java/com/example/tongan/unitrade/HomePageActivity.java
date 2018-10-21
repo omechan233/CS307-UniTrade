@@ -1,10 +1,13 @@
 package com.example.tongan.unitrade;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,28 +18,44 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Item;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class HomePageActivity extends AppCompatActivity {
+
+    private static final String TAG = "HomePage";
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Spinner spinner;
     private Button search_button;
     private EditText search_word;
     private Spinner search_sort;
+    SharedPreferences shared;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+
+        //get global variable object
+        shared=getSharedPreferences("app", Context.MODE_PRIVATE);
+
 
         Button clickToPost = (Button) findViewById(R.id.home_post_btn);
         Button clickToSetting = (Button) findViewById(R.id.home_settings_btn);
@@ -63,6 +82,7 @@ public class HomePageActivity extends AppCompatActivity {
         search_button = (Button)findViewById(R.id.hmpage_search_button);
         search_word = (EditText)findViewById(R.id.search_input);
         search_sort = (Spinner)findViewById(R.id.search_sort);
+
         //onclickListener is the function called when click on the button
         search_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,13 +96,75 @@ public class HomePageActivity extends AppCompatActivity {
                 //here is the hard coding item list, delete it after implementing backend function
                 Toast.makeText(getBaseContext(), search_category + sort_option + keyword, Toast.LENGTH_LONG).show();
 
-                List<Item> items = new ArrayList<Item>();
-                items.add(new Item("a", "title1", "seller1", "time1", 1.11, "desc1", "location1", 0));
-                items.add(new Item("b", "title2", "seller2", "time2", 2.22, "desc2", "location2", 0));
-                items.add(new Item("c", "title3", "seller3", "time3", 3.33, "desc3", "location3", 0));
-                LinearLayout homepage_result = (LinearLayout)findViewById(R.id.hmpage_results);
+                final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
                 homepage_result.removeAllViews();
 
+                CollectionReference Items = db.collection("items");
+                Items.get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                                        //Log.d(TAG, doc.getId() + "=> " + doc.getData());
+
+                                        //Get Map of Item
+                                        Map<String, Object> itemMap = doc.getData();
+                                        System.out.println("MAP STRING: " + itemMap.toString());
+                                        try {
+                                            //Construct Item Object from each DocSnapshot
+
+                                            //trouble getting these values from itemMap, using other functions
+                                            int status = doc.getDouble("status").intValue();
+                                            double price = doc.getDouble("price");
+
+                                            Item itemObj = new Item((String) itemMap.get("category"), (String) itemMap.get("title"), (String) itemMap.get("seller_name"),
+                                                    (String) itemMap.get("posted_time"), price, (String) itemMap.get("description"),
+                                                    (String) itemMap.get("location"), status);
+
+                                            LinearLayout item = new LinearLayout(getBaseContext());
+                                            //set layout params for parent layout
+                                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+                                            item.setLayoutParams(params);
+
+                                            //create and set params of image in parent layout
+                                            ImageView imageView = new ImageView(getBaseContext());
+                                            imageView.setImageResource(R.mipmap.poi_test_src);
+                                            params = new LinearLayout.LayoutParams(180, 180);
+                                            params.setMargins(20, 20, 0, 20);
+                                            imageView.setLayoutParams(params);
+                                            item.addView(imageView);
+
+                                            //create textview in parent layout
+                                            TextView tv = new TextView(getBaseContext());
+                                            String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
+                                            tv.setText(text);
+                                            item.addView(tv);
+                                            //set onclick function for each item displayed
+                                            final Item current_item = itemObj;
+                                            item.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) { //this is configured the same as OrderList 
+                                                    SharedPreferences.Editor edit = shared.edit();
+                                                    edit.putString("itemid", current_item.getid());
+                                                    edit.apply();
+
+                                                    startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
+                                                }
+                                            });
+                                            homepage_result.addView(item);
+                                        } catch (NullPointerException e) {
+                                            System.out.println("Null Doc Found: " + e.getLocalizedMessage());
+                                        } catch (NoSuchFieldError e){
+                                            System.out.println("No Such Field: " + e.getLocalizedMessage());
+                                        }
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error getting Item documents: ", task.getException());
+                                }
+                            }
+                        });
+/*
                 //print the interface of hardcoding list
                 for (int i = 0; i < items.size(); i++) {
                     //create the parent layout to show an item
@@ -112,6 +194,7 @@ public class HomePageActivity extends AppCompatActivity {
                     });
                     homepage_result.addView(item);
                 }
+*/
             };
 
 

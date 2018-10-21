@@ -19,6 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.tongan.unitrade.objects.Item;
+import com.example.tongan.unitrade.objects.Order;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -72,21 +73,20 @@ public class OrderList extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            List<String> my_items = new ArrayList<String>();
-                            my_items = (List<String>) document.getData().get("my_items");
-                            System.out.println(my_items);
-                            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                            if (my_items == null || my_items.isEmpty()) {
+                            List<String> my_orders = new ArrayList<String>();
+                            my_orders = (List<String>) document.getData().get("my_orders");
+
+                            if (my_orders == null || my_orders.isEmpty()) {
                                 System.out.println("Nothing on the list!");
                             } else {
-                                for (int i = 0; i < my_items.size(); i++) {
-                                    final DocumentReference item_doc = db.collection("items").document(my_items.get(i));
+                                for (int i = 0; i < my_orders.size(); i++) {
+                                    final DocumentReference item_doc = db.collection("orders").document(my_orders.get(i));
                                     final int finalI = i;
                                     item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                         @Override
                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            Item current_item = new Item();
-                                            current_item = documentSnapshot.toObject(Item.class);
+                                            Order current_order = new Order();
+                                            current_order = documentSnapshot.toObject(Order.class);
 
                                             LinearLayout item = new LinearLayout(getBaseContext());
                                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(400, 200);
@@ -98,16 +98,16 @@ public class OrderList extends AppCompatActivity {
                                             imageView.setLayoutParams(params);
                                             item.addView(imageView);
                                             TextView tv = new TextView(getBaseContext());
-                                            //todo : the String below is getting information from a hard coding ArrayList<Item>, change it to adapt the actual data retrieved from backend
-                                            String text = "\n" + current_item.getTitle() + "\n" + current_item.getPrice() + "\n" + current_item.getSeller_name();
+
+                                            String text = "\n" + current_order.getItem_title() + "\nPrice: $" + current_order.getItem_price() + "\nPurchased time: " + current_order.getOrder_time();
                                             tv.setText(text);
                                             item.addView(tv);
-                                            final Item finalCurrent_item = current_item;
+                                            final Order final_order = current_order;
                                             item.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
                                                     SharedPreferences.Editor edit = shared.edit();
-                                                    edit.putString("itemid", finalCurrent_item.getid());
+                                                    edit.putString("itemid", final_order.getItem_ID());
                                                     edit.apply();
 
                                                     //todo:get the item_id of the selected item and store it into a global variable that can be used in the ItemDetail page(need to know which item to display detail)
@@ -130,7 +130,6 @@ public class OrderList extends AppCompatActivity {
                 });
             }
         });
-
 
         /*
         myItem.setOnClickListener(new View.OnClickListener() {

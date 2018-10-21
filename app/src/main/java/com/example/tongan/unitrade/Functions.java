@@ -516,11 +516,6 @@ public class Functions {
      */
 
     public void create_order(String buyer_email, String item_ID, String order_time, Double item_price, String item_title){
-        Map<String, Object> order_doc = new HashMap<>();
-        order_doc.put("buyer_email", buyer_email);
-        order_doc.put("item_ID", item_ID);
-        order_doc.put("order_time", order_time);
-        order_doc.put("is_sold", true);
 
         Order order = new Order(item_ID, order_time, buyer_email,item_title, item_price, true );
 
@@ -587,9 +582,10 @@ public class Functions {
                             item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    Item current_item = new Item();
-                                    current_item = documentSnapshot.toObject(Item.class);
+                                    Order current_order = new Order();
+                                    current_order = documentSnapshot.toObject(Order.class);
 
+                                    //Todo: combine with front end
 
                                 }
                             });

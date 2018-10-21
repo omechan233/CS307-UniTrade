@@ -144,7 +144,7 @@ public class HomePageActivity extends AppCompatActivity {
                                             final Item current_item = itemObj;
                                             item.setOnClickListener(new View.OnClickListener() {
                                                 @Override
-                                                public void onClick(View v) { //this is configured the same as OrderList 
+                                                public void onClick(View v) { //this is configured the same as OrderList
                                                     SharedPreferences.Editor edit = shared.edit();
                                                     edit.putString("itemid", current_item.getid());
                                                     edit.apply();
@@ -164,40 +164,7 @@ public class HomePageActivity extends AppCompatActivity {
                                 }
                             }
                         });
-/*
-                //print the interface of hardcoding list
-                for (int i = 0; i < items.size(); i++) {
-                    //create the parent layout to show an item
-                    LinearLayout item = new LinearLayout(getBaseContext());
-                    //set layout params for parent layout
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
-                    item.setLayoutParams(params);
-                    //create and set params of image in parent layout
-                    ImageView imageView = new ImageView(getBaseContext());
-                    imageView.setImageResource(R.mipmap.poi_test_src);
-                    params = new LinearLayout.LayoutParams(180, 180);
-                    params.setMargins(20, 20, 0, 20);
-                    imageView.setLayoutParams(params);
-                    item.addView(imageView);
-                    //create textview in parent layout
-                    TextView tv = new TextView(getBaseContext());
-                    String text = "\n" + items.get(i).getTitle() + "\n" + items.get(i).getPrice() + "\n" + items.get(i).getSeller_name();
-                    tv.setText(text);
-                    item.addView(tv);
-                    //set onclick function for each item displayed
-                    item.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //todo:jump to related item detail page, use a global variable like my item list to get which item to display
-                            //startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
-                        }
-                    });
-                    homepage_result.addView(item);
-                }
-*/
-            };
-
-
+            }
         });
         //call the search button function when creating the interface to generate initial item list
         search_button.callOnClick();

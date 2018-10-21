@@ -21,8 +21,17 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,14 +44,12 @@ public class Functions {
     private static final String TAG = "Functions";
 
 
-
-
     //AT!!
 
     /**************************************
      * Change notification
      *********************************/
-    void change_notification(String user_email, int setting){
+    void change_notification(String user_email, int setting) {
         DocumentReference user_doc = db.collection("users").document(user_email);
         user_doc.update("notification", setting)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -60,8 +67,6 @@ public class Functions {
     }
 
 
-
-
     /**************************************
      * Create a user. This function should be called after authentication function
      *
@@ -70,9 +75,9 @@ public class Functions {
      *******************************************/
     public int create_user(String user_name, String email, String phone,
                            int gender, String description, int notification, String real_name,
-                           String address){
+                           String address) {
         Map<String, Object> user_doc = new HashMap<>();
-        user_doc.put("notification",notification);
+        user_doc.put("notification", notification);
         user_doc.put("user_email", email);
         user_doc.put("user_name", user_name);
 
@@ -80,8 +85,8 @@ public class Functions {
         profile_doc.put("phone_number", phone);
         profile_doc.put("gender", gender);
         profile_doc.put("description", description);
-        profile_doc.put("address",address);
-        profile_doc.put("real_name",real_name);
+        profile_doc.put("address", address);
+        profile_doc.put("real_name", real_name);
         profile_doc.put("user_name", user_name);
 
         db.collection("users").document(email)
@@ -117,14 +122,14 @@ public class Functions {
         return 1;
         /******************************
          * haven't completed features
-            //return error code:
-            //1 on success
-            //-1 on firebase fail
-            //0 on same user name
-            //2 on same email_address
-            //3 on bad password(haven't done yet)
-            //4 on wrong gender
-            //5 on wrong phone number
+         //return error code:
+         //1 on success
+         //-1 on firebase fail
+         //0 on same user name
+         //2 on same email_address
+         //3 on bad password(haven't done yet)
+         //4 on wrong gender
+         //5 on wrong phone number
          ************************************/
 
     }
@@ -146,8 +151,8 @@ public class Functions {
      // 1 for available
      // 2 for someone bought it
      *************************************/
-    public int create_post(String title,String email, String posted_time, double price,
-                           String category, String address, String description,int status){
+    public int create_post(String title, String email, String posted_time, double price,
+                           String category, String address, String description, int status) {
 
         /******  AT:
          * There is a simpler way to add post, at the bottom of this function
@@ -165,17 +170,17 @@ public class Functions {
         item_doc.put("location", address);
         */
         //error number 2 for invalid input price
-        if(price<=0){
+        if (price <= 0) {
             return 2;
         }
         //error message 3 for empty category
-        if(category == null || category.equals("")){
+        if (category == null || category.equals("")) {
             return 3;
         }
 
         //error number 0 for invalid status input
         // initially seller can only choose 0 or 1
-        if( status!= 1 && status!= 0){
+        if (status != 1 && status != 0) {
             return 0;
         }
         //!!!!!!!!!!!!!!!!!!!!!!!!status code,
@@ -240,7 +245,6 @@ public class Functions {
         */
 
 
-
         /****
          * Or using the item java class, which is simpler!
          */
@@ -255,9 +259,9 @@ public class Functions {
     }
 
 
-        /**************************************
-         * Find buyer by input the order
-         ****************************************/
+    /**************************************
+     * Find buyer by input the order
+     ****************************************/
     public String view_buyer(String itemplustime) {
         DocumentReference order_doc = db.collection("orders").document(itemplustime);
         final String[] result = {""};
@@ -284,7 +288,7 @@ public class Functions {
      * Get the user name by user email
      */
 
-    public String get_username_by_email(String email){
+    public String get_username_by_email(String email) {
         final String[] result = {""};
         final Task<DocumentSnapshot> task = db.collection("users").document(email).get();
         task.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -315,7 +319,7 @@ public class Functions {
     /**************************************
      * Check if anyone has taken the user name. emails are checked by authentication
      ****************************************/
-    public boolean username_exists(String user_name){
+    public boolean username_exists(String user_name) {
         DocumentReference user_doc = db.collection("users").document(user_name);
         final boolean[] result = {false};
         user_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -325,7 +329,7 @@ public class Functions {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         //System.out.println("HEREEEEEEEEEEEEEEEEEEEE");
-                        result[0]=true;
+                        result[0] = true;
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -340,10 +344,11 @@ public class Functions {
 
     /**
      * Checks if the email already exists in the database
+     *
      * @param user_email email under question
      * @return true if username already exists in the database
      */
-    public boolean email_exists(String user_email){
+    public boolean email_exists(String user_email) {
         DocumentReference user_doc = db.collection("users").document(user_email);
         final boolean[] result = {false};
         user_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -352,7 +357,7 @@ public class Functions {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        result[0]=true;
+                        result[0] = true;
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -369,7 +374,7 @@ public class Functions {
      *
      */
 
-    public Item get_Item_by_Item_ID(String item_ID){
+    public Item get_Item_by_Item_ID(String item_ID) {
         final DocumentReference item_doc = db.collection("items").document(item_ID);
         final Item[] result = {null};
         item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -389,24 +394,24 @@ public class Functions {
      *
      **************************/
     public void edit_post(String item_id, String title, double price,
-                          String category, String address, String description,int status){
+                          String category, String address, String description, int status) {
         Item item = get_Item_by_Item_ID(item_id);
-        if(!category.equals(item.getCategory())) {
+        if (!category.equals(item.getCategory())) {
             item.setCategory(category);
         }
-        if(!title.equals(item.getTitle())){
+        if (!title.equals(item.getTitle())) {
             item.setTitle(title);
         }
-        if(price!=item.getPrice()){
+        if (price != item.getPrice()) {
             item.setPrice(price);
         }
-        if(!address.equals(item.getLocation())){
+        if (!address.equals(item.getLocation())) {
             item.setLocation(address);
         }
-        if(!description.equals(item.getDescription())){
+        if (!description.equals(item.getDescription())) {
             item.setDescription(description);
         }
-        if(status!=item.getStatus()){
+        if (status != item.getStatus()) {
             item.setStatus(status);
         }
 
@@ -427,26 +432,24 @@ public class Functions {
     }
 
 
-
-
     /***************** AT:
      * Edit profile
      *
      **************************/
     public void update_profile(String email, String phone, int gender,
-                               String description, String real_name, String address){
+                               String description, String real_name, String address) {
 
-        if(!phone.equals("")){
+        if (!phone.equals("")) {
             db.collection("profiles").document(email)
-                    .update("phone_number",phone);
+                    .update("phone_number", phone);
         }
-        if(!description.equals("")){
+        if (!description.equals("")) {
             db.collection("profiles").document(email)
-                    .update("description",description);
+                    .update("description", description);
         }
-        if(!address.equals("")){
+        if (!address.equals("")) {
             db.collection("profiles").document(email)
-                    .update("address",address);
+                    .update("address", address);
         }
 
         /*
@@ -482,7 +485,7 @@ public class Functions {
      * I am VERY UNCERTAIN about this function!
      *
      */
-    public String[] get_my_item(String user_name){
+    public String[] get_my_item(String user_name) {
         final DocumentReference user_doc = db.collection("profiles").document(user_name);
         final Object result[] = new Object[1];
 
@@ -490,24 +493,21 @@ public class Functions {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot document = task.getResult();
-                if (document.exists()){
+                if (document.exists()) {
                     result[0] = document.get("my_items");
                     //result[0] = (String[])document.getData().get("my_items");
                     Log.e(TAG, "my item list found");
 
-                }else{
-                    Log.e(TAG,"my item list not found");
+                } else {
+                    Log.e(TAG, "my item list not found");
                 }
             }
         });
 
-        String[] items = ((List<String>)result[0]).toArray(new String[0]);
+        String[] items = ((List<String>) result[0]).toArray(new String[0]);
 
         return items;
     }
-
-
-
 
 
     //Mia!!
@@ -516,7 +516,7 @@ public class Functions {
      delete item from wishlist
      ******************************/
 
-    public void delete_wishlist(String itemid, String userid){
+    public void delete_wishlist(String itemid, String userid) {
         final DocumentReference wish_doc = db.collection("profiles").document(userid);
         wish_doc.update("wish_list", FieldValue.arrayRemove(itemid));
 //        db.collection("profiles").document(userid)
@@ -539,7 +539,7 @@ public class Functions {
      add item to wishlist
      **************************/
 
-    public void add_wishlist(String itemid, String userid){
+    public void add_wishlist(String itemid, String userid) {
         final DocumentReference wish_doc = db.collection("profiles").document(userid);
         wish_doc.update("wish_list", FieldValue.arrayUnion(itemid));
 
@@ -564,20 +564,20 @@ public class Functions {
     /*********************
      * get item name through item id
      */
-    public String[] get_item_name(String id){
+    public String[] get_item_name(String id) {
         final String[] item_name = {""};
         final DocumentReference docRef = db.collection("items").document(id);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if(document.exists()){
+                    if (document.exists()) {
                         item_name[0] = (String) document.getData().get("name");
-                    } else{
+                    } else {
                         Log.d(TAG, "No such document");
                     }
-                }else {
+                } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
             }
@@ -590,24 +590,24 @@ public class Functions {
      * @param items  a list of itemIDs
      * @return List<Item> list of Items corresponding to List of itemIDs
      */
-    public List<Item> get_wanted_item(List<String> items){
+    public List<Item> get_wanted_item(List<String> items) {
         List<Item> wishlist = new ArrayList<>();
         String itemid = "";
         //loop through wishlist in profile
-        for(int i = 0; i < items.size(); i ++){
+        for (int i = 0; i < items.size(); i++) {
             itemid = items.get(i);
             Item item = get_Item_by_Item_ID(itemid);
             wishlist.add(item);
 
         }
 
-        return  wishlist;
+        return wishlist;
     }
 
     /***
      * put all itemid into a list
      */
-    public List<String> get_itemid_list(String userid){
+    public List<String> get_itemid_list(String userid) {
         final List<String> itemid_list = new ArrayList<String>();
         db.collection("profiles").document(userid).collection("wish_list")
                 .get()
@@ -625,6 +625,7 @@ public class Functions {
                 });
         return itemid_list;
     }
+
     /****
      * delete post
      * use itemid to find the document and delete it from firebase
@@ -633,7 +634,7 @@ public class Functions {
      * Previous version only deleted the item in current user's wishlist
      * Now (hopefully) it deletes item in every user's wishlist
      */
-    public void delete_post(final String itemid, String userid){
+    public void delete_post(final String itemid, String userid) {
         db.collection("items").document(itemid)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -653,12 +654,12 @@ public class Functions {
         DocumentReference profiles_doc = db.collection("profiles").document(userid);
         profiles_doc.update("my_items", FieldValue.arrayRemove(itemid));
 
-        Query query= profile_ref.whereArrayContains("wish_list", itemid);
+        Query query = profile_ref.whereArrayContains("wish_list", itemid);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document: task.getResult()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
                         if (document.exists()) {
                             String current_user = document.getId();
                             DocumentReference current_profile = db.collection("profiles").document(current_user);
@@ -682,10 +683,14 @@ public class Functions {
     /**
      * Function for calling all items to be displayed on the HomePageActivity
      *
+     * NOTE: having same asynchronous issues as before... need integrate this function with frontend interface
+     * once that is done. Currently it is able to retrieve all of the items but returns before the data
+     * is actually received :(
+     *
      * @param criterion option for sorting the list, can be "all", "posting date", or "price"
      * @return List of all Items pulled from Firestore
      */
-    public ArrayList<Item> getHomePageList(String criterion){
+    public ArrayList<Item> getHomePageList(String criterion) {
         final ArrayList<Item> allItems = new ArrayList<Item>();  //2D ArrayList to hold all posted items from all users
 
         System.out.println("FUNCTIONS: ATTEMPTING TO RETRIEVE ITEMS FOR HOMEPAGE");
@@ -695,8 +700,8 @@ public class Functions {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot doc : task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
                                 //Log.d(TAG, doc.getId() + "=> " + doc.getData());
                                 //Get Map of Item
                                 Map<String, Object> itemMap = doc.getData();
@@ -717,17 +722,85 @@ public class Functions {
 
                                     //test to make sure item was received
                                     //System.out.println(itemObj.toString());
-                                }catch(NullPointerException e){
+                                } catch (NullPointerException e) {
                                     System.out.println("Null Doc Found: " + e.getLocalizedMessage());
+                                } catch (NoSuchFieldError e){
+                                    System.out.println("No Such Field: " + e.getLocalizedMessage());
                                 }
                             }
-                        }
-                        else{
+                        } else {
                             Log.d(TAG, "Error getting Item documents: ", task.getException());
                         }
                     }
                 });
+
+        //sort items based on criterion before returning
+        switch (criterion) {
+            case "price":
+                Collections.sort(allItems, priceComparator);
+                break;
+            case "date":
+                Collections.sort(allItems, dateComparator);
+                break;
+            case "credibility":
+                Collections.sort(allItems, credComparator);
+                break;
+        }
+
         System.out.println(allItems.toString());
         return allItems;
     }
+
+    /**
+     * Item Comparator based on Item's price
+     */
+    public static Comparator<Item> priceComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item o1, Item o2) {
+            if(o1.getPrice() < o2.getPrice())
+                return -1;
+            else if(o1.getPrice() < o2.getPrice())
+                return 1;
+            else //equal
+                return 0;
+        }
+    };
+
+    /**
+     * Item Comparator based on Item's posted_date, need to parse Date String
+     * into Date Object to compare them
+     *
+     * Still need to test this... [Scott] //TODO
+     */
+    public static Comparator<Item> dateComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item o1, Item o2) {
+            SimpleDateFormat format = new SimpleDateFormat(Calendar.getInstance().toString());
+            Date d1 = null;
+            Date d2 = null;
+            try {
+                d1 = format.parse(o1.getPosted_time());
+                d2 = format.parse(o2.getPosted_time());
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return 0;
+            }
+            return d1.compareTo(d2);
+        }
+    };
+
+    /**
+     * Item Comparator based on Seller's credibility
+     *
+     * Work in Progress
+     */
+    //TODO
+    public static Comparator<Item> credComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item o1, Item o2) {
+            return 0;
+        }
+    };
 }
+
+

@@ -7,8 +7,8 @@ public class Comment {
     private String buyer_email;
     private String posted_time;
 
-    Comment(){}
-    Comment(String buyer_email, String content,String item_ID, int rating, String posted_time){
+    public Comment(){}
+    public Comment(String buyer_email, String content,String item_ID, int rating, String posted_time){
         this.buyer_email=buyer_email;
         this.content=content;
         this.item_ID=item_ID;

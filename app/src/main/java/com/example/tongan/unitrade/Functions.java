@@ -7,7 +7,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.tongan.unitrade.objects.Comment;
 import com.example.tongan.unitrade.objects.Item;
+import com.example.tongan.unitrade.objects.Order;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -88,6 +90,9 @@ public class Functions {
         profile_doc.put("address", address);
         profile_doc.put("real_name", real_name);
         profile_doc.put("user_name", user_name);
+        profile_doc.put("rating_number", 0);
+        profile_doc.put("rating", (double)0);
+
 
         db.collection("users").document(email)
                 .set(user_doc)
@@ -476,6 +481,165 @@ public class Functions {
                 });
                 */
     }
+
+    /**************** AT
+     * browses list of items by category
+     * !!! needs to be put in front end implementation file
+     * temporary useless
+     * */
+    public void get_classes_by_category(String category){
+        Query query = db.collection("courses").whereEqualTo("category", category);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document: task.getResult()) {
+                        if (document.exists()) {
+                            Item c = document.toObject(Item.class);
+                            if(c.getStatus()!=0){
+                                //Todo display the course c in front end
+                            }
+                        } else {
+                            // display empty list
+                            Log.d(TAG, "No such document");
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+
+
+
+
+    /********** AT:
+     * Call when user buys an item
+     */
+
+    public void create_order(String buyer_email, String item_ID, String order_time, Double item_price, String item_title){
+
+        Order order = new Order(item_ID, order_time, buyer_email,item_title, item_price, true );
+
+        db.collection("orders").document(buyer_email+order_time).set(order);
+
+        // add the order in profile
+        DocumentReference user_doc = db.collection("profiles").document(buyer_email);
+        user_doc.update("my_orders", FieldValue.arrayUnion(buyer_email+order_time));
+
+        //change status of item
+        update_item_status(item_ID, 1);
+
+    }
+
+    public void update_item_status(String itemID,int status){
+        DocumentReference item_doc = db.collection("items").document(itemID);
+        item_doc.update("status", status)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+    }
+
+    public void close_order(String orderID){
+        DocumentReference courses_doc = db.collection("orders").document(orderID);
+        courses_doc.update("status", true)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+    }
+
+    public void display_orders(String user_email){
+        DocumentReference prof_doc = db.collection("profiles").document(user_email);
+        prof_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    List<String> my_items = new ArrayList<String>();
+                    my_items = (List<String>) document.getData().get("my_orders");
+                    if (my_items == null || my_items.isEmpty()) {
+                        System.out.println("Nothing on the list!");
+                    } else {
+                        for (int i = 0; i < my_items.size(); i++) {
+                            final DocumentReference item_doc = db.collection("orders").document(my_items.get(i));
+                            final int finalI = i;
+                            item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    Order current_order = new Order();
+                                    current_order = documentSnapshot.toObject(Order.class);
+                                    //Todo: combine with front end
+                                }
+                            });
+                        }
+                    }
+                    //result[0] = (String[])document.getData().get("my_items");
+                    Log.e(TAG, "my item list found");
+
+                } else {
+                    Log.e(TAG, "my item list not found");
+                }
+            }
+        });
+    }
+
+
+    public void create_comment(String item_name, String buyeremail, String content, int rating, String posted_time){
+        Comment comment = new Comment(buyeremail,content,item_name,rating,posted_time);
+        db.collection("comments").document(buyeremail+posted_time).set(comment);
+
+        // add the comment to profile
+        final DocumentReference user_doc = db.collection("profiles").document(buyeremail);
+        user_doc.update("my_comments", FieldValue.arrayUnion(buyeremail+posted_time));
+
+        final int rate = rating;
+        //update average rating
+        user_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        int rating_number = (int) document.get("rating_number");
+                        if(rating_number!=0) {
+                            double prev_rate = (double) document.get("rating");
+                            user_doc.update("rating",(prev_rate*(double)rating_number)+(double)rate/(rating_number+1));
+                            user_doc.update("rating_number",rating_number+1);
+                        }
+                        else{
+                            user_doc.update("rating",rate);
+                            user_doc.update("rating_number",1);
+                        }
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
 
 
     /**********

@@ -132,4 +132,15 @@
         android:text="Posted Time:"
         android:textSize="18sp" />
 
+    <Button
+        android:id="@+id/Item_Details_Buy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/detail_image"
+        android:text="Buy"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_alignParentRight="true" />
+
 </RelativeLayout>

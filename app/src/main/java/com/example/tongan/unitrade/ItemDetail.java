@@ -96,7 +96,6 @@ public class ItemDetail extends AppCompatActivity {
         final String item_id = "TongAn12:03:5909212019";
         //final String user_id ="guo361@purdue.edu";
 
-        //todo : get above values from backend and store into variables
 
         desc_edit.setText(description);
         name_edit.setText(item_name);
@@ -237,11 +236,23 @@ public class ItemDetail extends AppCompatActivity {
 //                        Toast.makeText(getBaseContext(), "please signin first!", Toast.LENGTH_LONG).show();
 //                    }
 
-                    String add = "+wishList";
+                    String add = "-wishList";
                     wishListBtn.setText(add);
                 }
             }
         });
+
+
+        Button item_details_buy = (Button) findViewById(R.id.Item_Details_Buy);
+        item_details_buy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getBaseContext(), "Buy Success!", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(ItemDetail.this, Purchase.class);
+                startActivity(intent);
+            }
+        });
+
 
     }
 

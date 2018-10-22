@@ -841,6 +841,16 @@ public class Functions {
 
     }
 
+    /***
+     * if someone buy an item, call this function to change the item status to 2(which is been bought)
+     * @param itemid
+     */
+    void changeItemStatusToBought(String itemid){
+        db.collection("items").document(itemid)
+                .update("status", '2');
+    }
+
+
 
     /*** Scott's Work ***/
 

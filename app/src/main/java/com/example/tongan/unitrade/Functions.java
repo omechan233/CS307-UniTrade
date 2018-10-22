@@ -518,10 +518,9 @@ public class Functions {
     /********** AT:
      * Call when user buys an item
      */
+    public void create_order(String buyer_email, String item_ID, String order_time, Double item_price, String item_title, boolean face_to_face){
 
-    public void create_order(String buyer_email, String item_ID, String order_time, Double item_price, String item_title){
-
-        Order order = new Order(item_ID, order_time, buyer_email,item_title, item_price, true );
+        Order order = new Order(item_ID, order_time, buyer_email,item_title, item_price, true,face_to_face );
 
         db.collection("orders").document(buyer_email+order_time).set(order);
 
@@ -533,6 +532,7 @@ public class Functions {
         update_item_status(item_ID, 1);
 
     }
+
 
     public void update_item_status(String itemID,int status){
         DocumentReference item_doc = db.collection("items").document(itemID);

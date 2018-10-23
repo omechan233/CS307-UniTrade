@@ -4,26 +4,26 @@ public class Comment {
     private String content;
     private String item_name;
     private int rating;
-    private String buyer_email;
+    private String sender_name;
     private String posted_time;
-    private String seller_email;
+    private String receiver_name;
 
     public Comment(){}
-    public Comment(String buyer_email, String content,String item_name, int rating, String posted_time, String seller_email){
-        this.buyer_email=buyer_email;
+    public Comment(String sender_name, String content,String item_name, int rating, String posted_time, String seller_email){
+        this.sender_name=sender_name;
         this.content=content;
         this.item_name=item_name;
         this.rating=rating;
         this.posted_time=posted_time;
-        this.seller_email=seller_email;
+        this.receiver_name=seller_email;
     }
 
     public int getRating() {
         return rating;
     }
 
-    public String getBuyer_email() {
-        return buyer_email;
+    public String getSender_name() {
+        return sender_name;
     }
 
     public String getContent() {
@@ -38,7 +38,7 @@ public class Comment {
         return posted_time;
     }
 
-    public String getSeller_email() {
-        return seller_email;
+    public String getReceiver_name() {
+        return receiver_name;
     }
 }

@@ -604,12 +604,12 @@ public class Functions {
     }
 
 
-    public void create_comment(String item_name, String buyeremail, String content, int rating, String posted_time){
-        Comment comment = new Comment(buyeremail,content,item_name,rating,posted_time);
+    public void create_comment(String item_name, String buyeremail, String content, int rating, String posted_time,String selleremail){
+        Comment comment = new Comment(buyeremail,content,item_name,rating,posted_time,selleremail);
         db.collection("comments").document(buyeremail+posted_time).set(comment);
 
         // add the comment to profile
-        final DocumentReference user_doc = db.collection("profiles").document(buyeremail);
+        final DocumentReference user_doc = db.collection("profiles").document(selleremail);
         user_doc.update("my_comments", FieldValue.arrayUnion(buyeremail+posted_time));
 
         final int rate = rating;

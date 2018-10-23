@@ -65,10 +65,8 @@ public class Purchase extends AppCompatActivity {
 
                         if(finalFace_to_face){
                             Toast.makeText(Purchase.this, "Submit Success! You choose "+ radioButton.getText(),Toast.LENGTH_LONG).show();
-                            f.changeOrderTypeFTF(orderid);
                         }else{
                             Toast.makeText(Purchase.this, "Submit Success! You choose "+radioButton.getText(), Toast.LENGTH_LONG).show();
-                            f.changeOrderTypeOnline(orderid);
                         }
                     }
                 });

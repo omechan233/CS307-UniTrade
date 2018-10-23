@@ -11,8 +11,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.tongan.unitrade.objects.Comment;
+import com.example.tongan.unitrade.objects.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +26,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -65,6 +73,9 @@ public class ProfileActivity extends AppCompatActivity {
         String phone = "";
         String address = "";
 
+        final TextView comment_view = (TextView) findViewById(R.id.comment_view);
+        String commentid = sharedPreferences.getString("commentid",null);
+
         /*
          * Retrieving data from the database to fill in EditText fields. Documents are specific to Firestore,
          * DO NOT CHANGE doc.get("[document]")
@@ -100,6 +111,7 @@ public class ProfileActivity extends AppCompatActivity {
                         //update text boxes with user info from database
                         address_edit.setText(doc.get("address").toString());
                         phone_edit.setText(doc.get("phone_number").toString());
+
                         Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
                     }else{
                         Log.d(TAG, "No such document...");
@@ -110,6 +122,71 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+        //retrieve comments
+//        final ScrollView scrollView = (ScrollView) findViewById(R.id.comment_area);
+//        scrollView.removeAllViews();
+//        Comment ct1=new Comment("guo361@purdue.edu","test1","g",
+//                '3',"2018/10/23/1132","xu830@purdue.edu");
+//        Comment ct2=new Comment("an82@purdue.edu","test2","a",
+//                '5',"2018/10/23/1133","xu830@purdue.edu");
+//        final ArrayList<Comment> com_test = new ArrayList<Comment>();
+//        com_test.add(ct1);
+//        com_test.add(ct2);
+//
+//        profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        List<String> my_comments = new ArrayList<String>();
+//                        my_comments = (List<String>) document.getData().get("my_comments");
+//                        if (my_comments == null || my_comments.isEmpty()) {
+//                            System.out.println("Nothing on the list!");
+//                        } else {
+//                            for (int i = 0; i < my_comments.size(); i++) {
+//                                final DocumentReference com_doc = db.collection("comments").document(my_comments.get(i));
+//                                final int finalI = i;
+//                                com_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                                    @Override
+//                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                                        Comment current_com = new Comment();
+//                                        current_com = documentSnapshot.toObject(Comment.class);
+//                                        LinearLayout comment = new LinearLayout(getBaseContext());
+//                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(400, 200);
+//                                        comment.setLayoutParams(params);
+//                                        ImageView imageView = new ImageView(getBaseContext());
+//                                        imageView.setImageResource(R.mipmap.poi_test_src);
+//                                        params = new LinearLayout.LayoutParams(180, 180);
+//                                        params.setMargins(20, 20, 0, 20);
+//                                        imageView.setLayoutParams(params);
+//                                        comment.addView(imageView);
+//                                        TextView tv = new TextView(getBaseContext());
+//                                        //todo : the String below is getting information from a hard coding ArrayList<Item>, change it to adapt the actual data retrieved from backend
+//                                        String text = "\n" + current_com.getContent() + "\n" + current_com.getPosted_time() + "\n" + current_com.getBuyer_email();
+//                                        tv.setText(text);
+//                                        comment.addView(tv);
+//                                        comment.setOnClickListener(new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View v) {
+//                                                //todo:get the item_id of the selected item and store it into a global variable that can be used in the ItemDetail page(need to know which item to display detail)
+//                                                startActivity(new Intent(ProfileActivity.this, ItemDetail.class));
+//
+//                                            }
+//                                        });
+//                                        scrollView.addView(comment);
+//                                    }
+//                                });
+//                            }
+//
+//
+//                        }
+//                        //result[0] = (String[])document.getData().get("my_items");
+//                        Log.e(TAG, "my item list found");
+//
+//                    } else {
+//                        Log.e(TAG, "my item list not found");
+//                    }
+//                }
+//            });
 
 
         //todo: get username, email, phone, address from backend, and store it into the variables above

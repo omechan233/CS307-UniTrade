@@ -49,7 +49,7 @@ public class Purchase extends AppCompatActivity {
                     face_to_face = true;
                 }
 
-                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
                 DocumentReference item_doc = db.collection("items").document(itemid);
                 final boolean finalFace_to_face = face_to_face;
                 item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -61,7 +61,6 @@ public class Purchase extends AppCompatActivity {
                         Functions f = new Functions();
                         f.create_order(useremail,itemid, time, item.getPrice() ,item.getTitle(), finalFace_to_face);
 
-                        final String orderid = shared.getString("orderid","");
 
                         if(finalFace_to_face){
                             Toast.makeText(Purchase.this, "Submit Success! You choose "+ radioButton.getText(),Toast.LENGTH_LONG).show();

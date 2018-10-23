@@ -29,7 +29,6 @@ public class Purchase extends AppCompatActivity {
         shared = getSharedPreferences("app", Context.MODE_PRIVATE);
         final String useremail = shared.getString("email","");
         final String itemid = shared.getString("itemid","");
-        final String orderid = shared.getString("orderid","");
         setContentView(R.layout.activity_purchase);
 
 
@@ -62,7 +61,7 @@ public class Purchase extends AppCompatActivity {
                         Functions f = new Functions();
                         f.create_order(useremail,itemid, time, item.getPrice() ,item.getTitle(), finalFace_to_face);
 
-                        DocumentReference order_doc = db.collection("orders").document(orderid);
+                        final String orderid = shared.getString("orderid","");
 
                         if(finalFace_to_face){
                             Toast.makeText(Purchase.this, "Submit Success! You choose "+ radioButton.getText(),Toast.LENGTH_LONG).show();

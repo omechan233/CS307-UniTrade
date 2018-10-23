@@ -60,6 +60,7 @@ public class ItemDetail extends AppCompatActivity {
         name_edit.setFocusable(false);
         price_edit.setFocusable(false);
 
+        final TextView editBtn = (TextView) findViewById(R.id.detail_edit);
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference item_doc = db.collection("items").document(itemid);
@@ -73,6 +74,16 @@ public class ItemDetail extends AppCompatActivity {
                 String seller = item.getSeller_name();
                 final String item_id = itemid;
                 String time = item.getPosted_time();
+
+                // if current login user is not the seller of this item
+                // set the edit item detail button invisible.
+                if (!seller.equals(email)){
+                    editBtn.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    System.out.println("This item is sold by yourself!!!");
+                }
+
 
                 desc_edit.setText(description);
                 time_edit.setText(time);
@@ -106,7 +117,6 @@ public class ItemDetail extends AppCompatActivity {
         price_edit.setText(temp);
         */
 
-        final TextView editBtn = (TextView) findViewById(R.id.detail_edit);
         final TextView delBtn = (TextView) findViewById(R.id.detail_delete);
         delBtn.setClickable(false);
         editBtn.setOnClickListener(new View.OnClickListener() {

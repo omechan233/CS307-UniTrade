@@ -850,6 +850,21 @@ public class Functions {
                 .update("status", '2');
     }
 
+    /***
+     * change order type
+     * @param orderid
+     */
+
+    void changeOrderTypeFTF(String orderid){
+        db.collection("orders").document(orderid)
+                .update("face_to_face",true);
+    }
+
+    void changeOrderTypeOnline(String orderid){
+        db.collection("orders").document(orderid)
+                .update("face_to_face",false);
+    }
+
 
 
     /*** Scott's Work ***/

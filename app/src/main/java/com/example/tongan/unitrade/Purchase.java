@@ -29,6 +29,7 @@ public class Purchase extends AppCompatActivity {
         shared = getSharedPreferences("app", Context.MODE_PRIVATE);
         final String useremail = shared.getString("email","");
         final String itemid = shared.getString("itemid","");
+        final String orderid = shared.getString("orderid","");
         setContentView(R.layout.activity_purchase);
 
 
@@ -49,7 +50,7 @@ public class Purchase extends AppCompatActivity {
                     face_to_face = true;
                 }
 
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                final FirebaseFirestore db = FirebaseFirestore.getInstance();
                 DocumentReference item_doc = db.collection("items").document(itemid);
                 final boolean finalFace_to_face = face_to_face;
                 item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -61,10 +62,14 @@ public class Purchase extends AppCompatActivity {
                         Functions f = new Functions();
                         f.create_order(useremail,itemid, time, item.getPrice() ,item.getTitle(), finalFace_to_face);
 
+                        DocumentReference order_doc = db.collection("orders").document(orderid);
+
                         if(finalFace_to_face){
                             Toast.makeText(Purchase.this, "Submit Success! You choose "+ radioButton.getText(),Toast.LENGTH_LONG).show();
+                            f.changeOrderTypeFTF(orderid);
                         }else{
                             Toast.makeText(Purchase.this, "Submit Success! You choose "+radioButton.getText(), Toast.LENGTH_LONG).show();
+                            f.changeOrderTypeOnline(orderid);
                         }
                     }
                 });

@@ -125,31 +125,34 @@ public class ProfileActivity extends AppCompatActivity {
         //retrieve comments
 //        final ScrollView scrollView = (ScrollView) findViewById(R.id.comment_area);
 //        scrollView.removeAllViews();
-//        Comment ct1=new Comment("guo361@purdue.edu","test1","g",
-//                '3',"2018/10/23/1132","xu830@purdue.edu");
-//        Comment ct2=new Comment("an82@purdue.edu","test2","a",
-//                '5',"2018/10/23/1133","xu830@purdue.edu");
-//        final ArrayList<Comment> com_test = new ArrayList<Comment>();
-//        com_test.add(ct1);
-//        com_test.add(ct2);
-//
-//        profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//                        List<String> my_comments = new ArrayList<String>();
-//                        my_comments = (List<String>) document.getData().get("my_comments");
-//                        if (my_comments == null || my_comments.isEmpty()) {
-//                            System.out.println("Nothing on the list!");
-//                        } else {
-//                            for (int i = 0; i < my_comments.size(); i++) {
-//                                final DocumentReference com_doc = db.collection("comments").document(my_comments.get(i));
-//                                final int finalI = i;
-//                                com_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                                    @Override
-//                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                                        Comment current_com = new Comment();
-//                                        current_com = documentSnapshot.toObject(Comment.class);
+        Comment ct1=new Comment("guo361@purdue.edu","test1","g",
+                '3',"2018/10/23/1132","xu830@purdue.edu");
+        Comment ct2=new Comment("an82@purdue.edu","test2","a",
+                '5',"2018/10/23/1133","xu830@purdue.edu");
+        final ArrayList<Comment> com_test = new ArrayList<Comment>();
+        com_test.add(ct1);
+        com_test.add(ct2);
+
+        profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        List<String> my_comments = new ArrayList<String>();
+                        my_comments = (List<String>) document.getData().get("my_comments");
+                        if (my_comments == null || my_comments.isEmpty()) {
+                            System.out.println("Nothing on the list!");
+                        } else {
+                            for (int i = 0; i < my_comments.size(); i++) {
+                                final DocumentReference com_doc = db.collection("comments").document(my_comments.get(i));
+                                final int finalI = i;
+                                com_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        Comment current_com = new Comment();
+                                        current_com = documentSnapshot.toObject(Comment.class);
+                                        System.out.println(current_com.getSender_name() + current_com.getPosted_time()
+                                        + current_com.getContent() + current_com.getReceiver_name());
+                                        System.out.println("#################################");
 //                                        LinearLayout comment = new LinearLayout(getBaseContext());
 //                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(400, 200);
 //                                        comment.setLayoutParams(params);
@@ -165,7 +168,7 @@ public class ProfileActivity extends AppCompatActivity {
 //                                        tv.setText(text);
 //                                        comment.addView(tv);
 //                                        comment.setOnClickListener(new View.OnClickListener() {
-//                                            @Override
+//
 //                                            public void onClick(View v) {
 //                                                //todo:get the item_id of the selected item and store it into a global variable that can be used in the ItemDetail page(need to know which item to display detail)
 //                                                startActivity(new Intent(ProfileActivity.this, ItemDetail.class));
@@ -173,20 +176,20 @@ public class ProfileActivity extends AppCompatActivity {
 //                                            }
 //                                        });
 //                                        scrollView.addView(comment);
-//                                    }
-//                                });
-//                            }
-//
-//
-//                        }
-//                        //result[0] = (String[])document.getData().get("my_items");
-//                        Log.e(TAG, "my item list found");
-//
-//                    } else {
-//                        Log.e(TAG, "my item list not found");
-//                    }
-//                }
-//            });
+                                    }
+                                });
+                            }
+
+
+                        }
+                        //result[0] = (String[])document.getData().get("my_items");
+                        Log.e(TAG, "my item list found");
+
+                    } else {
+                        Log.e(TAG, "my item list not found");
+                    }
+                }
+            });
 
 
         //todo: get username, email, phone, address from backend, and store it into the variables above

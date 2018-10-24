@@ -9,8 +9,8 @@
     </string-array>
 
     <string-array name="sort">
-        <item>Default</item>
-        <item>Distance</item>
+        <item>Name</item>
+        <item>Post Date</item>
         <item>Price</item>
     </string-array>
 

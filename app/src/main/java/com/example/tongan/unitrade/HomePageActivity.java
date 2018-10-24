@@ -3,7 +3,6 @@ package com.example.tongan.unitrade;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,31 +10,22 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -83,34 +73,54 @@ public class HomePageActivity extends AppCompatActivity {
         search_word = (EditText)findViewById(R.id.search_input);
         search_sort = (Spinner)findViewById(R.id.search_sort);
 
+        // NOT WORKING FOR SOME REASON???
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                search_button.callOnClick();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         //onclickListener is the function called when click on the button
         search_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //For sorting based on criterion like price, post data, etc.
+                String criterion = "title"; //default sorting criterion for items
+                //search_category is the selected category, the default is set to "all"
+                String sort_option = search_sort.getSelectedItem().toString();
+                if(sort_option.equals("Price")){
+                    criterion = "price";
+                }else if(sort_option.equals("Most Recent")){
+                    criterion = "posted_time";
+                }
+
+
                 //keyWord is the user input
                 String keyword = search_word.getText().toString();
-                //search_category is the selected category, the default is set to "all"
                 String search_category = spinner.getSelectedItem().toString();
-                String sort_option = search_sort.getSelectedItem().toString();
                 //todo:use values above to get items, if keyWord isEmpty(), get top items from all categories
-                //here is the hard coding item list, delete it after implementing backend function
+
                 Toast.makeText(getBaseContext(), search_category + sort_option + keyword, Toast.LENGTH_LONG).show();
 
                 final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
                 homepage_result.removeAllViews();
 
                 CollectionReference Items = db.collection("items");
-                Items.get()
+                Items.orderBy(criterion).get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                                        //Log.d(TAG, doc.getId() + "=> " + doc.getData());
+                                        Log.d(TAG, doc.getId() + "=> " + doc.getData());
 
                                         //Get Map of Item
                                         Map<String, Object> itemMap = doc.getData();
-                                        System.out.println("MAP STRING: " + itemMap.toString());
                                         try {
                                             //Construct Item Object from each DocSnapshot
 
@@ -166,7 +176,6 @@ public class HomePageActivity extends AppCompatActivity {
                         });
             }
         });
-        //call the search button function when creating the interface to generate initial item list
         search_button.callOnClick();
     }
 }

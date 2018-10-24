@@ -32,11 +32,14 @@ public class Notification extends AppCompatActivity {
 
         Button notifi_back_btn = (Button) findViewById(R.id.notifi_back);
         final Switch notifi_switch = (Switch) findViewById(R.id.notifi_switch);
+        final Switch notifi_itemSold = (Switch) findViewById(R.id.notifi_itemSold_switch);
+        final Switch notifi_changeMethod = (Switch) findViewById(R.id.notifi_changeMethod_switch);
+
 
         final String email=shared.getString("email","");
         final Functions f = new Functions();
 
-        //TODO: get Notification number value from backend function.
+
 
         //use backend function to get Notification number
         //if int == 1, set switch.checked() = true;
@@ -84,6 +87,42 @@ public class Notification extends AppCompatActivity {
 
             }
         });
+
+        notifi_itemSold.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    //Todo:back-end change the ItemSold Notify status to 1;
+                    Toast.makeText(getBaseContext(), "Item Sold Notification on!", Toast.LENGTH_LONG).show();
+
+                }
+                else {
+                    //Todo:back-end change the ItemSold Notify status to 0;
+                    Toast.makeText(getBaseContext(), "Item Sold Notification off!", Toast.LENGTH_LONG).show();
+
+
+                }
+            }
+        });
+
+        notifi_changeMethod.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    //Todo:back-end change the ChangeMethod Notify status to 1;
+                    Toast.makeText(getBaseContext(), "ChangeMethod Notification on!", Toast.LENGTH_LONG).show();
+
+                }
+                else {
+                    //Todo:back-end change the ChangeNotify Notify status to 0;
+                    Toast.makeText(getBaseContext(), "ChangeMethod Notification off!", Toast.LENGTH_LONG).show();
+
+
+                }
+            }
+        });
+
+
 
 
 

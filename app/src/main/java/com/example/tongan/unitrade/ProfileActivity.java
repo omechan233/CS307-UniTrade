@@ -3,16 +3,20 @@ package com.example.tongan.unitrade;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.ColorSpace;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -29,6 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -72,9 +77,6 @@ public class ProfileActivity extends AppCompatActivity {
         final String username = "";
         String phone = "";
         String address = "";
-
-        final TextView comment_view = (TextView) findViewById(R.id.comment_view);
-        String commentid = sharedPreferences.getString("commentid",null);
 
         /*
          * Retrieving data from the database to fill in EditText fields. Documents are specific to Firestore,
@@ -122,75 +124,36 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
-        //retrieve comments
-//        final ScrollView scrollView = (ScrollView) findViewById(R.id.comment_area);
-//        scrollView.removeAllViews();
-        Comment ct1=new Comment("guo361@purdue.edu","test1","g",
-                '3',"2018/10/23/1132","xu830@purdue.edu");
-        Comment ct2=new Comment("an82@purdue.edu","test2","a",
-                '5',"2018/10/23/1133","xu830@purdue.edu");
-        final ArrayList<Comment> com_test = new ArrayList<Comment>();
-        com_test.add(ct1);
-        com_test.add(ct2);
-
-        profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        List<String> my_comments = new ArrayList<String>();
-                        my_comments = (List<String>) document.getData().get("my_comments");
-                        if (my_comments == null || my_comments.isEmpty()) {
-                            System.out.println("Nothing on the list!");
-                        } else {
-                            for (int i = 0; i < my_comments.size(); i++) {
-                                final DocumentReference com_doc = db.collection("comments").document(my_comments.get(i));
-                                final int finalI = i;
-                                com_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        Comment current_com = new Comment();
-                                        current_com = documentSnapshot.toObject(Comment.class);
-                                        System.out.println(current_com.getSender_name() + current_com.getPosted_time()
-                                        + current_com.getContent() + current_com.getReceiver_name());
-                                        System.out.println("#################################");
-//                                        LinearLayout comment = new LinearLayout(getBaseContext());
-//                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(400, 200);
-//                                        comment.setLayoutParams(params);
-//                                        ImageView imageView = new ImageView(getBaseContext());
-//                                        imageView.setImageResource(R.mipmap.poi_test_src);
-//                                        params = new LinearLayout.LayoutParams(180, 180);
-//                                        params.setMargins(20, 20, 0, 20);
-//                                        imageView.setLayoutParams(params);
-//                                        comment.addView(imageView);
-//                                        TextView tv = new TextView(getBaseContext());
-//                                        //todo : the String below is getting information from a hard coding ArrayList<Item>, change it to adapt the actual data retrieved from backend
-//                                        String text = "\n" + current_com.getContent() + "\n" + current_com.getPosted_time() + "\n" + current_com.getBuyer_email();
-//                                        tv.setText(text);
-//                                        comment.addView(tv);
-//                                        comment.setOnClickListener(new View.OnClickListener() {
-//
-//                                            public void onClick(View v) {
-//                                                //todo:get the item_id of the selected item and store it into a global variable that can be used in the ItemDetail page(need to know which item to display detail)
-//                                                startActivity(new Intent(ProfileActivity.this, ItemDetail.class));
-//
-//                                            }
-//                                        });
-//                                        scrollView.addView(comment);
-                                    }
-                                });
-                            }
 
 
-                        }
-                        //result[0] = (String[])document.getData().get("my_items");
-                        Log.e(TAG, "my item list found");
+        //display comments
+        final LinearLayout comment_view = (LinearLayout) findViewById(R.id.comment_area);
+        //THIS IS A HARD CODING STRING COMMENT ARRAY!
+        //todo:get comments from backend
+        final String[] comments = new String[] {"comment1", "comment2", "comment3", "4", "5"};
 
-                    } else {
-                        Log.e(TAG, "my item list not found");
-                    }
-                }
-            });
-
+        for (int i = 0; i < comments.length; i++) {
+            LinearLayout comment = new LinearLayout(getBaseContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+            comment.setLayoutParams(params);
+            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 200);
+            TextView tv = new TextView(getBaseContext());
+            tv.setLayoutParams(params);
+            //todo : Set the text here to actual comment
+            String text = "  Username\n    This is a hard coding comment " + (i + 1) + "\n Remember to change here.";
+            tv.setText(text);
+            tv.setTextColor(Color.parseColor("#000000"));
+            comment.addView(tv);
+            RatingBar rating = new RatingBar(getBaseContext(), null, android.R.attr.ratingBarStyleSmall);
+            rating.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            rating.setStepSize(1);
+            rating.setClickable(false);
+            rating.setNumStars(5);
+            //todo : get rating of comment and use setRating()
+            rating.setRating(3);
+            comment.addView(rating);
+            comment_view.addView(comment);
+        }
 
         //todo: get username, email, phone, address from backend, and store it into the variables above
         //todo: during registration set new user's phone, address to empty string

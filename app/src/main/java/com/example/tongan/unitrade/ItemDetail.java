@@ -19,12 +19,16 @@ import com.example.tongan.unitrade.objects.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ItemDetail extends AppCompatActivity {
     SharedPreferences shared;
@@ -72,10 +76,14 @@ public class ItemDetail extends AppCompatActivity {
                 String description = item.getDescription();
                 String seller = item.getSeller_name();
                 final String item_id = itemid;
-                String time = item.getPosted_time();
+                Timestamp time = item.getPostTime();
+
+                //format post date
+                SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
+                String postText = "Posted: " +format.format(item.getPostTime().toDate());
 
                 desc_edit.setText(description);
-                time_edit.setText(time);
+                time_edit.setText(postText);
                 name_edit.setText(item_name);
                 TextView seller_name = (TextView) findViewById(R.id.detail_seller);
                 seller = "Seller : " + seller;

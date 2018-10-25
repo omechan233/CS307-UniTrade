@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.Timestamp;
+
 import java.io.FileNotFoundException;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,6 +49,7 @@ public class NewPostActivity extends AppCompatActivity {
                 EditText category_edit = (EditText) findViewById(R.id.category_input);
 
                 //get input in edittext
+                Timestamp postTime = Timestamp.now();
                 Date currentTime = Calendar.getInstance().getTime();
                 String itemName = itemName_edit.getText().toString();
                 String description = description_edit.getText().toString();
@@ -72,7 +75,7 @@ public class NewPostActivity extends AppCompatActivity {
 
                     price = Double.parseDouble(price_edit.getText().toString());
 
-                    int ret = f.create_post(itemName,email,postedtime,price,category,address,description,status);
+                    int ret = f.create_post(itemName,email,price,category,address,description,status, postTime);
 
                     //back to homepage
                     Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();

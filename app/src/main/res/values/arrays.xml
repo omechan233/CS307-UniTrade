@@ -10,7 +10,7 @@
 
     <string-array name="sort">
         <item>Name</item>
-        <item>Post Date</item>
+        <item>Most Recent</item>
         <item>Price</item>
     </string-array>
 

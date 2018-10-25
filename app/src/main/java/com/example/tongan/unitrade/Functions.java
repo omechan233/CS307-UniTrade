@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -156,24 +157,9 @@ public class Functions {
      // 1 for available
      // 2 for someone bought it
      *************************************/
-    public int create_post(String title, String email, String posted_time, double price,
-                           String category, String address, String description, int status) {
+    public int create_post(String title, String email, double price,
+                           String category, String address, String description, int status, Timestamp postTime) {
 
-        /******  AT:
-         * There is a simpler way to add post, at the bottom of this function
-         *
-         */
-        /*
-        Map<String, Object> item_doc = new HashMap<>();
-        item_doc.put("description", description);
-        item_doc.put("price", price);
-        item_doc.put("seller_name", username);
-        item_doc.put("category", category);
-        item_doc.put("title", title);
-        item_doc.put("posted_time", posted_time);
-        item_doc.put("status", status);
-        item_doc.put("location", address);
-        */
         //error number 2 for invalid input price
         if (price <= 0) {
             return 2;
@@ -204,56 +190,12 @@ public class Functions {
          *  so that the item will contain all the structures
          *************************************/
 
-        /*
-        db.collection("items").document(username+posted_time)
-                .set(item_doc)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                        error[0] = -1;
-                    }
-
-                });
-
-                        if (error[0]==-1){
-            return -1;
-        }
-
-                */
-
-        /*
-        Map<String, Object> post_doc = new HashMap<>();
-        db.collection("posts").document(username+posted_time)
-                .set(post_doc)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                        error[0] = -1;
-                    }
-
-                });
-
-        */
 
 
         /****
-         * Or using the item java class, which is simpler!
+         * using the item java class, which is simpler!
          */
-        Item item = new Item(category, title, email, posted_time, price, description, address, status);
+        Item item = new Item(category, title, email, price, description, address, status, postTime);
         db.collection("items").document(item.getid()).set(item);
 
         // Adding the item to my_items list
@@ -840,133 +782,6 @@ public class Functions {
 
 
     }
-
-
-    /*** Scott's Work ***/
-
-    /**
-     * Function for calling all items to be displayed on the HomePageActivity
-     *
-     * NOTE: having same asynchronous issues as before... need integrate this function with frontend interface
-     * once that is done. Currently it is able to retrieve all of the items but returns before the data
-     * is actually received :(
-     *
-     * NOTE 2: Functionality moved to HomePageActivity, may still use this function for sorting
-     *
-     * @param criterion option for sorting the list, can be "all", "posting date", or "price"
-     * @return List of all Items pulled from Firestore
-     */
-    public ArrayList<Item> getHomePageList(String criterion) {
-        final ArrayList<Item> allItems = new ArrayList<Item>();  //2D ArrayList to hold all posted items from all users
-
-        System.out.println("FUNCTIONS: ATTEMPTING TO RETRIEVE ITEMS FOR HOMEPAGE");
-
-        CollectionReference Items = db.collection("items");
-        Items.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                //Log.d(TAG, doc.getId() + "=> " + doc.getData());
-                                //Get Map of Item
-                                Map<String, Object> itemMap = doc.getData();
-                                //System.out.println("MAP STRING: " + itemMap.toString());
-                                try {
-                                    //Construct Item Object from each DocSnapshot
-
-                                    //trouble getting these values from itemMap, using other functions
-                                    int status = doc.getDouble("status").intValue();
-                                    double price = doc.getDouble("price");
-
-                                    Item itemObj = new Item((String) itemMap.get("category"), (String) itemMap.get("title"), (String) itemMap.get("seller_name"),
-                                            (String) itemMap.get("posted_time"), price, (String) itemMap.get("description"),
-                                            (String) itemMap.get("location"), status);
-
-                                    //add item to list
-                                    allItems.add(itemObj);
-
-                                    //test to make sure item was received
-                                    //System.out.println(itemObj.toString());
-                                } catch (NullPointerException e) {
-                                    System.out.println("Null Doc Found: " + e.getLocalizedMessage());
-                                } catch (NoSuchFieldError e){
-                                    System.out.println("No Such Field: " + e.getLocalizedMessage());
-                                }
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting Item documents: ", task.getException());
-                        }
-                    }
-                });
-
-        //sort items based on criterion before returning
-        switch (criterion) {
-            case "price":
-                Collections.sort(allItems, priceComparator);
-                break;
-            case "date":
-                Collections.sort(allItems, dateComparator);
-                break;
-            case "credibility":
-                Collections.sort(allItems, credComparator);
-                break;
-        }
-
-        System.out.println(allItems.toString());
-        return allItems;
-    }
-
-    /**
-     * Item Comparator based on Item's price
-     */
-    public static Comparator<Item> priceComparator = new Comparator<Item>() {
-        @Override
-        public int compare(Item o1, Item o2) {
-            if(o1.getPrice() < o2.getPrice())
-                return -1;
-            else if(o1.getPrice() < o2.getPrice())
-                return 1;
-            else //equal
-                return 0;
-        }
-    };
-
-    /**
-     * Item Comparator based on Item's posted_date, need to parse Date String
-     * into Date Object to compare them
-     *
-     * Still need to test this... [Scott] //TODO
-     */
-    public static Comparator<Item> dateComparator = new Comparator<Item>() {
-        @Override
-        public int compare(Item o1, Item o2) {
-            SimpleDateFormat format = new SimpleDateFormat(Calendar.getInstance().toString());
-            Date d1 = null;
-            Date d2 = null;
-            try {
-                d1 = format.parse(o1.getPosted_time());
-                d2 = format.parse(o2.getPosted_time());
-            } catch (ParseException e) {
-                e.printStackTrace();
-                return 0;
-            }
-            return d1.compareTo(d2);
-        }
-    };
-
-    /**
-     * Item Comparator based on Seller's credibility
-     *
-     * Work in Progress
-     */
-    //TODO
-    public static Comparator<Item> credComparator = new Comparator<Item>() {
-        @Override
-        public int compare(Item o1, Item o2) {
-            return 0;
-        }
-    };
 }
 
 

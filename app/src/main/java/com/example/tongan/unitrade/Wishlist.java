@@ -43,7 +43,7 @@ public class Wishlist extends AppCompatActivity {
         shared=getSharedPreferences("app", Context.MODE_PRIVATE);
 
         Button backbtn = (Button) findViewById(R.id.wishlist_back_btn);
-
+/*
         Item test1 = new Item("Test Category1", "POI", "Yudachi", "1996-5-5", 2.33,
                 "This is the content of description\nYou don't need to look at it at all\nsince this description is totally meaningless!\nlol", "ass", 0);
         Item test2 = new Item("Test Category2", "POII", "Yudachi_2", "1996-5-6", 3.33,
@@ -54,7 +54,7 @@ public class Wishlist extends AppCompatActivity {
         test_list.add(test1);
         test_list.add(test2);
         test_list.add(test3);
-
+*/
         final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.wlistview);
         linearLayout.removeAllViews();
 

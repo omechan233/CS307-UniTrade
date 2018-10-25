@@ -519,18 +519,42 @@ public class Functions {
      * Call when user buys an item
      */
     public void create_order(String buyer_email, String item_ID, String order_time, Double item_price, String item_title, boolean face_to_face){
+        final Order order = new Order(item_ID, order_time, buyer_email,item_title, item_price, false, face_to_face );
+        final String order_ID = buyer_email+order_time;
+        final String final_item_ID = item_ID;
+        final String final_buyer_email = buyer_email;
 
-        Order order = new Order(item_ID, order_time, buyer_email,item_title, item_price, true,face_to_face );
+        DocumentReference docRef = db.collection("items").document(item_ID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        int status = (int) document.get("status");
+                        if(status==2){
+                            Log.d(TAG, "Item already sold");
+                        }
+                        else {
+                            // add order in orders
+                            db.collection("orders").document(order_ID).set(order);
 
-        db.collection("orders").document(buyer_email+order_time).set(order);
+                            // add the order in profile
+                            DocumentReference user_doc = db.collection("profiles").document(final_buyer_email);
+                            user_doc.update("my_orders", FieldValue.arrayUnion(order_ID));
 
-        // add the order in profile
-        DocumentReference user_doc = db.collection("profiles").document(buyer_email);
-        user_doc.update("my_orders", FieldValue.arrayUnion(buyer_email+order_time));
-
-        //change status of item
-        update_item_status(item_ID, 1);
-
+                            //change status of item
+                            update_item_status(final_item_ID, 2);
+                            Log.d(TAG, "Order created successfully");
+                        }
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
 
@@ -593,7 +617,6 @@ public class Functions {
                             });
                         }
                     }
-                    //result[0] = (String[])document.getData().get("my_items");
                     Log.e(TAG, "my item list found");
 
                 } else {

@@ -143,18 +143,16 @@
         android:src="@mipmap/home_page_icon" />
 
     <ScrollView
-        android:id="@+id/comment_area"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_above="@id/settings_home_page_icon"
+        android:layout_above="@id/profile_back_icon"
         android:layout_below="@id/input_email">
 
-        <TextView
-            android:id="@+id/comment_view"
+        <LinearLayout
+            android:id="@+id/comment_area"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="*\n*\n*\n*View for comment here\n*\n*\n*\n*\n*\n*\n*"
-            android:textSize="20sp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
 
     </ScrollView>
 

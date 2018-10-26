@@ -869,8 +869,20 @@ public class Functions {
      * @param itemid
      */
     void changeItemStatusToBought(String itemid){
-        db.collection("items").document(itemid)
-                .update("status", '2');
+        DocumentReference item_doc = db.collection("items").document(itemid);
+        item_doc.update("status", 2)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
     }
 
     /***
@@ -879,13 +891,38 @@ public class Functions {
      */
 
     void changeOrderTypeFTF(String orderid){
-        db.collection("orders").document(orderid)
-                .update("face_to_face",true);
+
+        DocumentReference order_doc = db.collection("orders").document(orderid);
+        order_doc.update("face_to_face", true)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
     }
 
     void changeOrderTypeOnline(String orderid){
-        db.collection("orders").document(orderid)
-                .update("face_to_face",false);
+        DocumentReference order_doc = db.collection("orders").document(orderid);
+        order_doc.update("face_to_face", true)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
     }
 
 

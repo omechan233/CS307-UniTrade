@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -19,7 +18,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class Notification extends AppCompatActivity {
+public class NotificationPage extends AppCompatActivity {
     SharedPreferences shared;
     FirebaseFirestore db;
 
@@ -32,13 +31,16 @@ public class Notification extends AppCompatActivity {
 
         Button notifi_back_btn = (Button) findViewById(R.id.notifi_back);
         final Switch notifi_switch = (Switch) findViewById(R.id.notifi_switch);
+        final Switch notifi_itemSold = (Switch) findViewById(R.id.notifi_itemSold_switch);
+        final Switch notifi_changeMethod = (Switch) findViewById(R.id.notifi_changeMethod_switch);
+
 
         final String email=shared.getString("email","");
         final Functions f = new Functions();
 
-        //TODO: get Notification number value from backend function.
 
-        //use backend function to get Notification number
+
+        //use backend function to get NotificationPage number
         //if int == 1, set switch.checked() = true;
         //if int == 0, set switch.checked() = false;
         final DocumentReference userDoc = db.collection("users").document(email);
@@ -61,7 +63,7 @@ public class Notification extends AppCompatActivity {
         notifi_back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Notification.this, SettingActivity.class);
+                Intent intent = new Intent(NotificationPage.this, SettingActivity.class);
                 startActivity(intent);
             }
         });
@@ -74,16 +76,60 @@ public class Notification extends AppCompatActivity {
                 System.out.println(email);
                 if (isChecked){
                     f.change_notification(email, 1);
-                    Toast.makeText(getBaseContext(), "Notification on!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "NotificationPage on!", Toast.LENGTH_LONG).show();
 
                 }
                 else {
                     f.change_notification(email, 0);
-                    Toast.makeText(getBaseContext(), "Notification off!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "NotificationPage off!", Toast.LENGTH_LONG).show();
                 }
 
             }
         });
+
+        notifi_itemSold.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    //Todo:back-end change the ItemSold Notify status to 1;
+                    Toast.makeText(getBaseContext(), "Item Sold NotificationPage on!", Toast.LENGTH_LONG).show();
+
+                }
+                else {
+                    //Todo:back-end change the ItemSold Notify status to 0;
+                    Toast.makeText(getBaseContext(), "Item Sold NotificationPage off!", Toast.LENGTH_LONG).show();
+
+
+                }
+            }
+        });
+
+        notifi_changeMethod.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    //Todo:back-end change the ChangeMethod Notify status to 1;
+                    Toast.makeText(getBaseContext(), "ChangeMethod NotificationPage on!", Toast.LENGTH_LONG).show();
+
+                }
+                else {
+                    //Todo:back-end change the ChangeNotify Notify status to 0;
+                    Toast.makeText(getBaseContext(), "ChangeMethod NotificationPage off!", Toast.LENGTH_LONG).show();
+
+
+                }
+            }
+        });
+
+        Button send_page = (Button) findViewById(R.id.notify_gotoSendpage);
+        send_page.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NotificationPage.this, SendNotification.class);
+                startActivity(intent);
+            }
+        });
+
 
 
 

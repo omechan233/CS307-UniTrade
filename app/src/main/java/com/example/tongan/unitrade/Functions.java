@@ -460,21 +460,45 @@ public class Functions {
     /********** AT:
      * Call when user buys an item
      */
+    public void create_order(String buyer_email, String item_ID, String order_time, Double item_price, String item_title, boolean face_to_face){
+        final Order order = new Order(item_ID, order_time, buyer_email,item_title, item_price, false, face_to_face );
+        final String order_ID = buyer_email+order_time;
+        final String final_item_ID = item_ID;
+        final String final_buyer_email = buyer_email;
 
-    public void create_order(String buyer_email, String item_ID, String order_time, Double item_price, String item_title){
+        DocumentReference docRef = db.collection("items").document(item_ID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        long status = (long) document.get("status");
+                        if(status==2){
+                            Log.d(TAG, "Item already sold");
+                        }
+                        else {
+                            // add order in orders
+                            db.collection("orders").document(order_ID).set(order);
 
-        Order order = new Order(item_ID, order_time, buyer_email,item_title, item_price, true );
+                            // add the order in profile
+                            DocumentReference user_doc = db.collection("profiles").document(final_buyer_email);
+                            user_doc.update("my_orders", FieldValue.arrayUnion(order_ID));
 
-        db.collection("orders").document(buyer_email+order_time).set(order);
-
-        // add the order in profile
-        DocumentReference user_doc = db.collection("profiles").document(buyer_email);
-        user_doc.update("my_orders", FieldValue.arrayUnion(buyer_email+order_time));
-
-        //change status of item
-        update_item_status(item_ID, 1);
-
+                            //change status of item
+                            update_item_status(final_item_ID, 2);
+                            Log.d(TAG, "Order created successfully");
+                        }
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
+
 
     public void update_item_status(String itemID,int status){
         DocumentReference item_doc = db.collection("items").document(itemID);
@@ -535,7 +559,6 @@ public class Functions {
                             });
                         }
                     }
-                    //result[0] = (String[])document.getData().get("my_items");
                     Log.e(TAG, "my item list found");
 
                 } else {
@@ -546,12 +569,12 @@ public class Functions {
     }
 
 
-    public void create_comment(String item_name, String buyeremail, String content, int rating, String posted_time){
-        Comment comment = new Comment(buyeremail,content,item_name,rating,posted_time);
+    public void create_comment(String item_name, String buyeremail, String content, int rating, String posted_time,String selleremail){
+        Comment comment = new Comment(buyeremail,content,item_name,rating,posted_time,selleremail);
         db.collection("comments").document(buyeremail+posted_time).set(comment);
 
         // add the comment to profile
-        final DocumentReference user_doc = db.collection("profiles").document(buyeremail);
+        final DocumentReference user_doc = db.collection("profiles").document(selleremail);
         user_doc.update("my_comments", FieldValue.arrayUnion(buyeremail+posted_time));
 
         final int rate = rating;
@@ -781,6 +804,66 @@ public class Functions {
         });
 
 
+    }
+
+    /***
+     * if someone buy an item, call this function to change the item status to 2(which is been bought)
+     * @param itemid
+     */
+    void changeItemStatusToBought(String itemid){
+        DocumentReference item_doc = db.collection("items").document(itemid);
+        item_doc.update("status", 2)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+    }
+
+    /***
+     * change order type
+     * @param orderid ID of Order
+     */
+    void changeOrderTypeFTF(String orderid){
+
+        DocumentReference order_doc = db.collection("orders").document(orderid);
+        order_doc.update("face_to_face", true)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+    }
+
+    void changeOrderTypeOnline(String orderid){
+        DocumentReference order_doc = db.collection("orders").document(orderid);
+        order_doc.update("face_to_face", true)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
     }
 }
 

@@ -67,6 +67,7 @@ public class ItemDetail extends AppCompatActivity {
         name_edit.setFocusable(false);
         price_edit.setFocusable(false);
 
+        final TextView editBtn = (TextView) findViewById(R.id.detail_edit);
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference item_doc = db.collection("items").document(itemid);
@@ -85,6 +86,16 @@ public class ItemDetail extends AppCompatActivity {
                 SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
                 format.setTimeZone(TimeZone.getTimeZone("EDT"));
                 String postText = "Posted: " +format.format(item.getPostTime().toDate());
+
+                // if current login user is not the seller of this item
+                // set the edit item detail button invisible.
+                if (!seller.equals(email)){
+                    editBtn.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    System.out.println("This item is sold by yourself!!!");
+                }
+
 
                 desc_edit.setText(description);
                 time_edit.setText(postText);
@@ -118,7 +129,6 @@ public class ItemDetail extends AppCompatActivity {
         price_edit.setText(temp);
         */
 
-        final TextView editBtn = (TextView) findViewById(R.id.detail_edit);
         final TextView delBtn = (TextView) findViewById(R.id.detail_delete);
         delBtn.setClickable(false);
         editBtn.setOnClickListener(new View.OnClickListener() {
@@ -259,7 +269,8 @@ public class ItemDetail extends AppCompatActivity {
         item_details_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getBaseContext(), "Buy Success!", Toast.LENGTH_LONG).show();
+                //AT: Buy success should not show up until its finished
+                //Toast.makeText(getBaseContext(), "Buy Success!", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(ItemDetail.this, Purchase.class);
                 startActivity(intent);
             }

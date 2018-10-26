@@ -10,24 +10,28 @@ public class Order {
     private String buyer_email;
     private String item_ID;
     private String order_time;
+    private boolean face_to_face;
 
     /**
      * Constructor; Creates an order based on a purchased Item
      *
      */
     public Order(){}
-    public Order(String item_ID, String order_time, String buyer_email, String item_title, Double item_price, boolean is_sold){
+    public Order(String item_ID, String order_time, String buyer_email, String item_title, Double item_price, boolean is_sold, boolean face_to_face){
         this.buyer_email=buyer_email;
         this.is_sold=is_sold;
         this.item_ID=item_ID;
         this.item_price=item_price;
         this.item_title=item_title;
         this.order_time=order_time;
+        this.face_to_face=face_to_face;
     }
 
     public Double getItem_price() {
         return item_price;
     }
+
+    public boolean getFace_toface() {return face_to_face;}
 
     public boolean isIs_sold() {
         return is_sold;

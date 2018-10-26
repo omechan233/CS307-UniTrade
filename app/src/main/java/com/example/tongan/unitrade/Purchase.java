@@ -1,5 +1,6 @@
 package com.example.tongan.unitrade;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.tongan.unitrade.objects.Item;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Date;
+
 public class Purchase extends AppCompatActivity {
     SharedPreferences shared;
     private RadioGroup radioGroup;
@@ -17,6 +26,9 @@ public class Purchase extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        shared = getSharedPreferences("app", Context.MODE_PRIVATE);
+        final String useremail = shared.getString("email","");
+        final String itemid = shared.getString("itemid","");
         setContentView(R.layout.activity_purchase);
 
 
@@ -29,15 +41,41 @@ public class Purchase extends AppCompatActivity {
                 int selectId = radioGroup.getCheckedRadioButtonId();
                 System.out.println(selectId);
                 radioButton = (RadioButton) findViewById(selectId);
-                if (radioButton.getText().equals("Face-to-Face")){
-                    Toast.makeText(Purchase.this, "Submit Success! You choose "+ radioButton.getText(),Toast.LENGTH_LONG).show();
-                    //Todo: store current user's payment method (face-to-face)in database
 
-                }else {
-                    Toast.makeText(Purchase.this, "Submit Success! You choose "+radioButton.getText(), Toast.LENGTH_LONG).show();
-                    //Todo: store current user's payment method (Online)in database
 
+                boolean face_to_face = false;
+
+                if (radioButton.getText().equals("Face-to-Face")) {
+                    face_to_face = true;
                 }
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                DocumentReference item_doc = db.collection("items").document(itemid);
+                final boolean finalFace_to_face = face_to_face;
+                item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        Item item = documentSnapshot.toObject(Item.class);
+                        int status = item.getStatus();
+                        if (status != 1) {
+                            Toast.makeText(Purchase.this, "Item was already sold" + radioButton.getText(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Date date = new Date();
+                            String time = date.toGMTString();
+                            Functions f = new Functions();
+                            f.create_order(useremail, itemid, time, item.getPrice(), item.getTitle(), finalFace_to_face);
+                            f.changeItemStatusToBought(itemid);
+
+                            if (finalFace_to_face) {
+                                Toast.makeText(Purchase.this, "Submit Success! You choose " + radioButton.getText(), Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(Purchase.this, "Submit Success! You choose " + radioButton.getText(), Toast.LENGTH_LONG).show();
+                            }
+                            finish();
+                        }
+                    }
+                });
             }
         });
 

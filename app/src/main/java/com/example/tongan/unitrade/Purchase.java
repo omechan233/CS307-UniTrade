@@ -65,7 +65,8 @@ public class Purchase extends AppCompatActivity {
                             String time = date.toGMTString();
                             Functions f = new Functions();
                             f.create_order(useremail, itemid, time, item.getPrice(), item.getTitle(), finalFace_to_face);
-                            f.changeItemStatusToBought(itemid);
+                            // AT: after adding the below line, the order cannot be purchased...
+                            //f.changeItemStatusToBought(itemid);
 
                             if (finalFace_to_face) {
                                 Toast.makeText(Purchase.this, "Submit Success! You choose " + radioButton.getText(), Toast.LENGTH_LONG).show();

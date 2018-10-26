@@ -41,8 +41,10 @@
         <activity android:name=".NewPostActivity" />
         <activity android:name=".OrderList"/>
         <activity android:name=".ItemDetail"/>
-        <activity android:name=".Notification"/>
+        <activity android:name=".NotificationPage"/>
         <activity android:name=".Purchase"/>
+        <activity android:name=".SendNotification"/>
+
 
 
 

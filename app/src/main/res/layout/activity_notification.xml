@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
-    tools:context="com.example.tongan.unitrade.Notification">
+    tools:context="com.example.tongan.unitrade.NotificationPage">
 
     <Switch
         android:id="@+id/notifi_switch"
@@ -50,4 +50,16 @@
         android:text="Get notify when buyer change trading method"
         android:textSize="30sp"
         android:layout_alignLeft="@+id/notifi_switch" />
+
+    <Button
+        android:id="@+id/notify_gotoSendpage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/notifi_back"
+        android:layout_marginBottom="35dp"
+        android:text="GotoSendPage"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_alignLeft="@+id/notifi_back" />
 </RelativeLayout>

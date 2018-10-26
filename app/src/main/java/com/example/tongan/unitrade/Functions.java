@@ -531,7 +531,7 @@ public class Functions {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        int status = (int) document.get("status");
+                        long status = (long) document.get("status");
                         if(status==2){
                             Log.d(TAG, "Item already sold");
                         }

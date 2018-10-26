@@ -31,7 +31,7 @@ public class Order {
         return item_price;
     }
 
-    public boolean getFace_toface() {return face_to_face;}
+    public boolean getFace_to_face() {return face_to_face;}
 
     public boolean isIs_sold() {
         return is_sold;

@@ -74,20 +74,18 @@ public class OrderList extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            List<String> my_items = new ArrayList<String>();
-                            my_items = (List<String>) document.getData().get("my_orders");
-                            if (my_items == null || my_items.isEmpty()) {
+                            List<String> my_orders = new ArrayList<String>();
+                            my_orders = (List<String>) document.getData().get("my_orders");
+                            if (my_orders == null || my_orders.isEmpty()) {
                                 System.out.println("Nothing on the list!");
                             } else {
-                                for (int i = 0; i < my_items.size(); i++) {
-                                    final DocumentReference item_doc = db.collection("orders").document(my_items.get(i));
+                                for (int i = 0; i < my_orders.size(); i++) {
+                                    final DocumentReference order_doc = db.collection("orders").document(my_orders.get(i));
                                     final int finalI = i;
-                                    item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                         @Override
                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            Order current_order = new Order();
-                                            current_order = documentSnapshot.toObject(Order.class);
-                                            //Todo: combine with front end
+                                            Order current_order = documentSnapshot.toObject(Order.class);
                                             LinearLayout item = new LinearLayout(getBaseContext());
                                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(400, 200);
                                             item.setLayoutParams(params);
@@ -99,7 +97,7 @@ public class OrderList extends AppCompatActivity {
                                             item.addView(imageView);
                                             TextView tv = new TextView(getBaseContext());
                                             //todo : the String below is getting information from a hard coding ArrayList<Order>, change it to adapt the actual data retrieved from backend
-                                            String text = "\n" + current_order.getItem_title() + "\n" + current_order.getItem_price() + "\n" + current_order.getBuyer_email() + "\n" + current_order.getOrder_time() + "\n" + current_order.getFace_toface();
+                                            String text = "\n" + current_order.getItem_title() + "\n" + current_order.getItem_price() + "\n" + current_order.getBuyer_email() + "\n" + current_order.getOrder_time() + "\n" + current_order.getFace_to_face();
                                             tv.setText(text);
                                             item.addView(tv);
                                             final Order finalCurrent_Order = current_order;
@@ -107,7 +105,7 @@ public class OrderList extends AppCompatActivity {
                                                 @Override
                                                 public void onClick(View v) {
                                                     SharedPreferences.Editor edit = shared.edit();
-                                                    edit.putString("itemid", finalCurrent_Order.getItem_ID());
+                                                    edit.putString("order_ID", finalCurrent_Order.getBuyer_email()+finalCurrent_Order.getOrder_time());
                                                     edit.apply();
 
                                                     //todo:get the item_id of the selected item and store it into a global variable that can be used in the OrderDetail page(need to know which item to display detail)
@@ -115,17 +113,14 @@ public class OrderList extends AppCompatActivity {
                                                 }
                                             });
                                             linearLayout.addView(item);
-
-
-
                                         }
                                     });
                                 }
                             }
-                            Log.e(TAG, "my item list found");
+                            Log.e(TAG, "my order list found");
 
                         } else {
-                            Log.e(TAG, "my item list not found");
+                            Log.e(TAG, "my order list not found");
                         }
                     }
                 });

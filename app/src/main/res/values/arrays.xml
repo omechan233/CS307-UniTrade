@@ -12,6 +12,7 @@
         <item>Name</item>
         <item>Most Recent</item>
         <item>Price</item>
+        <item>Seller Rating</item>
     </string-array>
 
 </resources>

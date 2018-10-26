@@ -257,7 +257,8 @@ public class ItemDetail extends AppCompatActivity {
         item_details_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getBaseContext(), "Buy Success!", Toast.LENGTH_LONG).show();
+                //AT: Buy success should not show up until its finished
+                //Toast.makeText(getBaseContext(), "Buy Success!", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(ItemDetail.this, Purchase.class);
                 startActivity(intent);
             }

@@ -532,6 +532,7 @@ public class Functions {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         long status = (long) document.get("status");
+                        System.out.println(document.get("status"));
                         if(status==2){
                             Log.d(TAG, "Item already sold");
                         }
@@ -891,7 +892,6 @@ public class Functions {
      */
 
     void changeOrderTypeFTF(String orderid){
-
         DocumentReference order_doc = db.collection("orders").document(orderid);
         order_doc.update("face_to_face", true)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

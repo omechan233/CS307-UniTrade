@@ -766,7 +766,6 @@ public class Functions {
      * @param orderid ID of Order
      */
     void changeOrderTypeFTF(String orderid){
-
         DocumentReference order_doc = db.collection("orders").document(orderid);
         order_doc.update("face_to_face", true)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

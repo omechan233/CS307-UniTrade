@@ -24,7 +24,30 @@
         android:id="@+id/methodChange_notice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
         android:text="Send trding method change notice"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/insideApp_notice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="184dp"
+        android:text="Send inside app notice"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/decline_notice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="128dp"
+        android:text="send decline notice"
+        android:textSize="16sp"
         android:textStyle="bold" />
 </RelativeLayout>

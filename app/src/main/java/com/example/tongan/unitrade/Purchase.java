@@ -70,6 +70,7 @@ public class Purchase extends AppCompatActivity {
                             Toast.makeText(Purchase.this, "Submit Success! You choose " + radioButton.getText(), Toast.LENGTH_LONG).show();
 
                             finish();
+
                         }
                     }
                 });

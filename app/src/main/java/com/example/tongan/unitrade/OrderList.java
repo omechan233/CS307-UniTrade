@@ -47,11 +47,11 @@ public class OrderList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_list);
 
-        shared=getSharedPreferences("app", Context.MODE_PRIVATE);
+        shared = getSharedPreferences("app", Context.MODE_PRIVATE);
 
-        Button back = (Button)findViewById(R.id.posted_item_back);
+        Button back = (Button) findViewById(R.id.posted_item_back);
         Button myOrder = (Button) findViewById(R.id.show_my_order);
-        final Button myItem = (Button)findViewById(R.id.show_posted_item);
+        final Button myItem = (Button) findViewById(R.id.show_posted_item);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +59,7 @@ public class OrderList extends AppCompatActivity {
                 finish();
             }
         });
+
         myOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,11 +73,11 @@ public class OrderList extends AppCompatActivity {
                 prof_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isComplete()) {
+                        if (task.isComplete()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 //get my_items list from profile
-                                ArrayList<String> my_items =  (ArrayList<String>) document.get("my_orders");
+                                ArrayList<String> my_items = (ArrayList<String>) document.get("my_orders");
 
                                 if (my_items == null || my_items.isEmpty()) { //null check
                                     System.out.println("Nothing in the list!");
@@ -88,7 +89,6 @@ public class OrderList extends AppCompatActivity {
                                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                 Order current_order = documentSnapshot.toObject(Order.class);
 
-                                                //Todo: combine with front end
                                                 LinearLayout item = new LinearLayout(getBaseContext());
                                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(400, 200);
                                                 item.setLayoutParams(params);
@@ -99,8 +99,8 @@ public class OrderList extends AppCompatActivity {
                                                 imageView.setLayoutParams(params);
                                                 item.addView(imageView);
                                                 TextView tv = new TextView(getBaseContext());
-                                                //todo : the String below is getting information from a hard coding ArrayList<Order>, change it to adapt the actual data retrieved from backend
-                                                String text = "\n" + current_order.getItem_title() + "\n" + current_order.getItem_price() + "\n" + current_order.getBuyer_email() + "\n" + current_order.getOrder_time() + "\n" + current_order.getFace_toface();
+
+                                                String text = "\n" + current_order.getItem_title() + "\n" + current_order.getItem_price() + "\n" + current_order.getBuyer_email() + "\n" + current_order.getOrder_time() + "\n" + current_order.getFace_to_face();
                                                 tv.setText(text);
                                                 item.addView(tv);
                                                 final Order finalCurrent_Order = current_order;
@@ -133,6 +133,7 @@ public class OrderList extends AppCompatActivity {
 
             }
         });
+
 
         myItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,14 +194,12 @@ public class OrderList extends AppCompatActivity {
                                                 }
                                             });
                                             linearLayout.addView(item);
-
                                         }
                                     });
                                 }
                             }
                             //result[0] = (String[])document.getData().get("my_items");
                             Log.e(TAG, "my item list found");
-
                         } else {
                             Log.e(TAG, "my item list not found");
                         }
@@ -209,41 +208,7 @@ public class OrderList extends AppCompatActivity {
             }
         });
 
-        /*
-        myItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.list_area);
-                linearLayout.removeAllViews();
-                for (int i = 0; i < test_list.size(); i++) {
-                    LinearLayout item = new LinearLayout(getBaseContext());
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(400, 200);
-                    item.setLayoutParams(params);
-                    ImageView imageView = new ImageView(getBaseContext());
-                    imageView.setImageResource(R.mipmap.poi_test_src);
-                    params = new LinearLayout.LayoutParams(180, 180);
-                    params.setMargins(20, 20, 0, 20);
-                    imageView.setLayoutParams(params);
-                    item.addView(imageView);
-                    TextView tv = new TextView(getBaseContext());
-                    //todo : the String below is getting information from a hard coding ArrayList<Item>, change it to adapt the actual data retrieved from backend
-                    String text = "\n" + test_list.get(i).getTitle() + "\n" + test_list.get(i).getPrice() + "\n" + test_list.get(i).getSeller_name();
-                    tv.setText(text);
-                    item.addView(tv);
-                    item.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //todo:get the item_id of the selected item and store it into a global variable that can be used in the ItemDetail page(need to know which item to display detail)
-                            startActivity(new Intent(OrderList.this, ItemDetail.class));
-                        }
-                    });
-                    linearLayout.addView(item);
-                }
-            }
-        });
-        */
-
-
+        //display my items by default
         myItem.callOnClick();
 
     }

@@ -50,14 +50,12 @@ public class NewPostActivity extends AppCompatActivity {
 
                 //get input in edittext
                 Timestamp postTime = Timestamp.now();
-                Date currentTime = Calendar.getInstance().getTime();
                 String itemName = itemName_edit.getText().toString();
                 String description = description_edit.getText().toString();
                 //String username = "";
-                String postedtime =currentTime.toString();
                 String address ="[not implemented yet]";
                 String category = category_edit.getText().toString();
-                Double price = -1.0;
+                Double price;
 
                 // 0 for currently unavailable
                 // 1 for available
@@ -65,8 +63,7 @@ public class NewPostActivity extends AppCompatActivity {
                 int status = 1;
 
                 //get username by email
-                Functions f1 = new Functions();
-                String email=shared.getString("email","");
+                String email = shared.getString("email","");
 
                 Functions f = new Functions();
 

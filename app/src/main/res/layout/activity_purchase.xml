@@ -77,7 +77,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="65dp"
-        android:text="My Order"
+        android:text="My Orders"
         android:textSize="18sp"
         android:textStyle="bold" />
 

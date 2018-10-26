@@ -76,14 +76,13 @@ public class OrderList extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 //get my_items list from profile
-                                ArrayList<String> my_items =  (ArrayList<String>) document.getData().get("my_orders");
+                                ArrayList<String> my_items =  (ArrayList<String>) document.get("my_orders");
 
                                 if (my_items == null || my_items.isEmpty()) { //null check
                                     System.out.println("Nothing in the list!");
                                 } else {
                                     for (int i = 0; i < my_items.size(); i++) {
                                         final DocumentReference item_doc = db.collection("orders").document(my_items.get(i));
-                                        final int finalI = i;
                                         item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
                                             public void onSuccess(DocumentSnapshot documentSnapshot) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.health.TimerStat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -13,16 +14,20 @@ import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Item;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.sql.Time;
 import java.util.Date;
 
 public class Purchase extends AppCompatActivity {
-    SharedPreferences shared;
+    private SharedPreferences shared;
     private RadioGroup radioGroup;
     private RadioButton radioButton;
+
+    private final Functions f = new Functions();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +47,6 @@ public class Purchase extends AppCompatActivity {
                 System.out.println(selectId);
                 radioButton = (RadioButton) findViewById(selectId);
 
-
                 boolean face_to_face = false;
 
                 if (radioButton.getText().equals("Face-to-Face")) {
@@ -57,21 +61,14 @@ public class Purchase extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                         Item item = documentSnapshot.toObject(Item.class);
-                        int status = item.getStatus();
-                        if (status != 1) {
+                        if (item.getStatus() != 1) {
                             Toast.makeText(Purchase.this, "Item was already sold" + radioButton.getText(), Toast.LENGTH_LONG).show();
                         } else {
-                            Date date = new Date();
-                            String time = date.toGMTString();
-                            Functions f = new Functions();
-                            f.create_order(useremail, itemid, time, item.getPrice(), item.getTitle(), finalFace_to_face);
-                            f.changeItemStatusToBought(itemid);
+                            Timestamp orderTime = Timestamp.now();
+                            f.create_order(useremail, itemid, orderTime, item.getPrice(), item.getTitle(), finalFace_to_face);
 
-                            if (finalFace_to_face) {
-                                Toast.makeText(Purchase.this, "Submit Success! You choose " + radioButton.getText(), Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(Purchase.this, "Submit Success! You choose " + radioButton.getText(), Toast.LENGTH_LONG).show();
-                            }
+                            Toast.makeText(Purchase.this, "Submit Success! You choose " + radioButton.getText(), Toast.LENGTH_LONG).show();
+
                             finish();
                         }
                     }

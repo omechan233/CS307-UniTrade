@@ -1,11 +1,7 @@
 package com.example.tongan.unitrade;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.health.SystemHealthManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Comment;
 import com.example.tongan.unitrade.objects.Item;
@@ -24,22 +20,13 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParseException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.android.gms.flags.impl.SharedPreferencesFactory.getSharedPreferences;
 
 
 public class Functions {
@@ -460,43 +447,24 @@ public class Functions {
     /********** AT:
      * Call when user buys an item
      */
-    public void create_order(String buyer_email, String item_ID, String order_time, Double item_price, String item_title, boolean face_to_face){
+    public void create_order(String buyer_email, String item_ID, Timestamp order_time, Double item_price, String item_title, boolean face_to_face){
         final Order order = new Order(item_ID, order_time, buyer_email,item_title, item_price, false, face_to_face );
-        final String order_ID = buyer_email+order_time;
+        final String order_ID = buyer_email+order_time.toString();
         final String final_item_ID = item_ID;
         final String final_buyer_email = buyer_email;
 
-        DocumentReference docRef = db.collection("items").document(item_ID);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        long status = (long) document.get("status");
-                        if(status==2){
-                            Log.d(TAG, "Item already sold");
-                        }
-                        else {
-                            // add order in orders
-                            db.collection("orders").document(order_ID).set(order);
 
-                            // add the order in profile
-                            DocumentReference user_doc = db.collection("profiles").document(final_buyer_email);
-                            user_doc.update("my_orders", FieldValue.arrayUnion(order_ID));
+        // add order in orders
+        db.collection("orders").document(order_ID).set(order);
 
-                            //change status of item
-                            update_item_status(final_item_ID, 2);
-                            Log.d(TAG, "Order created successfully");
-                        }
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
+        // add the order in profile
+        DocumentReference user_doc = db.collection("profiles").document(final_buyer_email);
+        user_doc.update("my_orders", FieldValue.arrayUnion(order_ID));
+
+        //change status of item
+        changeItemStatusToBought(item_ID);
+        Log.d(TAG, "Order created successfully");
+
     }
 
 
@@ -606,39 +574,6 @@ public class Functions {
     }
 
 
-
-    /**********
-     * AT:
-     * Get my items list, return a list of string
-     *
-     * I am VERY UNCERTAIN about this function!
-     *
-     */
-    public String[] get_my_item(String user_name) {
-        final DocumentReference user_doc = db.collection("profiles").document(user_name);
-        final Object result[] = new Object[1];
-
-        user_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    result[0] = document.get("my_items");
-                    //result[0] = (String[])document.getData().get("my_items");
-                    Log.e(TAG, "my item list found");
-
-                } else {
-                    Log.e(TAG, "my item list not found");
-                }
-            }
-        });
-
-        String[] items = ((List<String>) result[0]).toArray(new String[0]);
-
-        return items;
-    }
-
-
     //Mia!!
 
     /*****************************
@@ -671,7 +606,6 @@ public class Functions {
     public void add_wishlist(String itemid, String userid) {
         final DocumentReference wish_doc = db.collection("profiles").document(userid);
         wish_doc.update("wish_list", FieldValue.arrayUnion(itemid));
-
 //        Map<String, Object> item = new HashMap<>();
 //        item.put("item_id", itemid);
 //        db.collection("profiles").document(userid)

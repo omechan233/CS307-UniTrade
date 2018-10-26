@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Item;
 import com.google.android.gms.tasks.OnCompleteListener;

@@ -2,7 +2,6 @@ package com.example.tongan.unitrade.objects;
 
 import com.google.firebase.Timestamp;
 
-import java.sql.Time;
 
 public class Item {
     //constructor

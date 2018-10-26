@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.example.tongan.unitrade.objects.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -80,7 +79,7 @@ public class HomePageActivity extends AppCompatActivity {
         search_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                refreshHome();
+                searchKeyword();
             }
 
         });
@@ -103,6 +102,94 @@ public class HomePageActivity extends AppCompatActivity {
     }
 
     /**
+     * When called, gets keyword inputted into search bar and searches for items based on input
+     *
+     * Search method is pretty simple for now, if the item's title or description contains the keyword, we'll display it
+     *
+     * NOTE: works best with one or two word searches
+     */
+    public void searchKeyword(){
+        //clear homepage first
+        final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
+        homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
+
+        final String keyword = search_word.getText().toString();
+        CollectionReference Items = db.collection("items");
+        Query itemsQuery = Items.orderBy("title");
+
+        itemsQuery.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                Log.d(TAG, doc.getId() + "=> " + doc.getData());
+
+                                //Get Map of Item
+                                Map<String, Object> itemMap = doc.getData();
+
+                                //Get Title
+                                String itemTitle = (String) itemMap.get("title");
+                                String itemDesc = (String) itemMap.get("description:");
+
+                                if(itemTitle.contains(keyword) || itemDesc.contains(keyword)){ //only display items that contain keyword in their title or description
+                                    try {
+                                        //Construct Item Object from each DocSnapshot
+                                        Item itemObj = new Item((String) itemMap.get("category"), (String) itemMap.get("title"), (String) itemMap.get("seller_name"),
+                                                doc.getDouble("price"), (String) itemMap.get("description"),
+                                                (String) itemMap.get("location"), doc.getDouble("status").intValue(), doc.getTimestamp("postTime"));
+
+                                        //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
+                                        LinearLayout item = new LinearLayout(getBaseContext());
+                                        //set layout params for parent layout
+                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+                                        item.setLayoutParams(params);
+
+                                        //create and set params of image in parent layout
+                                        ImageView imageView = new ImageView(getBaseContext());
+                                        imageView.setImageResource(R.mipmap.poi_test_src);
+                                        params = new LinearLayout.LayoutParams(180, 180);
+                                        params.setMargins(20, 20, 0, 20);
+                                        imageView.setLayoutParams(params);
+                                        item.addView(imageView);
+
+                                        //create textview in parent layout
+                                        TextView tv = new TextView(getBaseContext());
+                                        String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
+                                        tv.setText(text);
+                                        item.addView(tv);
+                                        //==================
+
+                                        //Set up OnClick for each Item to get ItemDetailPage ==================
+                                        final Item current_item = itemObj;
+                                        item.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) { //this is configured the same as OrderList
+                                                SharedPreferences.Editor edit = shared.edit();
+                                                edit.putString("itemid", current_item.getid());
+                                                edit.apply();
+
+                                                startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
+                                            }
+                                        });
+
+                                        homepage_result.addView(item); //add view to homepage list
+
+                                    } catch (NullPointerException e) {
+                                        System.out.println("Null Found: " + e.getLocalizedMessage());
+                                    } catch (NoSuchFieldError e){
+                                        System.out.println("No Such Field: " + e.getLocalizedMessage());
+                                    }
+
+                                }
+                            }
+                        } else
+                            Log.d(TAG, "Error getting Item documents: ", task.getException());
+                    }
+                });
+    }
+
+    /**
      * Refreshes the list displayed in the HomePage based on spinner and search values
      *
      */
@@ -110,12 +197,7 @@ public class HomePageActivity extends AppCompatActivity {
         final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
         homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
 
-        //KEYWORD SEARCH VARS ==============
-        String keyword = search_word.getText().toString();
-        String search_category = cat_spinner.getSelectedItem().toString();
-        //todo:use values above to get items, if keyWord isEmpty(), get top items from all categories
-
-        //SORT BY VARS -----------
+        //SORT BY PRICE, NAME, POSTDATE, RATING VARS -----------
         String criterion = "title"; //default sorting criterion for items
         String sort_option = search_sort_spinner.getSelectedItem().toString();
         if(sort_option.equals("Price"))
@@ -123,10 +205,8 @@ public class HomePageActivity extends AppCompatActivity {
         else if(sort_option.equals("Most Recent"))
             criterion = "postTime";
 
-        Toast.makeText(getBaseContext(), search_category + sort_option + keyword, Toast.LENGTH_LONG).show(); //for testing selection
-
         CollectionReference Items = db.collection("items");
-        Query itemsQuery = null; //query for retrieving docs in a certain order
+        Query itemsQuery; //query for retrieving docs in a certain order
 
         //NOTE: special sorting order for post time is descending, the rest can be ascending todo: add more options to allow user to choose ascending/descending order?
         if(criterion.equals("postTime"))
@@ -171,7 +251,6 @@ public class HomePageActivity extends AppCompatActivity {
                                     item.addView(tv);
                                     //==================
 
-
                                     //Set up OnClick for each Item to get ItemDetailPage ==================
                                     final Item current_item = itemObj;
                                     item.setOnClickListener(new View.OnClickListener() {
@@ -184,7 +263,9 @@ public class HomePageActivity extends AppCompatActivity {
                                             startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
                                         }
                                     });
+
                                     homepage_result.addView(item); //add view to homepage list
+
                                 } catch (NullPointerException e) {
                                     System.out.println("Null Found: " + e.getLocalizedMessage());
                                 } catch (NoSuchFieldError e){

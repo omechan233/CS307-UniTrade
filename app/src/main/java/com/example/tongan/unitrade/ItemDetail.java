@@ -27,8 +27,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class ItemDetail extends AppCompatActivity {
     SharedPreferences shared;
@@ -80,6 +83,7 @@ public class ItemDetail extends AppCompatActivity {
 
                 //format post date
                 SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
+                format.setTimeZone(TimeZone.getTimeZone("EDT"));
                 String postText = "Posted: " +format.format(item.getPostTime().toDate());
 
                 desc_edit.setText(description);

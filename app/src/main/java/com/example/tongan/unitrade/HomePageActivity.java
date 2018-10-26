@@ -213,59 +213,66 @@ public class HomePageActivity extends AppCompatActivity {
                                 //Get Map of Item
                                 Map<String, Object> itemMap = doc.getData();
 
+                                if(doc.getDouble("status").intValue() != 1){ //if item not available, don't display it
+                                    continue;
+                                }
+
                                 //Get Title
                                 String itemTitle = (String) itemMap.get("title");
                                 String itemDesc = (String) itemMap.get("description:");
+                                try {
+                                    if (itemTitle.contains(keyword) || itemDesc.contains(keyword)) { //only display items that contain keyword in their title or description
+                                        try {
+                                            //Construct Item Object from each DocSnapshot
+                                            Item itemObj = new Item((String) itemMap.get("category"), (String) itemMap.get("title"), (String) itemMap.get("seller_name"),
+                                                    doc.getDouble("price"), (String) itemMap.get("description"),
+                                                    (String) itemMap.get("location"), doc.getDouble("status").intValue(), doc.getTimestamp("postTime"));
 
-                                if(itemTitle.contains(keyword) || itemDesc.contains(keyword)){ //only display items that contain keyword in their title or description
-                                    try {
-                                        //Construct Item Object from each DocSnapshot
-                                        Item itemObj = new Item((String) itemMap.get("category"), (String) itemMap.get("title"), (String) itemMap.get("seller_name"),
-                                                doc.getDouble("price"), (String) itemMap.get("description"),
-                                                (String) itemMap.get("location"), doc.getDouble("status").intValue(), doc.getTimestamp("postTime"));
+                                            //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
+                                            LinearLayout item = new LinearLayout(getBaseContext());
+                                            //set layout params for parent layout
+                                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+                                            item.setLayoutParams(params);
 
-                                        //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
-                                        LinearLayout item = new LinearLayout(getBaseContext());
-                                        //set layout params for parent layout
-                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
-                                        item.setLayoutParams(params);
+                                            //create and set params of image in parent layout
+                                            ImageView imageView = new ImageView(getBaseContext());
+                                            imageView.setImageResource(R.mipmap.poi_test_src);
+                                            params = new LinearLayout.LayoutParams(180, 180);
+                                            params.setMargins(20, 20, 0, 20);
+                                            imageView.setLayoutParams(params);
+                                            item.addView(imageView);
 
-                                        //create and set params of image in parent layout
-                                        ImageView imageView = new ImageView(getBaseContext());
-                                        imageView.setImageResource(R.mipmap.poi_test_src);
-                                        params = new LinearLayout.LayoutParams(180, 180);
-                                        params.setMargins(20, 20, 0, 20);
-                                        imageView.setLayoutParams(params);
-                                        item.addView(imageView);
+                                            //create textview in parent layout
+                                            TextView tv = new TextView(getBaseContext());
+                                            String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
+                                            tv.setText(text);
+                                            item.addView(tv);
+                                            //==================
 
-                                        //create textview in parent layout
-                                        TextView tv = new TextView(getBaseContext());
-                                        String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
-                                        tv.setText(text);
-                                        item.addView(tv);
-                                        //==================
+                                            //Set up OnClick for each Item to get ItemDetailPage ==================
+                                            final Item current_item = itemObj;
+                                            item.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) { //this is configured the same as OrderList
+                                                    SharedPreferences.Editor edit = shared.edit();
+                                                    edit.putString("itemid", current_item.getid());
+                                                    edit.apply();
 
-                                        //Set up OnClick for each Item to get ItemDetailPage ==================
-                                        final Item current_item = itemObj;
-                                        item.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) { //this is configured the same as OrderList
-                                                SharedPreferences.Editor edit = shared.edit();
-                                                edit.putString("itemid", current_item.getid());
-                                                edit.apply();
+                                                    startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
+                                                }
+                                            });
 
-                                                startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
-                                            }
-                                        });
+                                            homepage_result.addView(item); //add view to homepage list
 
-                                        homepage_result.addView(item); //add view to homepage list
+                                        } catch (NullPointerException e) {
+                                            System.out.println("Null Found: " + e.getLocalizedMessage());
+                                        } catch (NoSuchFieldError e) {
+                                            System.out.println("No Such Field: " + e.getLocalizedMessage());
+                                        }
 
-                                    } catch (NullPointerException e) {
-                                        System.out.println("Null Found: " + e.getLocalizedMessage());
-                                    } catch (NoSuchFieldError e){
-                                        System.out.println("No Such Field: " + e.getLocalizedMessage());
                                     }
-
+                                }catch(NullPointerException e){
+                                    System.out.println("Null Pointer when using contains, message: " + e.getLocalizedMessage());
                                 }
                             }
                         } else
@@ -276,6 +283,9 @@ public class HomePageActivity extends AppCompatActivity {
 
     /**
      * Refreshes the list displayed in the HomePage based on spinner and search values
+     *
+     * Checks spinner for sort options and [TODO] checks category spinner
+     * and sorts the HomePage List accordingly
      *
      */
     public void refreshHome(){
@@ -291,9 +301,9 @@ public class HomePageActivity extends AppCompatActivity {
             criterion = "postTime";
         else if(sort_option.equals("Seller Rating")) {
             sortByRating();
-            return;
-         //   criterion = "title"; //change to something else once this sorting feature is implemented
+            return; //sortByRating takes care of everything else, so return
         }
+
         CollectionReference Items = db.collection("items");
         Query itemsQuery; //query for retrieving docs in a certain order
 
@@ -372,6 +382,13 @@ public class HomePageActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Special Sorting function since Rating requires us to pull Profiles from the DB and
+     * sort their items by the Profile Ratings
+     *
+     * First sends query to get ordered list of profiles based on rating, then adds each available item from
+     * those profiles into the displayed list
+     */
     public void sortByRating(){
         final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
         homepage_result.removeAllViews(); //clear to ensure duplicates aren't added

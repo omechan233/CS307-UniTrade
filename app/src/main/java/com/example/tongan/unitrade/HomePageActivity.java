@@ -121,21 +121,19 @@ public class HomePageActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                Log.d(TAG, doc.getId() + "=> " + doc.getData());
+                            for (QueryDocumentSnapshot ItemDoc : task.getResult()) {
+                                Log.d(TAG, ItemDoc.getId() + "=> " + ItemDoc.getData());
 
                                 //Get Map of Item
-                                Map<String, Object> itemMap = doc.getData();
+                                Map<String, Object> itemMap = ItemDoc.getData();
 
-                                if(doc.getDouble("status").intValue() != 1){ //if item not available, don't display it
+                                if(ItemDoc.getDouble("status").intValue() != 1){ //if item not available, don't display it
                                     continue;
                                 }
 
                                 try {
                                     //Construct Item Object from each DocSnapshot
-                                    Item itemObj = new Item((String) itemMap.get("category"), (String) itemMap.get("title"), (String) itemMap.get("seller_name"),
-                                            doc.getDouble("price"), (String) itemMap.get("description"),
-                                            (String) itemMap.get("location"), doc.getDouble("status").intValue(), doc.getTimestamp("postTime"));
+                                    Item itemObj = ItemDoc.toObject(Item.class);
 
                                     //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
                                     LinearLayout item = new LinearLayout(getBaseContext());
@@ -206,13 +204,13 @@ public class HomePageActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                Log.d(TAG, doc.getId() + "=> " + doc.getData());
+                            for (QueryDocumentSnapshot ItemDoc : task.getResult()) {
+                                Log.d(TAG, ItemDoc.getId() + "=> " + ItemDoc.getData());
 
                                 //Get Map of Item
-                                Map<String, Object> itemMap = doc.getData();
+                                Map<String, Object> itemMap = ItemDoc.getData();
 
-                                if(doc.getDouble("status").intValue() != 1){ //if item not available, don't display it
+                                if(ItemDoc.getDouble("status").intValue() != 1){ //if item not available, don't display it
                                     continue;
                                 }
 
@@ -223,9 +221,7 @@ public class HomePageActivity extends AppCompatActivity {
                                     if (itemTitle.contains(keyword) || itemDesc.contains(keyword)) { //only display items that contain keyword in their title or description
                                         try {
                                             //Construct Item Object from each DocSnapshot
-                                            Item itemObj = new Item((String) itemMap.get("category"), (String) itemMap.get("title"), (String) itemMap.get("seller_name"),
-                                                    doc.getDouble("price"), (String) itemMap.get("description"),
-                                                    (String) itemMap.get("location"), doc.getDouble("status").intValue(), doc.getTimestamp("postTime"));
+                                            Item itemObj = ItemDoc.toObject(Item.class);
 
                                             //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
                                             LinearLayout item = new LinearLayout(getBaseContext());
@@ -317,21 +313,19 @@ public class HomePageActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                Log.d(TAG, doc.getId() + "=> " + doc.getData());
+                            for (QueryDocumentSnapshot ItemDoc : task.getResult()) {
+                                Log.d(TAG, ItemDoc.getId() + "=> " + ItemDoc.getData());
 
                                 //Get Map of Item
-                                Map<String, Object> itemMap = doc.getData();
+                                Map<String, Object> itemMap = ItemDoc.getData();
 
-                                if(doc.getDouble("status").intValue() != 1){ //if item not available, don't display it
+                                if(ItemDoc.getDouble("status").intValue() != 1){ //if item not available, don't display it
                                     continue;
                                 }
 
                                 try {
                                     //Construct Item Object from each DocSnapshot
-                                    Item itemObj = new Item((String) itemMap.get("category"), (String) itemMap.get("title"), (String) itemMap.get("seller_name"),
-                                             doc.getDouble("price"), (String) itemMap.get("description"),
-                                            (String) itemMap.get("location"), doc.getDouble("status").intValue(), doc.getTimestamp("postTime"));
+                                    Item itemObj = ItemDoc.toObject(Item.class);
 
                                     //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
                                     LinearLayout item = new LinearLayout(getBaseContext());
@@ -399,8 +393,8 @@ public class HomePageActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isComplete()){
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                ArrayList<String> list = (ArrayList<String>) doc.get("my_items"); //get ItemIDs
+                            for (QueryDocumentSnapshot ProfileDoc : task.getResult()) {
+                                ArrayList<String> list = (ArrayList<String>) ProfileDoc.get("my_items"); //get ItemIDs
 
                                 for (String itemID : list) {
                                     CollectionReference itemsRef = db.collection("items");
@@ -411,10 +405,11 @@ public class HomePageActivity extends AppCompatActivity {
                                             if (task.isComplete()) {
                                                 DocumentSnapshot itemSnapshot = task.getResult();
                                                 //Construct Item Object from each DocSnapshot
+                                                if(itemSnapshot.getDouble("status").intValue() != 1){ //if item not available, don't display it
+                                                    return;
+                                                }
                                                 try {
-                                                    Item itemObj = new Item((String) itemSnapshot.get("category"), (String) itemSnapshot.get("title"), (String) itemSnapshot.get("seller_name"),
-                                                            itemSnapshot.getDouble("price"), (String) itemSnapshot.get("description"),
-                                                            (String) itemSnapshot.get("location"), itemSnapshot.getDouble("status").intValue(), itemSnapshot.getTimestamp("postTime"));
+                                                    Item itemObj = itemSnapshot.toObject(Item.class);
 
                                                     //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
                                                     LinearLayout item = new LinearLayout(getBaseContext());

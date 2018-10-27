@@ -175,19 +175,45 @@ public class HomePageActivity extends AppCompatActivity {
                                     }
 
                                     if (snapshot != null && snapshot.exists()) {
-                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
-                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
-                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "ItemSold")
-                                                .setContentTitle("UniTrade:")
-                                                .setContentText("Your item is sold!")
-                                                .setWhen(System.currentTimeMillis())
-                                                .setSmallIcon(R.mipmap.ic_launcher_round)
-                                                .setAutoCancel(true)
-                                                .setContentIntent(ma)
-                                                .build();
+                                        item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                Item current_item = new Item();
+                                                current_item = documentSnapshot.toObject(Item.class);
+                                                if(current_item.getStatus() == 2) {
+                                                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                    Intent intent = new Intent(HomePageActivity.this, Order.class);
+                                                    PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
+                                                    Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "ItemSold")
+                                                            .setContentTitle("UniTrade:")
+                                                            .setContentText("Your item is sold!")
+                                                            .setWhen(System.currentTimeMillis())
+                                                            .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                            .setAutoCancel(true)
+                                                            .setContentIntent(ma)
+                                                            .build();
 
-                                        manager.notify(1, notification);
+                                                    manager.notify(1, notification);
+                                                }
+                                                Log.e(TAG, current_item.getid()+ current_item.getStatus() + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+                                            }
+                                        });
+//                                        if(current_item.getStatus() == 2) {
+//                                            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                                            Intent intent = new Intent(HomePageActivity.this, Order.class);
+//                                            PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
+//                                            Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "ItemSold")
+//                                                    .setContentTitle("UniTrade:")
+//                                                    .setContentText("Your item is sold!")
+//                                                    .setWhen(System.currentTimeMillis())
+//                                                    .setSmallIcon(R.mipmap.ic_launcher_round)
+//                                                    .setAutoCancel(true)
+//                                                    .setContentIntent(ma)
+//                                                    .build();
+//
+//                                            manager.notify(1, notification);
+//                                        }
                                     } else {
                                         Log.d(TAG, "Current data: null");
                                     }

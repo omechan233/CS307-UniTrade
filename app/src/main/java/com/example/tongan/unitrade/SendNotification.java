@@ -6,23 +6,39 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 
 import com.example.tongan.unitrade.objects.Order;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class SendNotification extends AppCompatActivity {
     private Button itemSold_btn;
     private Button methodChange_btn;
     private Button insideAppNotice_btn;
+
+    private String TAG = "SendNotification";
+    private FirebaseAuth mAuth;
+    FirebaseFirestore db;
+    private SharedPreferences sharedPreferences;
+    private Functions f;
 
     @TargetApi(Build.VERSION_CODES.O)
     private void createNotificationChannel(String channelId, String channelName, int importance) {
@@ -33,6 +49,13 @@ public class SendNotification extends AppCompatActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        f = new Functions();
+        sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
+        String email = sharedPreferences.getString("email", null);
+        String itemid = sharedPreferences.getString("itemid", null);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sendnotification);
@@ -60,34 +83,66 @@ public class SendNotification extends AppCompatActivity {
         // Following code is for pushing a system notification, to notify user "Your posted item is sold."
         /********************************************************************/
 
-
-        itemSold_btn.setOnClickListener(new View.OnClickListener() {
+        final DocumentReference docRef = db.collection("items").document(email);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onClick(View v) {
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
 
+                if (snapshot != null && snapshot.exists()) {
+                    System.out.println("changed!!!send notify!!!!!!!!!!!!!!!!!!!!!!!");
+                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    Intent intent = new Intent(SendNotification.this, Order.class);
+                    PendingIntent ma = PendingIntent.getActivity(SendNotification.this,0,intent,0);
+                    Notification notification = new NotificationCompat.Builder(SendNotification.this, "ItemSold")
+                            .setContentTitle("UniTrade:")
+                            .setContentText("Your item is sold!")
+                            .setWhen(System.currentTimeMillis())
+                            .setSmallIcon(R.mipmap.ic_launcher_round)
+                            .setAutoCancel(true)
+                            .setContentIntent(ma)
+                            .build();
 
-                //Todo: check back-end Notification status
-                //if current user's ItemSold Notification status is on, and the item they posted is sold,
-                //use following code to push notification.
-
-                //Todo: front-end functionality starts here, combine them with back-end.
-                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                Intent intent = new Intent(SendNotification.this, Order.class);
-                PendingIntent ma = PendingIntent.getActivity(SendNotification.this,0,intent,0);
-                Notification notification = new NotificationCompat.Builder(SendNotification.this, "ItemSold")
-                        .setContentTitle("UniTrade:")
-                        .setContentText("Your item is sold!")
-                        .setWhen(System.currentTimeMillis())
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
-                        .setAutoCancel(true)
-                        .setContentIntent(ma)
-                        .build();
-
-                manager.notify(1, notification);
-                //front-end functionality ends here.
-
+                    manager.notify(1, notification);
+                    Log.d(TAG, "Current data: " + snapshot.getData());
+                } else {
+                    Log.d(TAG, "Current data: null");
+                }
             }
         });
+
+
+//        itemSold_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//                //Todo: check back-end Notification status
+//                //if current user's ItemSold Notification status is on, and the item they posted is sold,
+//                //use following code to push notification.
+//
+//                //Todo: front-end functionality starts here, combine them with back-end.
+//                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                Intent intent = new Intent(SendNotification.this, Order.class);
+//                PendingIntent ma = PendingIntent.getActivity(SendNotification.this,0,intent,0);
+//                Notification notification = new NotificationCompat.Builder(SendNotification.this, "ItemSold")
+//                        .setContentTitle("UniTrade:")
+//                        .setContentText("Your item is sold!")
+//                        .setWhen(System.currentTimeMillis())
+//                        .setSmallIcon(R.mipmap.ic_launcher_round)
+//                        .setAutoCancel(true)
+//                        .setContentIntent(ma)
+//                        .build();
+//
+//                manager.notify(1, notification);
+//                //front-end functionality ends here.
+//
+//            }
+//        });
 
         /**********************************************************************/
         // Following code is for pushing a system notification, to notify user "Your trading method is changed."

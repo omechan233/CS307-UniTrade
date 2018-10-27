@@ -1,10 +1,15 @@
 package com.example.tongan.unitrade;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,17 +23,22 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.tongan.unitrade.objects.Item;
+import com.example.tongan.unitrade.objects.Order;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -43,6 +53,7 @@ public class HomePageActivity extends AppCompatActivity {
     private Spinner search_sort_spinner;
     SharedPreferences shared;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +61,8 @@ public class HomePageActivity extends AppCompatActivity {
 
         //get global variable object
         shared = getSharedPreferences("app", Context.MODE_PRIVATE);
+        String email = shared.getString("email", "");
+
 
         //Buttons
         Button clickToPost = (Button) findViewById(R.id.home_post_btn);
@@ -57,9 +70,9 @@ public class HomePageActivity extends AppCompatActivity {
         Button search_button = (Button) findViewById(R.id.hmpage_search_button);
 
         //init fields
-        cat_spinner = (Spinner)findViewById(R.id.category_sp);
-        search_word = (EditText)findViewById(R.id.search_input);
-        search_sort_spinner = (Spinner)findViewById(R.id.search_sort);
+        cat_spinner = (Spinner) findViewById(R.id.category_sp);
+        search_word = (EditText) findViewById(R.id.search_input);
+        search_sort_spinner = (Spinner) findViewById(R.id.search_sort);
 
         clickToSetting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +104,7 @@ public class HomePageActivity extends AppCompatActivity {
         search_sort_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!initFlag) //if initial setup, don't refreshHome else we'll get duplicated items
+                if (!initFlag) //if initial setup, don't refreshHome else we'll get duplicated items
                     refreshHome(); //refresh home to resort list
                 else
                     initFlag = false; //set initFlag to false so this function works as intended after init
@@ -104,12 +117,102 @@ public class HomePageActivity extends AppCompatActivity {
 
         //fill initial homepage
         initHome();
-    }
+
+        //notification test
+//        final DocumentReference docRef = db.collection("items")
+//                .document("xu830@purdue.eduTimestamp(seconds=1540622001, nanoseconds=173000000)");
+//        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot snapshot,
+//                                @Nullable FirebaseFirestoreException e) {
+//                if (e != null) {
+//                    Log.w(TAG, "Listen failed.", e);
+//                    return;
+//                }
+//
+//                if (snapshot != null && snapshot.exists()) {
+//                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                    Intent intent = new Intent(HomePageActivity.this, Order.class);
+//                    PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this,0,intent,0);
+//                    Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "ItemSold")
+//                            .setContentTitle("UniTrade:")
+//                            .setContentText("Your item is sold!")
+//                            .setWhen(System.currentTimeMillis())
+//                            .setSmallIcon(R.mipmap.ic_launcher_round)
+//                            .setAutoCancel(true)
+//                            .setContentIntent(ma)
+//                            .build();
+//
+//                    manager.notify(1, notification);
+//                } else {
+//                    Log.d(TAG, "Current data: null");
+//                }
+//            }
+//        });
+
+        final DocumentReference user_doc = db.collection("profiles").document(email);
+
+        user_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    List<String> my_items = new ArrayList<String>();
+                    my_items = (List<String>) document.getData().get("my_items");
+                    if (my_items == null || my_items.isEmpty()) {
+                        System.out.println("Nothing on the list!");
+                    } else {
+                        for (int i = 0; i < my_items.size(); i++) {
+                            final DocumentReference item_doc = db.collection("items").document(my_items.get(i));
+                            final int finalI = i;
+                            item_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                                    @Nullable FirebaseFirestoreException e) {
+                                    if (e != null) {
+                                        Log.w(TAG, "Listen failed.", e);
+                                        return;
+                                    }
+
+                                    if (snapshot != null && snapshot.exists()) {
+                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
+                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
+                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "ItemSold")
+                                                .setContentTitle("UniTrade:")
+                                                .setContentText("Your item is sold!")
+                                                .setWhen(System.currentTimeMillis())
+                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                .setAutoCancel(true)
+                                                .setContentIntent(ma)
+                                                .build();
+
+                                        manager.notify(1, notification);
+                                    } else {
+                                        Log.d(TAG, "Current data: null");
+                                    }
+                                }
+                            });
+                    }
+
+
+                }
+                //result[0] = (String[])document.getData().get("my_items");
+                Log.e(TAG, "my item list found");
+
+            } else
+
+            {
+                Log.e(TAG, "my item list not found");
+            }
+        }
+    });
+}
 
     /**
      * Initial layout of the homepage, displaying all items in alphabetical order by default
      */
-    public void initHome(){
+    public void initHome() {
         final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
         homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
 
@@ -127,7 +230,7 @@ public class HomePageActivity extends AppCompatActivity {
                                 //Get Map of Item
                                 Map<String, Object> itemMap = ItemDoc.getData();
 
-                                if(ItemDoc.getDouble("status").intValue() != 1){ //if item not available, don't display it
+                                if (ItemDoc.getDouble("status").intValue() != 1) { //if item not available, don't display it
                                     continue;
                                 }
 
@@ -173,7 +276,7 @@ public class HomePageActivity extends AppCompatActivity {
 
                                 } catch (NullPointerException e) {
                                     System.out.println("Null Found: " + e.getLocalizedMessage());
-                                } catch (NoSuchFieldError e){
+                                } catch (NoSuchFieldError e) {
                                     System.out.println("No Such Field: " + e.getLocalizedMessage());
                                 }
                             }
@@ -185,12 +288,12 @@ public class HomePageActivity extends AppCompatActivity {
 
     /**
      * When called, gets keyword inputted into search bar and searches for items based on input
-     *
+     * <p>
      * Search method is pretty simple for now, if the item's title or description contains the keyword, we'll display it
-     *
+     * <p>
      * NOTE: works best with one or two word searches
      */
-    public void searchKeyword(){
+    public void searchKeyword() {
         //clear homepage first
         final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
         homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
@@ -210,7 +313,7 @@ public class HomePageActivity extends AppCompatActivity {
                                 //Get Map of Item
                                 Map<String, Object> itemMap = ItemDoc.getData();
 
-                                if(ItemDoc.getDouble("status").intValue() != 1){ //if item not available, don't display it
+                                if (ItemDoc.getDouble("status").intValue() != 1) { //if item not available, don't display it
                                     continue;
                                 }
 
@@ -266,7 +369,7 @@ public class HomePageActivity extends AppCompatActivity {
                                         }
 
                                     }
-                                }catch(NullPointerException e){
+                                } catch (NullPointerException e) {
                                     System.out.println("Null Pointer when using contains, message: " + e.getLocalizedMessage());
                                 }
                             }
@@ -278,23 +381,22 @@ public class HomePageActivity extends AppCompatActivity {
 
     /**
      * Refreshes the list displayed in the HomePage based on spinner and search values
-     *
+     * <p>
      * Checks spinner for sort options and [TODO] checks category spinner
      * and sorts the HomePage List accordingly
-     *
      */
-    public void refreshHome(){
+    public void refreshHome() {
         final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
         homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
 
         //SORT BY PRICE, NAME, POSTDATE, RATING VARS -----------
         String criterion = "title"; //default sorting criterion for items
         String sort_option = search_sort_spinner.getSelectedItem().toString();
-        if(sort_option.equals("Price"))
+        if (sort_option.equals("Price"))
             criterion = "price";
-        else if(sort_option.equals("Most Recent"))
+        else if (sort_option.equals("Most Recent"))
             criterion = "postTime";
-        else if(sort_option.equals("Seller Rating")) {
+        else if (sort_option.equals("Seller Rating")) {
             sortByRating();
             return; //sortByRating takes care of everything else, so return
         }
@@ -303,7 +405,7 @@ public class HomePageActivity extends AppCompatActivity {
         Query itemsQuery; //query for retrieving docs in a certain order
 
         //NOTE: special sorting order for post time is descending, the rest can be ascending todo: add more options to allow user to choose ascending/descending order?
-        if(criterion.equals("postTime"))
+        if (criterion.equals("postTime"))
             itemsQuery = Items.orderBy(criterion, Query.Direction.DESCENDING);
         else
             itemsQuery = Items.orderBy(criterion);
@@ -319,7 +421,7 @@ public class HomePageActivity extends AppCompatActivity {
                                 //Get Map of Item
                                 Map<String, Object> itemMap = ItemDoc.getData();
 
-                                if(ItemDoc.getDouble("status").intValue() != 1){ //if item not available, don't display it
+                                if (ItemDoc.getDouble("status").intValue() != 1) { //if item not available, don't display it
                                     continue;
                                 }
 
@@ -365,7 +467,7 @@ public class HomePageActivity extends AppCompatActivity {
 
                                 } catch (NullPointerException e) {
                                     System.out.println("Null Found: " + e.getLocalizedMessage());
-                                } catch (NoSuchFieldError e){
+                                } catch (NoSuchFieldError e) {
                                     System.out.println("No Such Field: " + e.getLocalizedMessage());
                                 }
                             }
@@ -378,11 +480,11 @@ public class HomePageActivity extends AppCompatActivity {
     /**
      * Special Sorting function since Rating requires us to pull Profiles from the DB and
      * sort their items by the Profile Ratings
-     *
+     * <p>
      * First sends query to get ordered list of profiles based on rating, then adds each available item from
      * those profiles into the displayed list
      */
-    public void sortByRating(){
+    public void sortByRating() {
         final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
         homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
 
@@ -392,7 +494,7 @@ public class HomePageActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isComplete()){
+                        if (task.isComplete()) {
                             for (QueryDocumentSnapshot ProfileDoc : task.getResult()) {
                                 ArrayList<String> list = (ArrayList<String>) ProfileDoc.get("my_items"); //get ItemIDs
 
@@ -405,7 +507,7 @@ public class HomePageActivity extends AppCompatActivity {
                                             if (task.isComplete()) {
                                                 DocumentSnapshot itemSnapshot = task.getResult();
                                                 //Construct Item Object from each DocSnapshot
-                                                if(itemSnapshot.getDouble("status").intValue() != 1){ //if item not available, don't display it
+                                                if (itemSnapshot.getDouble("status").intValue() != 1) { //if item not available, don't display it
                                                     return;
                                                 }
                                                 try {

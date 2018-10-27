@@ -9,12 +9,115 @@
     tools:context=".OrderDetail">
 
     <TextView
-        android:id="@+id/orderdetail_title"
-        android:layout_width="225dp"
-        android:layout_height="55dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="OrderDetail Page"
-        android:textSize="24sp"
+        android:id="@+id/order_detail_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#FF9900"
+        android:text=" Item Details"
+        android:textSize="20sp"
         android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/order_detail_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:src="@mipmap/poi_test_src"
+        android:id="@+id/order_detail_image"
+        android:contentDescription="ItemImage"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/order_detail_title"
+        android:text="Back"
+        android:layout_marginTop="10dp"
+        android:id="@+id/order_detail_previous_page"
+        android:textSize="15sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/order_detail_image"
+        android:layout_marginLeft="10dp"
+        android:textColor="#000000"
+        android:id="@+id/item_name_order_detail"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="Order Item:"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_name_order_detail"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/price_order_detail"
+        android:layout_marginTop="10dp"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="Price:"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/price_order_detail"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/time_order_detail"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:text="Order Time:"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/time_order_detail"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/trade_order_detail"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:text="Trade Method:"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/trade_order_detail"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/seller_order_detail"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:text="Seller Name:"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seller_order_detail"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/status_order_detail"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:text="Status:"/>
+
+    <!--reserved area, do not change here
+    add any buttons here-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:weightSum="2"
+        android:layout_alignParentBottom="true"
+        android:layout_height="50dp">
+
+    </LinearLayout>
+
 </RelativeLayout>

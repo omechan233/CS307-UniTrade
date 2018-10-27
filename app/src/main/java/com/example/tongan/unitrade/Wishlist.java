@@ -8,20 +8,15 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.tongan.unitrade.objects.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -43,7 +38,7 @@ public class Wishlist extends AppCompatActivity {
         shared=getSharedPreferences("app", Context.MODE_PRIVATE);
 
         Button backbtn = (Button) findViewById(R.id.wishlist_back_btn);
-
+/*
         Item test1 = new Item("Test Category1", "POI", "Yudachi", "1996-5-5", 2.33,
                 "This is the content of description\nYou don't need to look at it at all\nsince this description is totally meaningless!\nlol", "ass", 0);
         Item test2 = new Item("Test Category2", "POII", "Yudachi_2", "1996-5-6", 3.33,
@@ -54,7 +49,7 @@ public class Wishlist extends AppCompatActivity {
         test_list.add(test1);
         test_list.add(test2);
         test_list.add(test3);
-
+*/
         final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.wlistview);
         linearLayout.removeAllViews();
 

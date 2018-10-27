@@ -52,13 +52,13 @@
             android:layout_weight="1"/>
 
         <Spinner
-            android:layout_marginTop="2dp"
-            android:layout_width="1dp"
             android:id="@+id/search_sort"
-            android:entries="@array/sort"
-            android:spinnerMode="dropdown"
+            android:layout_width="1dp"
             android:layout_height="40dp"
-            android:layout_weight="1"/>
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:entries="@array/sort"
+            android:spinnerMode="dropdown" />
 
     </LinearLayout>
 

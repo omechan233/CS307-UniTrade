@@ -1,7 +1,7 @@
 package com.example.tongan.unitrade.objects;
 
-import java.util.Date;
 
+import com.google.firebase.Timestamp;
 
 public class Order {
     private String item_title;
@@ -9,7 +9,7 @@ public class Order {
     private boolean is_sold;
     private String buyer_email;
     private String item_ID;
-    private String order_time;
+    private Timestamp order_time;
     private boolean face_to_face;
 
     /**
@@ -17,7 +17,7 @@ public class Order {
      *
      */
     public Order(){}
-    public Order(String item_ID, String order_time, String buyer_email, String item_title, Double item_price, boolean is_sold, boolean face_to_face){
+    public Order(String item_ID, Timestamp order_time, String buyer_email, String item_title, Double item_price, boolean is_sold, boolean face_to_face){
         this.buyer_email=buyer_email;
         this.is_sold=is_sold;
         this.item_ID=item_ID;
@@ -49,7 +49,7 @@ public class Order {
         return item_title;
     }
 
-    public String getOrder_time() {
+    public Timestamp getOrder_time() {
         return order_time;
     }
 }

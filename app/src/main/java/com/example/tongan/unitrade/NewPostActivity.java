@@ -3,18 +3,15 @@ package com.example.tongan.unitrade;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.FileNotFoundException;
-import java.util.Calendar;
-import java.util.Date;
+import com.google.firebase.Timestamp;
+
 
 public class NewPostActivity extends AppCompatActivity {
     SharedPreferences shared;
@@ -47,14 +44,13 @@ public class NewPostActivity extends AppCompatActivity {
                 EditText category_edit = (EditText) findViewById(R.id.category_input);
 
                 //get input in edittext
-                Date currentTime = Calendar.getInstance().getTime();
+                Timestamp postTime = Timestamp.now();
                 String itemName = itemName_edit.getText().toString();
                 String description = description_edit.getText().toString();
                 //String username = "";
-                String postedtime =currentTime.toString();
                 String address ="[not implemented yet]";
                 String category = category_edit.getText().toString();
-                Double price = -1.0;
+                Double price;
 
                 // 0 for currently unavailable
                 // 1 for available
@@ -62,8 +58,7 @@ public class NewPostActivity extends AppCompatActivity {
                 int status = 1;
 
                 //get username by email
-                Functions f1 = new Functions();
-                String email=shared.getString("email","");
+                String email = shared.getString("email","");
 
                 Functions f = new Functions();
 
@@ -72,7 +67,7 @@ public class NewPostActivity extends AppCompatActivity {
 
                     price = Double.parseDouble(price_edit.getText().toString());
 
-                    int ret = f.create_post(itemName,email,postedtime,price,category,address,description,status);
+                    int ret = f.create_post(itemName,email,price,category,address,description,status, postTime);
 
                     //back to homepage
                     Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();

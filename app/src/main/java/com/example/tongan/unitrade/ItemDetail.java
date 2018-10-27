@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,12 +18,14 @@ import com.example.tongan.unitrade.objects.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 public class ItemDetail extends AppCompatActivity {
     SharedPreferences shared;
@@ -73,7 +74,12 @@ public class ItemDetail extends AppCompatActivity {
                 String description = item.getDescription();
                 String seller = item.getSeller_name();
                 final String item_id = itemid;
-                String time = item.getPosted_time();
+                Timestamp time = item.getPostTime();
+
+                //format post date
+                SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
+                format.setTimeZone(TimeZone.getTimeZone("EDT"));
+                String postText = "Posted: " +format.format(item.getPostTime().toDate());
 
                 // if current login user is not the seller of this item
                 // set the edit item detail button invisible.
@@ -86,7 +92,7 @@ public class ItemDetail extends AppCompatActivity {
 
 
                 desc_edit.setText(description);
-                time_edit.setText(time);
+                time_edit.setText(postText);
                 name_edit.setText(item_name);
                 TextView seller_name = (TextView) findViewById(R.id.detail_seller);
                 seller = "Seller : " + seller;

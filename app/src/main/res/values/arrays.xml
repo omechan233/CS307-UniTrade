@@ -5,15 +5,16 @@
         <item>All</item>
         <item>Books</item>
         <item>Electronics</item>
-        <item>Cloths</item>
+        <item>Clothes</item>
         <item>Furniture</item>
         <item>Other</item>
     </string-array>
 
     <string-array name="sort">
-        <item>Default</item>
-        <item>Distance</item>
+        <item>Name</item>
+        <item>Most Recent</item>
         <item>Price</item>
+        <item>Seller Rating</item>
     </string-array>
 
 </resources>

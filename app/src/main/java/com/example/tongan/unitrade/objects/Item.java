@@ -1,5 +1,8 @@
 package com.example.tongan.unitrade.objects;
 
+import com.google.firebase.Timestamp;
+
+
 public class Item {
     //constructor
     public Item(){
@@ -11,12 +14,12 @@ public class Item {
     private String category;
     private String title;
     private String seller_name;
-    private String posted_time;
     private int status;
     private String location;
     // private Image picture; 
     //private int SellerID;
     private String description;
+    private Timestamp postTime;
 
     /******** AT:
      * Updated the constructor, because having both post and item class seems redundant
@@ -40,22 +43,17 @@ public class Item {
      * Constructor; initialize ID, price, SellerID, and description
      *
      */
-    public Item(String category, String title, String seller_name, String posted_time, double price, String description, String location, int status){
-        //this.ID = ID;
-        this.id=seller_name+posted_time;
+    public Item(String category, String title, String seller_name, double price, String description, String location, int status, Timestamp postTime){
+        this.id=seller_name+postTime.toString();
         this.category=category;
         this.title=title;
-        this.posted_time=posted_time;
         this.seller_name=seller_name;
         this.status=status;
         this.price = price;
         this.location=location;
         //this.SellerID = SellerID;
         this.description = description;
-
-
-
-
+        this.postTime = postTime;
     }
 
     /** Getter Methods **/
@@ -75,16 +73,13 @@ public class Item {
     public int getStatus() {
         return status;
     }
-    public String getPosted_time() {
-        return posted_time;
-    }
     public String getDescription(){
         return this.description;
     }
     public String getLocation() {
         return location;
     }
-
+    public Timestamp getPostTime() { return this.postTime; }
 
     /** Setter Methods **/
     public void setPrice(double price){
@@ -116,10 +111,10 @@ public class Item {
                 "\nCategory: " + getCategory() +
                 "\nSeller Name: " + getSeller_name() +
                 "\nPrice: " + getPrice() +
-                "\nPosted Time: " + getPosted_time() +
                 "\nLocation: " + getLocation() +
                 "\nDescription: " + getDescription() +
-                "\nStatus: " + getStatus();
+                "\nStatus: " + getStatus() +
+                "\nPosted Time: " + getPostTime().toString();
     }
 
 }

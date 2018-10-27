@@ -798,6 +798,41 @@ public class Functions {
                     }
                 });
     }
+
+
+    void change_item_soldnotification(String user_email, int setting) {
+        DocumentReference user_doc = db.collection("users").document(user_email);
+        user_doc.update("Itemsold_notification", setting)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+    }
+
+    void change_method_notification(String user_email, int setting) {
+        DocumentReference user_doc = db.collection("users").document(user_email);
+        user_doc.update("method_notification", setting)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+    }
 }
 
 

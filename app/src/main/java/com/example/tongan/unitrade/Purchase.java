@@ -60,7 +60,11 @@ public class Purchase extends AppCompatActivity {
                         Item item = documentSnapshot.toObject(Item.class);
                         if (item.getStatus() != 1) {
                             Toast.makeText(Purchase.this, "Item was already sold" + radioButton.getText(), Toast.LENGTH_LONG).show();
-                        } else {
+                        }
+                        else if(item.getSeller_name().equals(useremail)){
+                            Toast.makeText(Purchase.this, "You cannot buy your own item" + radioButton.getText(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
                             Timestamp orderTime = Timestamp.now();
                             f.create_order(useremail, itemid, orderTime, item.getPrice(), item.getTitle(), finalFace_to_face);
                             f.changeItemStatusToBought(itemid);

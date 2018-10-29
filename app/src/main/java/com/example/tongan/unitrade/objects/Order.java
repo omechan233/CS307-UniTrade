@@ -7,7 +7,7 @@ public class Order {
     private String item_title;
     private Double item_price;
     private boolean is_sold;
-    private String buyer_email;
+    private String seller_email;
     private String item_ID;
     private Timestamp order_time;
     private boolean face_to_face;
@@ -17,8 +17,8 @@ public class Order {
      *
      */
     public Order(){}
-    public Order(String item_ID, Timestamp order_time, String buyer_email, String item_title, Double item_price, boolean is_sold, boolean face_to_face){
-        this.buyer_email=buyer_email;
+    public Order(String item_ID, Timestamp order_time, String seller_email, String item_title, Double item_price, boolean is_sold, boolean face_to_face){
+        this.seller_email=seller_email;
         this.is_sold=is_sold;
         this.item_ID=item_ID;
         this.item_price=item_price;
@@ -37,8 +37,8 @@ public class Order {
         return is_sold;
     }
 
-    public String getBuyer_email() {
-        return buyer_email;
+    public String getSeller_email() {
+        return seller_email;
     }
 
     public String getItem_ID() {

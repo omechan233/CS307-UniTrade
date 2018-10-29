@@ -447,18 +447,18 @@ public class Functions {
     /********** AT:
      * Call when user buys an item
      */
-    public void create_order(String buyer_email, String item_ID, Timestamp order_time, Double item_price, String item_title, boolean face_to_face){
-        final Order order = new Order(item_ID, order_time, buyer_email,item_title, item_price, false, face_to_face );
-        final String order_ID = buyer_email+order_time.toString();
+    public void create_order(String seller_email, String item_ID, Timestamp order_time, Double item_price, String item_title, boolean face_to_face){
+        final Order order = new Order(item_ID, order_time, seller_email,item_title, item_price, false, face_to_face );
+        final String order_ID = seller_email+order_time.toString();
         final String final_item_ID = item_ID;
-        final String final_buyer_email = buyer_email;
+        final String final_seller_email = seller_email;
 
 
         // add order in orders
         db.collection("orders").document(order_ID).set(order);
 
         // add the order in profile
-        DocumentReference user_doc = db.collection("profiles").document(final_buyer_email);
+        DocumentReference user_doc = db.collection("profiles").document(final_seller_email);
         user_doc.update("my_orders", FieldValue.arrayUnion(order_ID));
 
         //change status of item

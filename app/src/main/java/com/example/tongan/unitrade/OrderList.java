@@ -90,7 +90,7 @@ public class OrderList extends AppCompatActivity {
                                                 item.addView(imageView);
                                                 TextView tv = new TextView(getBaseContext());
 
-                                                String text = "\n" + current_order.getItem_title() + "\n" + current_order.getItem_price() + "\n" + current_order.getBuyer_email() + "\n" + current_order.getOrder_time() + "\n" + current_order.getFace_to_face();
+                                                String text = "\n" + current_order.getItem_title() + "\n" + current_order.getItem_price() + "\n" + current_order.getSeller_email() + "\n" + current_order.getOrder_time() + "\n" + current_order.getFace_to_face();
                                                 tv.setText(text);
                                                 item.addView(tv);
                                                 final Order finalCurrent_Order = current_order;
@@ -98,10 +98,12 @@ public class OrderList extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(View v) {
                                                         SharedPreferences.Editor edit = shared.edit();
-                                                        edit.putString("itemid", finalCurrent_Order.getItem_ID());
+                                                        String order_id = finalCurrent_Order.getSeller_email()+finalCurrent_Order.getOrder_time().toString();
+                                                        System.out.println("current order is "+order_id);
+                                                        edit.putString("order_ID", order_id);
+
                                                         edit.apply();
 
-                                                        //todo:get the item_id of the selected item and store it into a global variable that can be used in the OrderDetail page(need to know which item to display detail)
                                                         startActivity(new Intent(OrderList.this, OrderDetail.class));
                                                     }
                                                 });
@@ -112,10 +114,10 @@ public class OrderList extends AppCompatActivity {
                                         });
                                     }
                                 }
-                                Log.d(TAG, "my item list found");
+                                Log.d(TAG, "my order list found");
 
                             } else {
-                                Log.e(TAG, "my item list not found");
+                                Log.e(TAG, "my order list not found");
                             }
                         }
                     }

@@ -136,28 +136,21 @@
 
     <TextView
         android:id="@+id/category_text"
-        android:layout_width="162dp"
+        android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_above="@+id/category_input"
-        android:layout_marginBottom="-97dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="68dp"
         android:layout_toEndOf="@+id/item_image"
         android:text="Category"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_toRightOf="@+id/item_image" />
+        android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/category_input"
-        android:layout_width="250dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="102dp"
-        android:ems="10"
-        android:hint="Enter your item's category here"
-        android:inputType="textPersonName"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="12dp" />
+    <Spinner
+        android:id="@+id/post_spinner"
+        android:layout_width="116dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/item_name_input"
+        android:layout_alignTop="@+id/category_text"
+        android:entries="@array/post" />
 
 </RelativeLayout>

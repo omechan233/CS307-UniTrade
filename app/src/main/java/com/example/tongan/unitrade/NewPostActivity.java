@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
@@ -15,7 +17,8 @@ import com.google.firebase.Timestamp;
 
 public class NewPostActivity extends AppCompatActivity {
     SharedPreferences shared;
-
+    private Spinner post_spinner;
+    private String category;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +28,22 @@ public class NewPostActivity extends AppCompatActivity {
 
         Button cancel = (Button) findViewById(R.id.cancel_btn);
         Button submit = (Button) findViewById(R.id.submit_btn);
+        post_spinner = (Spinner) findViewById(R.id.post_spinner);
+
+
+        post_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String text = parent.getItemAtPosition(position).toString();
+                category = text;
+                Toast.makeText(parent.getContext(), text, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,7 +60,7 @@ public class NewPostActivity extends AppCompatActivity {
                 EditText itemName_edit = (EditText) findViewById(R.id.item_name_input);
                 EditText price_edit = (EditText) findViewById(R.id.price_input);
                 EditText description_edit = (EditText) findViewById(R.id.desc_input);
-                EditText category_edit = (EditText) findViewById(R.id.category_input);
+               // EditText category_edit = (EditText) findViewById(R.id.category_input);
 
                 //get input in edittext
                 Timestamp postTime = Timestamp.now();
@@ -49,7 +68,7 @@ public class NewPostActivity extends AppCompatActivity {
                 String description = description_edit.getText().toString();
                 //String username = "";
                 String address ="[not implemented yet]";
-                String category = category_edit.getText().toString();
+               // String category = category_edit.getText().toString();
                 Double price;
 
                 // 0 for currently unavailable

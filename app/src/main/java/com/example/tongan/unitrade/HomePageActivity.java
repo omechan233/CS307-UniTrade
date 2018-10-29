@@ -115,6 +115,21 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
+
+        cat_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!initFlag) //if initial setup, don't refreshHome else we'll get duplicated items
+                    refreshHome(); //refresh home to resort list
+                else
+                    initFlag = false; //set initFlag to false so this function works as intended after init
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         //fill initial homepage
         initHome();
 
@@ -324,6 +339,9 @@ public class HomePageActivity extends AppCompatActivity {
         final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
         homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
 
+        final String cate_option = cat_spinner.getSelectedItem().toString();
+        final String category = cate_option;
+
         final String keyword = search_word.getText().toString();
         CollectionReference Items = db.collection("items");
         Query itemsQuery = Items.orderBy("title");
@@ -340,6 +358,9 @@ public class HomePageActivity extends AppCompatActivity {
                                 Map<String, Object> itemMap = ItemDoc.getData();
 
                                 if (ItemDoc.getDouble("status").intValue() != 1) { //if item not available, don't display it
+                                    continue;
+                                }
+                                if (!category.equals("All") && !ItemDoc.get("category").equals(category)){
                                     continue;
                                 }
 
@@ -418,12 +439,23 @@ public class HomePageActivity extends AppCompatActivity {
         //SORT BY PRICE, NAME, POSTDATE, RATING VARS -----------
         String criterion = "title"; //default sorting criterion for items
         String sort_option = search_sort_spinner.getSelectedItem().toString();
+        String cate_option = cat_spinner.getSelectedItem().toString();
+
+
+        // Category default set to be All
+        String category = "All";
+
+        if (!cate_option.equals("All")){
+            category=cate_option;
+        }
+
+
         if (sort_option.equals("Price"))
             criterion = "price";
         else if (sort_option.equals("Most Recent"))
             criterion = "postTime";
         else if (sort_option.equals("Seller Rating")) {
-            sortByRating();
+            sortByRating(category);
             return; //sortByRating takes care of everything else, so return
         }
 
@@ -435,6 +467,8 @@ public class HomePageActivity extends AppCompatActivity {
             itemsQuery = Items.orderBy(criterion, Query.Direction.DESCENDING);
         else
             itemsQuery = Items.orderBy(criterion);
+
+        final String final_cate=category;
 
         itemsQuery.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -448,6 +482,9 @@ public class HomePageActivity extends AppCompatActivity {
                                 Map<String, Object> itemMap = ItemDoc.getData();
 
                                 if (ItemDoc.getDouble("status").intValue() != 1) { //if item not available, don't display it
+                                    continue;
+                                }
+                                if((!final_cate.equals("All")) && (!ItemDoc.get("category").equals(final_cate))){
                                     continue;
                                 }
 
@@ -510,7 +547,7 @@ public class HomePageActivity extends AppCompatActivity {
      * First sends query to get ordered list of profiles based on rating, then adds each available item from
      * those profiles into the displayed list
      */
-    public void sortByRating() {
+    public void sortByRating(final String category) {
         final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
         homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
 
@@ -533,7 +570,12 @@ public class HomePageActivity extends AppCompatActivity {
                                             if (task.isComplete()) {
                                                 DocumentSnapshot itemSnapshot = task.getResult();
                                                 //Construct Item Object from each DocSnapshot
-                                                if (itemSnapshot.getDouble("status").intValue() != 1) { //if item not available, don't display it
+
+                                                //AT: category
+                                                if (itemSnapshot.getDouble("status").intValue() != 1 || (!itemSnapshot.get("category").equals(category))) { //if item not available, don't display it
+                                                    return;
+                                                }
+                                                if((!category.equals("All")) && (!itemSnapshot.get("category").equals(category))){
                                                     return;
                                                 }
                                                 try {

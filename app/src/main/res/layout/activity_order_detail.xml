@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#FF9900"
-        android:text=" Item Details"
+        android:text=" Order Details"
         android:textSize="20sp"
         android:textStyle="bold" />
 

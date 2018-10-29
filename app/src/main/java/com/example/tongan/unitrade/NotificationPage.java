@@ -137,11 +137,9 @@ public class NotificationPage extends AppCompatActivity {
         notifi_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 System.out.println(email);
                 if (isChecked){
                     f.change_notification(email, 1);
-
                     Toast.makeText(getBaseContext(), "NotificationPage on!", Toast.LENGTH_LONG).show();
 
                 }
@@ -149,6 +147,8 @@ public class NotificationPage extends AppCompatActivity {
                     notifi_itemSold.setChecked(false);
                     notifi_changeMethod.setChecked(false);
                     f.change_notification(email, 0);
+                    f.change_item_soldnotification(email,0);
+                    f.change_method_notification(email, 0);
                     Toast.makeText(getBaseContext(), "NotificationPage off!", Toast.LENGTH_LONG).show();
                 }
 
@@ -158,7 +158,6 @@ public class NotificationPage extends AppCompatActivity {
         notifi_itemSold.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
 
                 //check itemSold switch:
                 if (isChecked){

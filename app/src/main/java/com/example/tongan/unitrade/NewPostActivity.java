@@ -27,7 +27,7 @@ public class NewPostActivity extends AppCompatActivity {
         shared=getSharedPreferences("app", Context.MODE_PRIVATE);
 
         Button cancel = (Button) findViewById(R.id.cancel_btn);
-        Button submit = (Button) findViewById(R.id.submit_btn);
+        Button submit = (Button) findViewById(R.id.post_submit_btn);
         post_spinner = (Spinner) findViewById(R.id.post_spinner);
 
 

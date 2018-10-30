@@ -89,7 +89,8 @@ public class OrderDetail extends AppCompatActivity {
         return_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                startActivity(new Intent(OrderDetail.this, OrderList.class));
+
             }
         });
 
@@ -102,6 +103,8 @@ public class OrderDetail extends AppCompatActivity {
 
             }
         });
+
+
 
     }
 }

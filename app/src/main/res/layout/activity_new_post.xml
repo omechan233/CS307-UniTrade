@@ -114,7 +114,7 @@
         android:inputType="textMultiLine" />
 
     <Button
-        android:id="@+id/submit_btn"
+        android:id="@+id/post_submit_btn"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
@@ -128,7 +128,7 @@
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/submit_btn"
+        android:layout_alignTop="@+id/post_submit_btn"
         android:layout_marginEnd="35dp"
         android:text="CANCEL"
         android:layout_alignParentRight="true"

@@ -135,7 +135,7 @@ public class Functions {
      * there are some issues:
      *
      *  1. I made the unique ID of course to be username+posted_time
-     *  So we dont have to have a order list and my item list in
+     *  So we dont have to have a order list and my list in
      *  the user structure.
      *  2. I am not sure if we really need a post class, because it
      *  has nothing special in it.

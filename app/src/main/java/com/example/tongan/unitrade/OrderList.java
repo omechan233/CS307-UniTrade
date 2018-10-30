@@ -153,8 +153,6 @@ public class OrderList extends AppCompatActivity {
                         if (document.exists()) {
                             List<String> my_items = new ArrayList<String>();
                             my_items = (List<String>) document.getData().get("my_items");
-                            System.out.println(my_items);
-                            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                             if (my_items == null || my_items.isEmpty()) {
                                 System.out.println("Nothing on the list!");
                             } else {

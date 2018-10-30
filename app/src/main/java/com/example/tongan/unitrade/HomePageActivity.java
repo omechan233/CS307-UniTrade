@@ -150,9 +150,7 @@ public class HomePageActivity extends AppCompatActivity {
                         //update text boxes with user info from database
                         String sold_notify = doc.get("Itemsold_notification").toString();
                         if(sold_notify.equals("0")){
-                            Log.d(TAG, "Notification off!! " + sold_notify + "############################");
                         }else{
-                            Log.d(TAG, "Notification on!! " + sold_notify + "############################");
                             //get order list from profile
                             final DocumentReference profiles = db.collection("profiles").document(email);
 

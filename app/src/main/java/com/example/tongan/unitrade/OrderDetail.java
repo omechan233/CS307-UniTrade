@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,8 +23,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
+import javax.annotation.Nonnull;
+
 public class OrderDetail extends AppCompatActivity {
     private SharedPreferences shared;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +47,8 @@ public class OrderDetail extends AppCompatActivity {
         final TextView status = (TextView)findViewById(R.id.status_order_detail);
 
         //get info from backend here
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference item_doc = db.collection("orders").document(order_ID);
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference item_doc = db.collection("orders").document(order_ID);
         item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -129,6 +133,8 @@ public class OrderDetail extends AppCompatActivity {
                                 Toast.makeText(OrderDetail.this, "You choose Face to Face!",
                                         Toast.LENGTH_SHORT).show();
                                 //Todo: back-end check is "Face to Face" same as the old trading method. if yes, do nothing. if no, update back-end with new trading method.
+                                db.collection("items").document(item_doc.getId())
+                                        .update("methodpending", 1);
 
                             }
                         });

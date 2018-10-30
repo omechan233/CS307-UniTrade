@@ -220,7 +220,8 @@ public class ItemDetail extends AppCompatActivity {
                                 Functions f = new Functions();
                                 f.delete_post(item_id,email);
                                 Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();
-                                finish();
+                                startActivity(new Intent(ItemDetail.this, OrderList.class));
+
                             }
                         })
                         .setNegativeButton("NO", new DialogInterface.OnClickListener() {

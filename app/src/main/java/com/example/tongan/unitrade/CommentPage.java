@@ -67,56 +67,70 @@ public class CommentPage extends AppCompatActivity {
                 comment = comment_input.getText().toString();
                 System.out.println("comment is " + comment);
                 System.out.println("rating is " + ratingNum);
+                //input check: rating cannot be 0, comment cannot be blank.
 
-                //after submit success, pop-up dialog to confirm and back to orderlist page.
-                AlertDialog.Builder builder = new AlertDialog.Builder(CommentPage.this);
-                builder.setTitle("Notice:");
-                builder.setMessage("Are you sure you want to submit this comment? ");
-                builder.setCancelable(true);
+                if (ratingNum == 0) {
+                    Toast.makeText(CommentPage.this, " Rating can't be 0!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else if (comment.length() < 1){
+                    Toast.makeText(CommentPage.this, "Comment can't be empty!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                
+                else {
+                    //after submit success, pop-up dialog to confirm and back to orderlist page.
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CommentPage.this);
+                    builder.setTitle("Notice:");
+                    builder.setMessage("Are you sure you want to submit this comment? ");
+                    builder.setCancelable(true);
 
-                // user choose "Yes" button:
-                builder.setPositiveButton(
-                        "Yes",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                    // user choose "Yes" button:
+                     builder.setPositiveButton(
+                             "Yes",
+                                new DialogInterface.OnClickListener() {
+                                 @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
-                                final String final_comment = comment;
-                                final double final_rate = ratingNum;
+                                     final String final_comment = comment;
+                                     final double final_rate = ratingNum;
 
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                DocumentReference item_doc = db.collection("orders").document(order_ID);
-                                item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                     DocumentReference item_doc = db.collection("orders").document(order_ID);
+                                        item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        Order current_order = documentSnapshot.toObject(Order.class);
-                                        String item_name = current_order.getItem_title();
-                                        Timestamp postTime = Timestamp.now();
-                                        String seller_email = current_order.getSeller_email();
-                                        Functions f = new Functions();
-                                        f.create_comment(item_name, current_email, final_comment,final_rate,postTime,seller_email);
-                                    }
+                                                Order current_order = documentSnapshot.toObject(Order.class);
+                                                String item_name = current_order.getItem_title();
+                                                Timestamp postTime = Timestamp.now();
+                                                String seller_email = current_order.getSeller_email();
+                                                Functions f = new Functions();
+                                                f.create_comment(item_name, current_email, final_comment, final_rate, postTime, seller_email);
+                                         }
                                 });
-                                Toast.makeText(CommentPage.this, "Submit Success!",
-                                        Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(CommentPage.this, OrderList.class);
-                                startActivity(intent);
-                            }
-                        });
+                                        Toast.makeText(CommentPage.this, "Submit Success!",
+                                                Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(CommentPage.this, OrderList.class);
+                                        startActivity(intent);
+                                 }
+                                });
 
-                //user choose "No" button:
-                builder.setNegativeButton(
-                        "No, continue edit",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(CommentPage.this, "Continue edit",
-                                        Toast.LENGTH_SHORT).show();
+                        //user choose "No" button:
+                        builder.setNegativeButton(
+                             "No, continue edit",
+                                new DialogInterface.OnClickListener() {
+                                  @Override
+                                  public void onClick(DialogInterface dialog, int which) {
+                                        Toast.makeText(CommentPage.this, "Continue edit",
+                                             Toast.LENGTH_SHORT).show();
 
-                            }
-                        });
-                builder.show();
-                //front-end functionality ends here.
+                                  }
+                              });
+                     builder.show();
+                        //front-end functionality ends here.
+
+
+                }
 
             }
         });

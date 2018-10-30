@@ -136,7 +136,7 @@ public class HomePageActivity extends AppCompatActivity {
         });
 
         //fill initial homepage
-        initHome();
+       // initHome();
 
         //get users notification setting
         final DocumentReference user_doc = db.collection("users").document(email);

@@ -145,9 +145,13 @@ public class Functions {
      // 0 for currently unavailable
      // 1 for available
      // 2 for someone bought it
+     *  4. notified code:
+     *  0 for not been notified
+     *  1 for notified
      *************************************/
     public int create_post(String title, String email, double price,
-                           String category, String address, String description, int status, Timestamp postTime) {
+                           String category, String address, String description, int status, Timestamp postTime,
+                           int notified) {
 
         //error number 2 for invalid input price
         if (price <= 0) {
@@ -184,7 +188,7 @@ public class Functions {
         /****
          * using the item java class, which is simpler!
          */
-        Item item = new Item(category, title, email, price, description, address, status, postTime);
+        Item item = new Item(category, title, email, price, description, address, status, postTime, notified);
         db.collection("items").document(item.getid()).set(item);
 
         // Adding the item to my_items list

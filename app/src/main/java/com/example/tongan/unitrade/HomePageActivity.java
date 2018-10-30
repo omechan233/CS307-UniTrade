@@ -133,38 +133,8 @@ public class HomePageActivity extends AppCompatActivity {
         //fill initial homepage
         initHome();
 
-        //notification test
-//        final DocumentReference docRef = db.collection("items")
-//                .document("xu830@purdue.eduTimestamp(seconds=1540622001, nanoseconds=173000000)");
-//        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot snapshot,
-//                                @Nullable FirebaseFirestoreException e) {
-//                if (e != null) {
-//                    Log.w(TAG, "Listen failed.", e);
-//                    return;
-//                }
-//
-//                if (snapshot != null && snapshot.exists()) {
-//                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//                    Intent intent = new Intent(HomePageActivity.this, Order.class);
-//                    PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this,0,intent,0);
-//                    Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "ItemSold")
-//                            .setContentTitle("UniTrade:")
-//                            .setContentText("Your item is sold!")
-//                            .setWhen(System.currentTimeMillis())
-//                            .setSmallIcon(R.mipmap.ic_launcher_round)
-//                            .setAutoCancel(true)
-//                            .setContentIntent(ma)
-//                            .build();
-//
-//                    manager.notify(1, notification);
-//                } else {
-//                    Log.d(TAG, "Current data: null");
-//                }
-//            }
-//        });
 
+        //get order list from profile
         final DocumentReference user_doc = db.collection("profiles").document(email);
 
         user_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -178,6 +148,7 @@ public class HomePageActivity extends AppCompatActivity {
                         System.out.println("Nothing on the list!");
                     } else {
                         for (int i = 0; i < my_items.size(); i++) {
+                            //get item from order list
                             final DocumentReference item_doc = db.collection("items").document(my_items.get(i));
                             final int finalI = i;
                             item_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -195,7 +166,7 @@ public class HomePageActivity extends AppCompatActivity {
                                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                 Item current_item = new Item();
                                                 current_item = documentSnapshot.toObject(Item.class);
-                                                if(current_item.getStatus() == 2) {
+                                                if(current_item.getStatus() == 2 && current_item.getNotified() != 1) {
                                                     NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                                     Intent intent = new Intent(HomePageActivity.this, Order.class);
                                                     PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);

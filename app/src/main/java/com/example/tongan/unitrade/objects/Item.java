@@ -20,6 +20,7 @@ public class Item {
     //private int SellerID;
     private String description;
     private Timestamp postTime;
+    private int notified;
 
     /******** AT:
      * Updated the constructor, because having both post and item class seems redundant
@@ -43,7 +44,8 @@ public class Item {
      * Constructor; initialize ID, price, SellerID, and description
      *
      */
-    public Item(String category, String title, String seller_name, double price, String description, String location, int status, Timestamp postTime){
+    public Item(String category, String title, String seller_name, double price, String description,
+                String location, int status, Timestamp postTime, int notified){
         this.id=seller_name+postTime.toString();
         this.category=category;
         this.title=title;
@@ -54,6 +56,7 @@ public class Item {
         //this.SellerID = SellerID;
         this.description = description;
         this.postTime = postTime;
+        this.notified = 0;
     }
 
     /** Getter Methods **/
@@ -80,6 +83,7 @@ public class Item {
         return location;
     }
     public Timestamp getPostTime() { return this.postTime; }
+    public int getNotified(){ return this.notified; }
 
     /** Setter Methods **/
     public void setPrice(double price){
@@ -100,7 +104,7 @@ public class Item {
     public void setLocation(String location){
         this.location=location;
     }
-
+    public void setNotified(int notified){this.notified = notified;}
     @Override
     /**
      * Override for toString Method, prints fields of the Item in orderly fashion
@@ -114,7 +118,8 @@ public class Item {
                 "\nLocation: " + getLocation() +
                 "\nDescription: " + getDescription() +
                 "\nStatus: " + getStatus() +
-                "\nPosted Time: " + getPostTime().toString();
+                "\nPosted Time: " + getPostTime().toString() +
+                "\nNotified: " + getNotified();
     }
 
 }

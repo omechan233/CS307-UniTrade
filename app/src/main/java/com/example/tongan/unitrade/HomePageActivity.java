@@ -68,6 +68,7 @@ public class HomePageActivity extends AppCompatActivity {
         shared = getSharedPreferences("app", Context.MODE_PRIVATE);
         final String email = shared.getString("email", "");
 
+        initFlag = true;
 
         //Buttons
         Button clickToPost = (Button) findViewById(R.id.home_post_btn);
@@ -85,7 +86,6 @@ public class HomePageActivity extends AppCompatActivity {
                 //direct to profile page and ask backend for current login user's information.
                 Intent intent = new Intent(HomePageActivity.this, SettingActivity.class);
                 startActivity(intent);
-
             }
         });
 
@@ -101,7 +101,8 @@ public class HomePageActivity extends AppCompatActivity {
         search_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchKeyword();
+                if(!initFlag)  //if init setup, don't search else we'll list duplicated items
+                    searchKeyword();
             }
 
         });
@@ -109,10 +110,9 @@ public class HomePageActivity extends AppCompatActivity {
         search_sort_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!initFlag) //if initial setup, don't refreshHome else we'll get duplicated items
+                if (!initFlag && !search_sort_spinner.getSelectedItem().equals("Name")) { //if initial setup, don't refreshHome else we'll get duplicated items
                     refreshHome(); //refresh home to resort list
-                else
-                    initFlag = false; //set initFlag to false so this function works as intended after init
+                }
             }
 
             @Override
@@ -124,19 +124,15 @@ public class HomePageActivity extends AppCompatActivity {
         cat_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!initFlag) //if initial setup, don't refreshHome else we'll get duplicated items
+                if (!initFlag && !cat_spinner.getSelectedItem().equals("All")) { //if initial setup, don't refreshHome else we'll get duplicated items
                     refreshHome(); //refresh home to resort list
-                else
-                    initFlag = false; //set initFlag to false so this function works as intended after init
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
-        //fill initial homepage
-        initHome();
 
         //get users notification setting
         final DocumentReference user_doc = db.collection("users").document(email);
@@ -227,17 +223,12 @@ public class HomePageActivity extends AppCompatActivity {
                                         //result[0] = (String[])document.getData().get("my_items");
                                         Log.e(TAG, "my item list found");
 
-                                    } else
-
-                                    {
+                                    } else {
                                         Log.e(TAG, "my item list not found");
                                     }
                                 }
                             });
-
-
                         }
-
                     } else {
                         Log.d(TAG, "No such document...");
                     }
@@ -328,7 +319,20 @@ public class HomePageActivity extends AppCompatActivity {
 //            }
 //        }
 //    });
+
+
+
 }
+    @Override
+    public void onStart() {
+        super.onStart();
+        //fill initial homepage
+        initHome();
+        //set init flag to false now
+        System.out.println("initFlag changed in OnStart()");
+        initFlag = false;
+
+    }
 
     /**
      * Initial layout of the homepage, displaying all items in alphabetical order by default
@@ -346,7 +350,7 @@ public class HomePageActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot ItemDoc : task.getResult()) {
-                                Log.d(TAG, ItemDoc.getId() + "=> " + ItemDoc.getData());
+                                Log.d(TAG, "initHome(): " + ItemDoc.getId() + "=> " + ItemDoc.getData());
 
                                 //Get Map of Item
                                 Map<String, Object> itemMap = ItemDoc.getData();
@@ -432,7 +436,7 @@ public class HomePageActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot ItemDoc : task.getResult()) {
-                                Log.d(TAG, ItemDoc.getId() + "=> " + ItemDoc.getData());
+                                Log.d(TAG, "searchKeyword(): " +ItemDoc.getId() + "=> " + ItemDoc.getData());
 
                                 //Get Map of Item
                                 Map<String, Object> itemMap = ItemDoc.getData();
@@ -556,7 +560,7 @@ public class HomePageActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot ItemDoc : task.getResult()) {
-                                Log.d(TAG, ItemDoc.getId() + "=> " + ItemDoc.getData());
+                                Log.d(TAG, "refreshHome(): " +ItemDoc.getId() + "=> " + ItemDoc.getData());
 
                                 //Get Map of Item
                                 Map<String, Object> itemMap = ItemDoc.getData();
@@ -651,15 +655,17 @@ public class HomePageActivity extends AppCompatActivity {
                                                 DocumentSnapshot itemSnapshot = task.getResult();
                                                 //Construct Item Object from each DocSnapshot
 
-                                                //AT: category
-                                                if (itemSnapshot.getDouble("status").intValue() != 1 || (!itemSnapshot.get("category").equals(category))) { //if item not available, don't display it
-                                                    return;
-                                                }
-                                                if((!category.equals("All")) && (!itemSnapshot.get("category").equals(category))){
-                                                    return;
-                                                }
+
                                                 try {
                                                     Item itemObj = itemSnapshot.toObject(Item.class);
+
+                                                    //AT: category
+                                                    if (itemObj.getStatus() != 1) { //if item not available, don't display it
+                                                        return;
+                                                    }
+                                                    if(!category.equals("All") && itemObj.getCategory().equals(category)){
+                                                        return;
+                                                    }
 
                                                     //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
                                                     LinearLayout item = new LinearLayout(getBaseContext());

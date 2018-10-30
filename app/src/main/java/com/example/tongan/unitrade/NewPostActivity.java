@@ -76,6 +76,10 @@ public class NewPostActivity extends AppCompatActivity {
                 // 2 for someone bought it
                 int status = 1;
 
+                //0 for not notified
+                //1 for notified
+                int notified = 0;
+
                 //get username by email
                 String email = shared.getString("email","");
 
@@ -86,7 +90,7 @@ public class NewPostActivity extends AppCompatActivity {
 
                     price = Double.parseDouble(price_edit.getText().toString());
 
-                    int ret = f.create_post(itemName,email,price,category,address,description,status, postTime);
+                    int ret = f.create_post(itemName,email,price,category,address,description,status, postTime, notified);
 
                     //back to homepage
                     Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();

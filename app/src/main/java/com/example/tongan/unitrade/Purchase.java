@@ -58,11 +58,14 @@ public class Purchase extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                         Item item = documentSnapshot.toObject(Item.class);
-                        if (item.getStatus() != 1) {
+                        if (item.getStatus() == 2) {
                             Toast.makeText(Purchase.this, "Item was already sold" + radioButton.getText(), Toast.LENGTH_LONG).show();
                         }
                         else if(item.getSeller_name().equals(useremail)){
                             Toast.makeText(Purchase.this, "You cannot buy your own item" + radioButton.getText(), Toast.LENGTH_LONG).show();
+                        }
+                        else if (item.getStatus() == 0) {
+                            Toast.makeText(Purchase.this, "Item is not available. " + radioButton.getText(), Toast.LENGTH_LONG).show();
                         }
                         else {
                             Timestamp orderTime = Timestamp.now();

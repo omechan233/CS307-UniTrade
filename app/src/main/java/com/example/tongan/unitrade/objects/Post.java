@@ -12,6 +12,7 @@ public class Post {
     private Date PostDate; 
     //private Location location; need to configure Location system in Sprint 2
     private Status status;
+    private int notified;
 
     /**
      * Constructor; Initializes fields of the Post
@@ -20,11 +21,12 @@ public class Post {
      * @param ItemID
      * @param PostDate
      */
-    public Post(int ID, int ItemID, Date PostDate){
+    public Post(int ID, int ItemID, Date PostDate, int notified){
         this.ID = ID;
         this.ItemID = ItemID;
         this.PostDate = PostDate;
         this.status = Status.FOR_SALE;
+        this.notified = notified;
     }
 
     /**
@@ -74,7 +76,7 @@ public class Post {
     /**
      * Setter method for Post's Item's ID
      * 
-     * @param ItemID new Item ID
+     * @param itemID new Item ID
      */
     public void setItemID(int itemID){
         this.ItemID = itemID;

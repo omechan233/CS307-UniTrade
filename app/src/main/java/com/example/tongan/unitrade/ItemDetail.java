@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Item;
+import com.example.tongan.unitrade.objects.Profile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -95,14 +96,20 @@ public class ItemDetail extends AppCompatActivity {
                 else{
                     System.out.println("This item is sold by yourself!!!");
                 }
-
-
                 desc_edit.setText(description);
                 time_edit.setText(postText);
                 name_edit.setText(item_name);
                 TextView seller_name = (TextView) findViewById(R.id.detail_seller);
                 seller = "Seller : " + seller;
                 seller_name.setText(seller);
+                /*todo : check username and redirect user to profile page and show information about seller user
+                ps: frontend here is pretty simple........ just set an onclicklistener.......)*/
+                seller_name.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(ItemDetail.this, ProfileActivity.class));
+                    }
+                });
                 String temp = price + "";
                 price_edit.setText(temp);
 
@@ -258,7 +265,7 @@ public class ItemDetail extends AppCompatActivity {
 //                        Toast.makeText(getBaseContext(), "please signin first!", Toast.LENGTH_LONG).show();
 //                    }
 
-                    String add = "-wishList";
+                    String add = "+wishList";
                     wishListBtn.setText(add);
                 }
             }

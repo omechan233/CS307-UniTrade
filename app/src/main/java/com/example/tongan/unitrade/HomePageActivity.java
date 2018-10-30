@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.example.tongan.unitrade.objects.Item;
 import com.example.tongan.unitrade.objects.Order;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -52,6 +53,7 @@ public class HomePageActivity extends AppCompatActivity {
     private EditText search_word;
     private Spinner search_sort_spinner;
     SharedPreferences shared;
+    private final Functions f = new Functions();
 
 
     @Override
@@ -181,8 +183,6 @@ public class HomePageActivity extends AppCompatActivity {
 
                                                     manager.notify(1, notification);
                                                 }
-                                                Log.e(TAG, current_item.getid()+ current_item.getStatus() + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-
                                             }
                                         });
 //                                        if(current_item.getStatus() == 2) {

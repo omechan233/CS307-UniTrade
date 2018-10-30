@@ -839,6 +839,26 @@ public class Functions {
                     }
                 });
     }
+    /***
+     * if someone buy an item, call this function to change the item status to 2(which is been bought)
+     * @param itemid
+     */
+    void changeItemnotification(String itemid){
+        DocumentReference item_doc = db.collection("items").document(itemid);
+        item_doc.update("notified", 1)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "item sold nofication is sent");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "item notifacation wrong", e);
+                    }
+                });
+    }
 }
 
 

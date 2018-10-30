@@ -3,6 +3,17 @@ package com.example.tongan.unitrade.objects;
 
 import com.google.firebase.Timestamp;
 
+/******* Mia:
+ * notified : item sold notification
+ * if notification sent:0
+ * if norifacation not sent:1
+ * methoedepending: whether item method change is comfirmed by seller
+ * 0: no change
+ * 1: pending
+ * 2: seller agree with buyer
+ * 3: seller decline buyer's request
+ */
+
 public class Order {
     private String item_title;
     private Double item_price;
@@ -11,13 +22,14 @@ public class Order {
     private String item_ID;
     private Timestamp order_time;
     private boolean face_to_face;
+    private int methodpending;
 
     /**
      * Constructor; Creates an order based on a purchased Item
      *
      */
     public Order(){}
-    public Order(String item_ID, Timestamp order_time, String seller_email, String item_title, Double item_price, boolean is_sold, boolean face_to_face){
+    public Order(String item_ID, Timestamp order_time, String seller_email, String item_title, Double item_price, boolean is_sold, boolean face_to_face, int methodpending){
         this.seller_email=seller_email;
         this.is_sold=is_sold;
         this.item_ID=item_ID;
@@ -25,6 +37,7 @@ public class Order {
         this.item_title=item_title;
         this.order_time=order_time;
         this.face_to_face=face_to_face;
+        this.methodpending = methodpending;
     }
 
     public Double getItem_price() {
@@ -52,4 +65,8 @@ public class Order {
     public Timestamp getOrder_time() {
         return order_time;
     }
+
+    public int getMethodpending(){ return this.methodpending; }
+
+    public void setMethodpending(int methodpending) { this.methodpending = methodpending; }
 }

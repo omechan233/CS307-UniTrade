@@ -453,8 +453,11 @@ public class Functions {
     /********** AT:
      * Call when user buys an item
      */
-    public void create_order(String buyer_email, String seller_email, String item_ID, Timestamp order_time, Double item_price, String item_title, boolean face_to_face){
-        final Order order = new Order(item_ID, order_time, seller_email,item_title, item_price, false, face_to_face );
+    public void create_order(String buyer_email, String seller_email, String item_ID,
+                             Timestamp order_time, Double item_price, String item_title,
+                             boolean face_to_face, int methodpending){
+        final Order order = new Order(item_ID, order_time, seller_email,item_title, item_price,
+                false, face_to_face, methodpending);
         final String order_ID = buyer_email+order_time.toString();
         final String final_item_ID = item_ID;
         final String final_seller_email = seller_email;

@@ -138,7 +138,7 @@ public class HomePageActivity extends AppCompatActivity {
         //fill initial homepage
        // initHome();
 
-        //get users notification setting
+        //get users sold notification setting
         final DocumentReference user_doc = db.collection("users").document(email);
         DocumentReference userDocRef = db.collection("users").document(email);
         userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

@@ -8,13 +8,16 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Order;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -28,6 +31,7 @@ import javax.annotation.Nonnull;
 public class OrderDetail extends AppCompatActivity {
     private SharedPreferences shared;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String TAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +137,7 @@ public class OrderDetail extends AppCompatActivity {
                                 Toast.makeText(OrderDetail.this, "You choose Face to Face!",
                                         Toast.LENGTH_SHORT).show();
                                 //Todo: back-end check is "Face to Face" same as the old trading method. if yes, do nothing. if no, update back-end with new trading method.
-                                db.collection("items").document(item_doc.getId())
+                                db.collection("orders").document(item_doc.getId())
                                         .update("methodpending", 1);
 
                             }
@@ -148,7 +152,8 @@ public class OrderDetail extends AppCompatActivity {
                                 Toast.makeText(OrderDetail.this, "You choose online Payment!",
                                         Toast.LENGTH_SHORT).show();
                                 //Todo: back-end check is "Online Payment" same as the old trading method. if yes, do nothing. if no, update back-end with new trading method.
-
+                                db.collection("orders").document(item_doc.getId())
+                                        .update("methodpending", 1);
 
                             }
                         });

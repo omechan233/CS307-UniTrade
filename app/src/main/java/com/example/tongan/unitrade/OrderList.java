@@ -62,7 +62,7 @@ public class OrderList extends AppCompatActivity {
                 final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.list_area);
                 linearLayout.removeAllViews();
 
-                String user_email = shared.getString("email", "");
+                final String user_email = shared.getString("email", "");
 
                 DocumentReference prof_doc = db.collection("profiles").document(user_email);
 
@@ -104,7 +104,7 @@ public class OrderList extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(View v) {
                                                         SharedPreferences.Editor edit = shared.edit();
-                                                        String order_id = finalCurrent_Order.getSeller_email()+finalCurrent_Order.getOrder_time().toString();
+                                                        String order_id = user_email+finalCurrent_Order.getOrder_time().toString();
                                                         System.out.println("current order is "+order_id);
                                                         edit.putString("order_ID", order_id);
 

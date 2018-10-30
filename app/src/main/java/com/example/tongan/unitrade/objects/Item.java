@@ -21,7 +21,6 @@ public class Item {
     private String description;
     private Timestamp postTime;
     private int notified;
-    private int methodpending;
 
     /******** AT:
      * Updated the constructor, because having both post and item class seems redundant
@@ -38,16 +37,7 @@ public class Item {
      * status as int transferred from post class to here
      * status 0 as available, 1 as sold, other codes undetermined
      * *****/
-    /******* Mia:
-     * notified : item sold notification
-     * if notification sent:0
-     * if norifacation not sent:1
-     * methoedepending: whether item method change is comfirmed by seller
-     * 0: no change
-     * 1: pending
-     * 2: seller agree with buyer
-     * 3: seller decline buyer's request
-     */
+
 
 
 
@@ -67,8 +57,7 @@ public class Item {
         //this.SellerID = SellerID;
         this.description = description;
         this.postTime = postTime;
-        this.notified = 0;
-        this.methodpending = 0;
+        this.notified = notified;
     }
 
     /** Getter Methods **/
@@ -96,7 +85,6 @@ public class Item {
     }
     public Timestamp getPostTime() { return this.postTime; }
     public int getNotified(){ return this.notified; }
-    public int getMethodpending(){ return this.methodpending; }
 
     /** Setter Methods **/
     public void setPrice(double price){
@@ -118,7 +106,6 @@ public class Item {
         this.location=location;
     }
     public void setNotified(int notified){this.notified = notified;}
-    public void setMethodpending(int methodpending) { this.methodpending = methodpending; }
 
     @Override
     /**

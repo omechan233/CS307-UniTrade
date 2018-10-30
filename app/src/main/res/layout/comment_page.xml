@@ -54,13 +54,25 @@
         android:inputType="textMultiLine" />
 
     <Button
-        android:id="@+id/submit_btn"
+        android:id="@+id/post_submit_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginBottom="109dp"
+        android:layout_marginEnd="67dp"
         android:text="Submit"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/commemt_cancle_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/post_submit_btn"
+        android:layout_marginStart="49dp"
+        android:text="Cancle"
         android:textSize="24sp"
         android:textStyle="bold" />
 

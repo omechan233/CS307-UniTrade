@@ -2,6 +2,7 @@ package com.example.tongan.unitrade;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -89,6 +90,16 @@ public class OrderDetail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+
+        Button write_comment = (Button) findViewById(R.id.write_comment);
+        write_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(OrderDetail.this, CommentPage.class));
+
             }
         });
 

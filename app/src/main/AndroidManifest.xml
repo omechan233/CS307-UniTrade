@@ -45,6 +45,8 @@
         <activity android:name=".Purchase"/>
         <activity android:name=".SendNotification"/>
         <activity android:name=".OrderDetail"/>
+        <activity android:name=".CommentPage"/>
+
 
 
 

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- PLEASE!!!!DO NOT CHANGE OR ADD ANY ATTRIBUTES HERE!!!!!!!!!!!
+PLEASSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!-->
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -32,7 +36,7 @@
             android:id="@+id/search_input"
             android:hint="Type to search..."
             android:layout_marginTop="5dp"
-            android:layout_weight="2"/>
+            android:layout_weight="4"/>
 
         <Button
             android:layout_width="1dp"
@@ -42,20 +46,28 @@
             android:textSize="10sp"
             android:id="@+id/hmpage_search_button"/>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_below="@id/search_area"
+        android:id="@+id/filter_options"
+        android:weightSum="2"
+        android:layout_height="wrap_content">
+
         <Spinner
             android:id="@+id/category_sp"
             android:spinnerMode="dropdown"
             android:entries="@array/category"
             android:layout_width="1dp"
-            android:layout_marginTop="2dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_height="40dp" />
 
         <Spinner
             android:id="@+id/search_sort"
             android:layout_width="1dp"
             android:layout_height="40dp"
-            android:layout_marginTop="2dp"
             android:layout_weight="1"
             android:entries="@array/sort"
             android:spinnerMode="dropdown" />
@@ -66,22 +78,14 @@
     <ScrollView
         android:id="@+id/hmpage_results_scrollbox"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="match_parent"
         android:layout_above="@+id/homepage_buttons"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="103dp"
-        android:layout_marginBottom="23dp">
+        android:layout_below="@id/filter_options">
 
         <LinearLayout
             android:id="@+id/hmpage_results"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="-3dp"
-            android:layout_marginBottom="0dp"
             android:orientation="vertical">
 
 
@@ -93,23 +97,22 @@
         android:id="@+id/homepage_buttons"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="11dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         android:weightSum="2"
         android:layout_alignParentLeft="true">
 
         <Button
             android:id="@+id/home_post_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Post" />
 
         <Button
             android:id="@+id/home_settings_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Settings and profile" />

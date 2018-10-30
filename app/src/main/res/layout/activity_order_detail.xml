@@ -120,4 +120,15 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/write_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="111dp"
+        android:text="Write Comments"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
 </RelativeLayout>

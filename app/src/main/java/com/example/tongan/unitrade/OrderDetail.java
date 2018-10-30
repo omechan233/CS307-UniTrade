@@ -103,15 +103,29 @@ public class OrderDetail extends AppCompatActivity {
             }
         });
 
-
+        /***********************************************
+         * check if current item status is  "is_sold". if yes, then show "write comment" btn. if not, invisible btn.
+         ***********************************************/
         Button write_comment = (Button) findViewById(R.id.write_comment);
-        write_comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(OrderDetail.this, CommentPage.class));
 
-            }
-        });
+        //Todo: get item status from back-end.
+        Boolean is_sold = true;
+        if (is_sold){
+            write_comment.setVisibility(View.VISIBLE);
+            write_comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(OrderDetail.this, CommentPage.class));
+
+                }
+            });
+        }
+        else {
+            write_comment.setVisibility(View.INVISIBLE);
+
+        }
+
+
 
         /**********************
          * click "Trade Method Textview" to change the trading method "

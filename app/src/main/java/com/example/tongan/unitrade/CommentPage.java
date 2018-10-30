@@ -38,6 +38,9 @@ public class CommentPage extends AppCompatActivity {
         final String current_email = shared.getString("email", "");
 
 
+
+
+
         Button cancle = (Button)findViewById(R.id.commemt_cancle_btn);
         Button submit = (Button) findViewById(R.id.post_submit_btn);
 
@@ -77,7 +80,7 @@ public class CommentPage extends AppCompatActivity {
                     Toast.makeText(CommentPage.this, "Comment can't be empty!",
                             Toast.LENGTH_SHORT).show();
                 }
-                
+
                 else {
                     //after submit success, pop-up dialog to confirm and back to orderlist page.
                     AlertDialog.Builder builder = new AlertDialog.Builder(CommentPage.this);

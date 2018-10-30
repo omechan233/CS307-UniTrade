@@ -294,6 +294,38 @@ public class ItemDetail extends AppCompatActivity {
         });
 
 
+        /********************************************************
+         * seller confirm payment after an item was sold by others
+         ******************************************************/
+        Button confirm_btn = (Button) findViewById(R.id.confirm_btn);
+        //get item status from back-end;
+        Boolean item_sold = true;
+        //if item status is sold, set confirm btn visible by seller.
+        if (item_sold ){
+            confirm_btn.setVisibility(View.VISIBLE);
+            confirm_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getBaseContext(), "You confirm this payment!", Toast.LENGTH_LONG).show();
+
+                }
+            });
+        }
+        else {
+            confirm_btn.setVisibility(View.INVISIBLE);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
 }

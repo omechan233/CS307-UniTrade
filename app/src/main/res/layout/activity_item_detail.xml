@@ -159,6 +159,15 @@
         android:textStyle="bold"
         android:layout_alignParentRight="true" />
 
+        <Button
+            android:id="@+id/confirm_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/detail_image"
+            android:layout_alignParentEnd="true"
+            android:text="Confirm"
+            android:textStyle="bold" />
+
     </RelativeLayout>
 
 </ScrollView>

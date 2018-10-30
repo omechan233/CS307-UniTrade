@@ -543,7 +543,7 @@ public class Functions {
     }
 
 
-    public void create_comment(String item_name, String buyeremail, String content, int rating, String posted_time,String selleremail){
+    public void create_comment(String item_name, String buyeremail, String content, double rating, Timestamp posted_time,String selleremail){
         Comment comment = new Comment(buyeremail,content,item_name,rating,posted_time,selleremail);
         db.collection("comments").document(buyeremail+posted_time).set(comment);
 
@@ -551,7 +551,7 @@ public class Functions {
         final DocumentReference user_doc = db.collection("profiles").document(selleremail);
         user_doc.update("my_comments", FieldValue.arrayUnion(buyeremail+posted_time));
 
-        final int rate = rating;
+        final double rate = rating;
         //update average rating
         user_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -559,10 +559,10 @@ public class Functions {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        int rating_number = (int) document.get("rating_number");
+                        int rating_number =document.getLong("rating_number").intValue();
                         if(rating_number!=0) {
                             double prev_rate = (double) document.get("rating");
-                            user_doc.update("rating",(prev_rate*(double)rating_number)+(double)rate/(rating_number+1));
+                            user_doc.update("rating",((prev_rate*(double)rating_number)+(double)rate)/(rating_number+1));
                             user_doc.update("rating_number",rating_number+1);
                         }
                         else{

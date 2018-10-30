@@ -177,7 +177,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     rating.setClickable(false);
                                     rating.setNumStars(5);
                                     //todo : get rating of comment and use setRating()
-                                    rating.setRating(current_com.getRating());
+                                    rating.setRating((float) current_com.getRating());
                                     comment.addView(rating);
                                     comment_view.addView(comment);
                                 }

@@ -186,7 +186,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
-                                                                    Log.d(TAG, "item sold nofication is sent");
+                                                                    Log.d(TAG, "Someone bought your item");
                                                                 }
                                                             })
                                                             .addOnFailureListener(new OnFailureListener() {

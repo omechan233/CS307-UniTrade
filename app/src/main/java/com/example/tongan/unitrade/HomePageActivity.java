@@ -182,6 +182,19 @@ public class HomePageActivity extends AppCompatActivity {
                                                             .build();
 
                                                     manager.notify(1, notification);
+                                                    item_doc.update("notified", 1)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Log.d(TAG, "item sold nofication is sent");
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w(TAG, "item notifacation wrong", e);
+                                                                }
+                                                            });
                                                 }
                                             }
                                         });

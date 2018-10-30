@@ -652,7 +652,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                 //Construct Item Object from each DocSnapshot
 
                                                 //AT: category
-                                                if (itemSnapshot.getDouble("status").intValue() != 1 || (!itemSnapshot.get("category").equals(category))) { //if item not available, don't display it
+                                                if (itemSnapshot.getDouble("status").intValue() != 1 ) { //if item not available, don't display it
                                                     return;
                                                 }
                                                 if((!category.equals("All")) && (!itemSnapshot.get("category").equals(category))){

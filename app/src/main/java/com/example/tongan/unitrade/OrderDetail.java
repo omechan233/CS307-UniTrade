@@ -65,7 +65,7 @@ public class OrderDetail extends AppCompatActivity {
 
 
                 if(current_order.getFace_to_face()) {
-                    method_String += "Face to face";
+                    method_String += "Face to Face";
                 }else{
                     method_String += "Online";
                 }
@@ -104,6 +104,52 @@ public class OrderDetail extends AppCompatActivity {
             }
         });
 
+        /**********************
+         * click "Trade Method Textview" to change the trading method "
+         ***********************/
+
+
+        method.setClickable(true);
+        method.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //pop-up dialog to ask user to choose new trading method.
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(OrderDetail.this);
+                builder.setTitle("Notice:");
+                builder.setMessage("Your want to change your trading method to:  ");
+                builder.setCancelable(true);
+
+                // user choose "Accepted" button:
+                builder.setPositiveButton(
+                        "Face to Face",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(OrderDetail.this, "You choose Face to Face!",
+                                        Toast.LENGTH_SHORT).show();
+                                //Todo: back-end check is "Face to Face" same as the old trading method. if yes, do nothing. if no, update back-end with new trading method.
+
+                            }
+                        });
+
+                //user choose "Online Payment" button:
+                builder.setNegativeButton(
+                        "Online Payment",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(OrderDetail.this, "You choose online Payment!",
+                                        Toast.LENGTH_SHORT).show();
+                                //Todo: back-end check is "Online Payment" same as the old trading method. if yes, do nothing. if no, update back-end with new trading method.
+
+
+                            }
+                        });
+                builder.show();
+                //front-end functionality ends here.
+
+            }
+        });
 
 
     }

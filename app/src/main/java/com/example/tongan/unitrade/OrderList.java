@@ -47,7 +47,8 @@ public class OrderList extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(OrderList.this, SettingActivity.class);
+                startActivity(intent);
             }
         });
 

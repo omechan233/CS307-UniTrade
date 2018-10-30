@@ -25,7 +25,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="155dp"
-        android:text="Get notify when your item is sold"
+        android:text="Get notified when your item is sold"
         android:textSize="20sp" />
 
     <Button
@@ -47,7 +47,7 @@
         android:layout_height="131dp"
         android:layout_alignStart="@+id/notifi_switch"
         android:layout_below="@+id/notifi_itemSold_switch"
-        android:text="Get notify when buyer change trading method"
+        android:text="Get notified when buyer changes trading method"
         android:textSize="20sp"
         android:layout_alignLeft="@+id/notifi_switch" />
 

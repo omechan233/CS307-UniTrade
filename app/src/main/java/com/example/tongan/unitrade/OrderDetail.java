@@ -49,7 +49,8 @@ public class OrderDetail extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Order current_order = documentSnapshot.toObject(Order.class);
-                String itemName_String = "Item Name : " + current_order.getItem_price();
+
+                String itemName_String = "Item Name : " + current_order.getItem_title();
                 String price_String = "Price : " + current_order.getItem_price();/*+ get price from backend*/;
 
                 Timestamp time_stamp = current_order.getOrder_time();

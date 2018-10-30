@@ -61,6 +61,11 @@ public class ItemDetail extends AppCompatActivity {
         name_edit.setFocusable(false);
         price_edit.setFocusable(false);
 
+        TextView category = (TextView)findViewById(R.id.item_category_detail);
+        //todo : get category from backend
+        String CATEGORY_TEXT = "category";
+        category.setText(CATEGORY_TEXT);
+
         final TextView editBtn = (TextView) findViewById(R.id.detail_edit);
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -70,6 +75,7 @@ public class ItemDetail extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Item item = documentSnapshot.toObject(Item.class);
                 String item_name = item.getTitle();
+                //todo : check status, if sold, let item_name = item_name + "(SOLD)"
                 final Double price = item.getPrice();
                 String description = item.getDescription();
                 String seller = item.getSeller_name();

@@ -94,7 +94,6 @@ public class SendNotification extends AppCompatActivity {
                 }
 
                 if (snapshot != null && snapshot.exists()) {
-                    System.out.println("changed!!!send notify!!!!!!!!!!!!!!!!!!!!!!!");
                     NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                     Intent intent = new Intent(SendNotification.this, Order.class);
                     PendingIntent ma = PendingIntent.getActivity(SendNotification.this,0,intent,0);

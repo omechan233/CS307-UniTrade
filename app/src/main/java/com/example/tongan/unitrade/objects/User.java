@@ -10,6 +10,9 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private int notification;
+    private int sold_notifacation;
+    private int trade_type_notification;
 
     /**
      * Constructor, creates User object based on ID, username, password, and email
@@ -26,6 +29,9 @@ public class User {
         this.username = username;
         this.password = password; // may need to change this for security reasons
         this.email = email;
+        this.notification = 1;
+        this.sold_notifacation = 1;
+        this.trade_type_notification = 1;
     }
 
     /**
@@ -66,6 +72,21 @@ public class User {
     }
 
     /**
+     * Getter method for notification
+     */
+    public int getNotification(){ return  this.notification; }
+
+    /**
+     * Getter method for sold notification
+     */
+    public int getSold_notifacation(){ return  this.sold_notifacation; }
+
+    /**
+     * Getter method for method notification
+     */
+    public int getTrade_type_notification(){ return  this.trade_type_notification; }
+
+    /**
      * Setter method for User ID
      * 
      * @param ID new ID for the User
@@ -100,4 +121,11 @@ public class User {
     public void setEmail(String email){
         this.email = email;
     }
+
+    public void setNotification(int notification) { this.notification = notification; }
+
+    public void setSoldNotification(int sold_notifacation) { this.sold_notifacation = sold_notifacation; }
+
+    public void setTrade_type_notification(int trade_type_notification) { this.trade_type_notification = trade_type_notification; }
+
 }

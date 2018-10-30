@@ -70,8 +70,8 @@ public class Functions {
         user_doc.put("notification", notification);
         user_doc.put("user_email", email);
         user_doc.put("user_name", user_name);
-        user_doc.put("method_notification", 0);
-        user_doc.put("Itemsold_notification", 0);
+        user_doc.put("method_notification", 1);
+        user_doc.put("Itemsold_notification", 1);
 
         Map<String, Object> profile_doc = new HashMap<>();
         profile_doc.put("phone_number", phone);

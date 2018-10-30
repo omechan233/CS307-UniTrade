@@ -118,12 +118,26 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+/***********************************************************
+ * get target user's overall rating and display it in user's profile.
+ * ***********************************************************/
 
+        RatingBar overall_rating = (RatingBar) findViewById(R.id.overall_rating);
+        overall_rating.setClickable(false);
+        //Todo: get overall rating from back-end, and save it to int numStars;
+        int numStars = 5;
+        overall_rating.setNumStars(numStars);
+        overall_rating.setRating(overall_rating.getNumStars());
+
+
+/***********************************************************
+ * Display comments
+ * ***********************************************************/
         //display comments
         final LinearLayout comment_view = (LinearLayout) findViewById(R.id.comment_area);
         //THIS IS A HARD CODING STRING COMMENT ARRAY!
         //todo:get comments from backend
-        //final String[] comments = new String[] {"comment1", "comment2", "comment3", "4", "5"};
+       // final String[] comments = new String[] {"comment1", "comment2", "comment3", "4", "5"};
         final int[] ratingnum = new int[1];
         profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

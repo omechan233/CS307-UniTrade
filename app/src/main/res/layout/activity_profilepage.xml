@@ -144,27 +144,27 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="228dp"
         android:layout_above="@id/profile_back_icon"
-        android:layout_below="@id/input_email">
+        android:layout_below="@id/input_email"
+        android:layout_marginTop="115dp">
 
         <LinearLayout
             android:id="@+id/comment_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
 
     </ScrollView>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_toRightOf="@id/settings_home_page_icon"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:text="Back"
         android:textSize="15sp"
-        android:textStyle="bold"
-        android:layout_marginLeft="5dp"/>
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/profile_wishlist_btn"
@@ -177,5 +177,34 @@
         android:layout_marginEnd="11dp"
         android:layout_marginRight="11dp"
         android:text="Wishlist" />
+
+    <TextView
+        android:id="@+id/comment_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignStart="@+id/user_image"
+        android:layout_below="@+id/overall_rating"
+        android:text="Comments:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/rating_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignStart="@+id/user_image"
+        android:layout_centerVertical="true"
+        android:text="Overall Rating:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <RatingBar
+        android:id="@+id/overall_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/profile_wishlist_btn"
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>

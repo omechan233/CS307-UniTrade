@@ -35,7 +35,7 @@ public class Item {
      * seller_name as String (changed from seller_ID)
      * location as String but left blank till Sprint
      * status as int transferred from post class to here
-     * status 0 as available, 1 as sold, other codes undetermined
+     * status 0 as unavailable, 1 as available, 2 sold
      */
 
 

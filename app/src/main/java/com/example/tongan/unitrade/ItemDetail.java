@@ -62,10 +62,7 @@ public class ItemDetail extends AppCompatActivity {
         name_edit.setFocusable(false);
         price_edit.setFocusable(false);
 
-        TextView category = (TextView)findViewById(R.id.item_category_detail);
-        //todo : get category from backend
-        String CATEGORY_TEXT = "category";
-        category.setText(CATEGORY_TEXT);
+        final TextView category = (TextView)findViewById(R.id.item_category_detail);
 
         final TextView editBtn = (TextView) findViewById(R.id.detail_edit);
 
@@ -76,8 +73,13 @@ public class ItemDetail extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Item item = documentSnapshot.toObject(Item.class);
                 String item_name = item.getTitle();
-                //todo : check status, if sold, let item_name = item_name + "(SOLD)"
-                final Double price = item.getPrice();
+
+                int availability = item.getStatus();
+                if (availability == 2){
+                    item_name += " (SOLD)";
+                }
+
+                Double price = item.getPrice();
                 String description = item.getDescription();
                 String seller = item.getSeller_name();
                 final String item_id = itemid;
@@ -96,6 +98,9 @@ public class ItemDetail extends AppCompatActivity {
                 else{
                     System.out.println("This item is sold by yourself!!!");
                 }
+
+                String cate = item.getCategory();
+                category.setText(cate);
                 desc_edit.setText(description);
                 time_edit.setText(postText);
                 name_edit.setText(item_name);
@@ -104,9 +109,13 @@ public class ItemDetail extends AppCompatActivity {
                 seller_name.setText(seller);
                 /*todo : check username and redirect user to profile page and show information about seller user
                 ps: frontend here is pretty simple........ just set an onclicklistener.......)*/
+                final String profile_email = item.getSeller_name();
                 seller_name.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        SharedPreferences.Editor edit = shared.edit();
+                        edit.putString("profile_email", profile_email);
+                        edit.apply();
                         startActivity(new Intent(ItemDetail.this, ProfileActivity.class));
                     }
                 });

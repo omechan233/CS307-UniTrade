@@ -125,6 +125,7 @@
     <TextView
         android:layout_width="100dp"
         android:layout_height="30dp"
+        android:visibility="invisible"
         android:text="Edit"
         android:textColor="#365fd1"
         android:id="@+id/edit_profile"

@@ -106,24 +106,31 @@ public class OrderDetail extends AppCompatActivity {
         /***********************************************
          * check if current item status is  "is_sold". if yes, then show "write comment" btn. if not, invisible btn.
          ***********************************************/
-        Button write_comment = (Button) findViewById(R.id.write_comment);
+        final Button write_comment = (Button) findViewById(R.id.write_comment);
 
-        //Todo: get item status from back-end.
-        Boolean is_sold = true;
-        if (is_sold){
-            write_comment.setVisibility(View.VISIBLE);
-            write_comment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(OrderDetail.this, CommentPage.class));
+        write_comment.setVisibility(View.INVISIBLE);
 
+        DocumentReference profileDocRef = db.collection("orders").document(order_ID);
+        profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Order current_order = document.toObject(Order.class);
+                    boolean is_sold = current_order.isIs_sold();
+                    if (is_sold) {
+                        write_comment.setVisibility(View.VISIBLE);
+                    }
                 }
-            });
-        }
-        else {
-            write_comment.setVisibility(View.INVISIBLE);
+            }
+        });
 
-        }
+        write_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(OrderDetail.this, CommentPage.class));
+            }
+        });
+
 
 
 

@@ -167,7 +167,7 @@ public class OrderDetail extends AppCompatActivity {
                                         Toast.LENGTH_SHORT).show();
                                 //Todo: back-end check is "Online Payment" same as the old trading method. if yes, do nothing. if no, update back-end with new trading method.
                                 db.collection("orders").document(item_doc.getId())
-                                        .update("methodpending", 1);
+                                        .update("methodpending", 2);
 
                             }
                         });

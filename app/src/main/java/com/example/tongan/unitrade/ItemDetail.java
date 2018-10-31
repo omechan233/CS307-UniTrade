@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Item;
+import com.example.tongan.unitrade.objects.Profile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -61,6 +62,8 @@ public class ItemDetail extends AppCompatActivity {
         name_edit.setFocusable(false);
         price_edit.setFocusable(false);
 
+        final TextView category = (TextView)findViewById(R.id.item_category_detail);
+
         final TextView editBtn = (TextView) findViewById(R.id.detail_edit);
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -70,7 +73,13 @@ public class ItemDetail extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Item item = documentSnapshot.toObject(Item.class);
                 String item_name = item.getTitle();
-                final Double price = item.getPrice();
+
+                int availability = item.getStatus();
+                if (availability == 2){
+                    item_name += " (SOLD)";
+                }
+
+                Double price = item.getPrice();
                 String description = item.getDescription();
                 String seller = item.getSeller_name();
                 final String item_id = itemid;
@@ -90,13 +99,26 @@ public class ItemDetail extends AppCompatActivity {
                     System.out.println("This item is sold by yourself!!!");
                 }
 
-
+                String cate = item.getCategory();
+                category.setText(cate);
                 desc_edit.setText(description);
                 time_edit.setText(postText);
                 name_edit.setText(item_name);
                 TextView seller_name = (TextView) findViewById(R.id.detail_seller);
                 seller = "Seller : " + seller;
                 seller_name.setText(seller);
+                /*todo : check username and redirect user to profile page and show information about seller user
+                ps: frontend here is pretty simple........ just set an onclicklistener.......)*/
+                final String profile_email = item.getSeller_name();
+                seller_name.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SharedPreferences.Editor edit = shared.edit();
+                        edit.putString("profile_email", profile_email);
+                        edit.apply();
+                        startActivity(new Intent(ItemDetail.this, ProfileActivity.class));
+                    }
+                });
                 String temp = price + "";
                 price_edit.setText(temp);
 
@@ -198,7 +220,8 @@ public class ItemDetail extends AppCompatActivity {
                                 Functions f = new Functions();
                                 f.delete_post(item_id,email);
                                 Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();
-                                finish();
+                                startActivity(new Intent(ItemDetail.this, OrderList.class));
+
                             }
                         })
                         .setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -252,7 +275,7 @@ public class ItemDetail extends AppCompatActivity {
 //                        Toast.makeText(getBaseContext(), "please signin first!", Toast.LENGTH_LONG).show();
 //                    }
 
-                    String add = "-wishList";
+                    String add = "+wishList";
                     wishListBtn.setText(add);
                 }
             }
@@ -269,6 +292,38 @@ public class ItemDetail extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        /********************************************************
+         * seller confirm payment after an item was sold by others
+         ******************************************************/
+        Button confirm_btn = (Button) findViewById(R.id.confirm_btn);
+        //get item status from back-end;
+        Boolean item_sold = true;
+        //if item status is sold, set confirm btn visible by seller.
+        if (item_sold ){
+            confirm_btn.setVisibility(View.VISIBLE);
+            confirm_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getBaseContext(), "You confirm this payment!", Toast.LENGTH_LONG).show();
+
+                }
+            });
+        }
+        else {
+            confirm_btn.setVisibility(View.INVISIBLE);
+        }
+
+
+
+
+
+
+
+
+
+
 
 
     }

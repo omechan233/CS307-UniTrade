@@ -4,16 +4,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Order;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,8 +26,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
+import javax.annotation.Nonnull;
+
 public class OrderDetail extends AppCompatActivity {
     private SharedPreferences shared;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String TAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +51,14 @@ public class OrderDetail extends AppCompatActivity {
         final TextView status = (TextView)findViewById(R.id.status_order_detail);
 
         //get info from backend here
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference item_doc = db.collection("orders").document(order_ID);
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference item_doc = db.collection("orders").document(order_ID);
         item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Order current_order = documentSnapshot.toObject(Order.class);
-                String itemName_String = "Item Name : " + current_order.getItem_price();
+
+                String itemName_String = "Item Name : " + current_order.getItem_title();
                 String price_String = "Price : " + current_order.getItem_price();/*+ get price from backend*/;
 
                 Timestamp time_stamp = current_order.getOrder_time();
@@ -65,7 +74,7 @@ public class OrderDetail extends AppCompatActivity {
 
 
                 if(current_order.getFace_to_face()) {
-                    method_String += "Face to face";
+                    method_String += "Face to Face";
                 }else{
                     method_String += "Online";
                 }
@@ -94,16 +103,79 @@ public class OrderDetail extends AppCompatActivity {
             }
         });
 
-
+        /***********************************************
+         * check if current item status is  "is_sold". if yes, then show "write comment" btn. if not, invisible btn.
+         ***********************************************/
         Button write_comment = (Button) findViewById(R.id.write_comment);
-        write_comment.setOnClickListener(new View.OnClickListener() {
+
+        //Todo: get item status from back-end.
+        Boolean is_sold = true;
+        if (is_sold){
+            write_comment.setVisibility(View.VISIBLE);
+            write_comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(OrderDetail.this, CommentPage.class));
+
+                }
+            });
+        }
+        else {
+            write_comment.setVisibility(View.INVISIBLE);
+
+        }
+
+
+
+        /**********************
+         * click "Trade Method Textview" to change the trading method "
+         ***********************/
+
+
+        method.setClickable(true);
+        method.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(OrderDetail.this, CommentPage.class));
+                //pop-up dialog to ask user to choose new trading method.
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(OrderDetail.this);
+                builder.setTitle("Notice:");
+                builder.setMessage("Your want to change your trading method to:  ");
+                builder.setCancelable(true);
+
+                // user choose "Accepted" button:
+                builder.setPositiveButton(
+                        "Face to Face",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(OrderDetail.this, "You choose Face to Face!",
+                                        Toast.LENGTH_SHORT).show();
+                                //Todo: back-end check is "Face to Face" same as the old trading method. if yes, do nothing. if no, update back-end with new trading method.
+                                db.collection("orders").document(item_doc.getId())
+                                        .update("methodpending", 1);
+
+                            }
+                        });
+
+                //user choose "Online Payment" button:
+                builder.setNegativeButton(
+                        "Online Payment",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(OrderDetail.this, "You choose online Payment!",
+                                        Toast.LENGTH_SHORT).show();
+                                //Todo: back-end check is "Online Payment" same as the old trading method. if yes, do nothing. if no, update back-end with new trading method.
+                                db.collection("orders").document(item_doc.getId())
+                                        .update("methodpending", 2);
+
+                            }
+                        });
+                builder.show();
+                //front-end functionality ends here.
 
             }
         });
-
 
 
     }

@@ -36,7 +36,8 @@ public class Item {
      * location as String but left blank till Sprint
      * status as int transferred from post class to here
      * status 0 as available, 1 as sold, other codes undetermined
-     */
+     * *****/
+
 
 
 
@@ -56,7 +57,7 @@ public class Item {
         //this.SellerID = SellerID;
         this.description = description;
         this.postTime = postTime;
-        this.notified = 0;
+        this.notified = notified;
     }
 
     /** Getter Methods **/
@@ -105,6 +106,7 @@ public class Item {
         this.location=location;
     }
     public void setNotified(int notified){this.notified = notified;}
+
     @Override
     /**
      * Override for toString Method, prints fields of the Item in orderly fashion

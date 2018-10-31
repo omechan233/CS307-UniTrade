@@ -68,7 +68,15 @@ public class ProfileActivity extends AppCompatActivity {
         email_edit.setFocusable(false);
         email_edit.setTextIsSelectable(false);
 
-        String email = sharedPreferences.getString("email", null);
+        final RatingBar overall_rating = (RatingBar) findViewById(R.id.overall_rating);
+        overall_rating.setClickable(false);
+
+        // AT:
+        // get the profile owner email, it may be different from the user email
+        // todo: if the profile_email and owner email are not the same, disabled edit function and add a button to view item list
+        final String user_email = sharedPreferences.getString("email", "");
+        String profile_email = sharedPreferences.getString("profile_email", user_email);
+
         final String username = "";
         String phone = "";
         String address = "";
@@ -77,37 +85,25 @@ public class ProfileActivity extends AppCompatActivity {
          * Retrieving data from the database to fill in EditText fields. Documents are specific to Firestore,
          * DO NOT CHANGE doc.get("[document]")
          */
-        //retrieve username from user document
-        DocumentReference userDocRef = db.collection("users").document(email);
-        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    if (doc.exists()) {
-                        //update text boxes with user info from database
-                        username_edit.setText(doc.get("user_name").toString());
-                        Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
-                    } else {
-                        Log.d(TAG, "No such document...");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
+
         //retrieve data from profile document
-        DocumentReference profileDocRef = db.collection("profiles").document(email);
+        // AT: changed user email to profile email
+        DocumentReference profileDocRef = db.collection("profiles").document(profile_email);
         profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
+                        username_edit.setText(doc.get("user_name").toString());
+
                         //update text boxes with user info from database
                         address_edit.setText(doc.get("address").toString());
                         phone_edit.setText(doc.get("phone_number").toString());
 
+                        // view the rating
+                        overall_rating.setNumStars(doc.getLong("rating").intValue());
+                        overall_rating.setRating(overall_rating.getNumStars());
                         Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
                     } else {
                         Log.d(TAG, "No such document...");
@@ -122,12 +118,8 @@ public class ProfileActivity extends AppCompatActivity {
  * get target user's overall rating and display it in user's profile.
  * ***********************************************************/
 
-        RatingBar overall_rating = (RatingBar) findViewById(R.id.overall_rating);
-        overall_rating.setClickable(false);
-        //Todo: get overall rating from back-end, and save it to int numStars;
-        int numStars = 5;
-        overall_rating.setNumStars(numStars);
-        overall_rating.setRating(overall_rating.getNumStars());
+// added in the above back end part
+
 
 
 /***********************************************************
@@ -136,9 +128,7 @@ public class ProfileActivity extends AppCompatActivity {
         //display comments
         final LinearLayout comment_view = (LinearLayout) findViewById(R.id.comment_area);
         //THIS IS A HARD CODING STRING COMMENT ARRAY!
-        //todo:get comments from backend
        // final String[] comments = new String[] {"comment1", "comment2", "comment3", "4", "5"};
-        final int[] ratingnum = new int[1];
         profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot document = task.getResult();
@@ -175,9 +165,8 @@ public class ProfileActivity extends AppCompatActivity {
                                     rating.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                                     rating.setStepSize(1);
                                     rating.setClickable(false);
-                                    rating.setNumStars(5);
-                                    //todo : get rating of comment and use setRating()
-                                    rating.setRating(current_com.getRating());
+
+                                    rating.setRating((float) current_com.getRating());
                                     comment.addView(rating);
                                     comment_view.addView(comment);
                                 }
@@ -185,23 +174,24 @@ public class ProfileActivity extends AppCompatActivity {
                             }
                         }
                         //result[0] = (String[])document.getData().get("my_items");
-                        Log.e(TAG, "my item list found");
+                        Log.e(TAG, "comment list found");
 
                     } else{
-                        Log.e(TAG, "my item list not found");
+                        Log.e(TAG, "comment list not found");
                     }
                 }
             });
 
-            //todo: get username, email, phone, address from backend, and store it into the variables above
-            //todo: during registration set new user's phone, address to empty string
-        
-        username_edit.setText(username);
-        phone_edit.setText(phone);
-        address_edit.setText(address);
-        email_edit.setText(email);
+//        username_edit.setText(username);
+//        phone_edit.setText(phone);
+//        address_edit.setText(address);
+//        email_edit.setText(user_email);
+
 
             TextView edit = (TextView) findViewById(R.id.edit_profile);
+            if (user_email.equals(profile_email)){
+                edit.setVisibility(View.VISIBLE);
+            }
         edit.setOnClickListener(new View.OnClickListener()
 
             {
@@ -220,8 +210,6 @@ public class ProfileActivity extends AppCompatActivity {
                     String text = "Confirm";
                     temp.setText(text);
                 } else {
-
-                    //todo: use xxx_edit.getText().toString() to get updated input and update it into backend
                     f.update_profile(email_edit.getText().toString(), phone_edit.getText().toString(), 1, "", "", address_edit.getText().toString());
 
 
@@ -246,6 +234,9 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onClick (View v){
              /*   Intent intent = new Intent(ProfileActivity.this, HomePageActivity.class);
                 startActivity(intent);*/
+                    SharedPreferences.Editor edit = sharedPreferences.edit();
+                    edit.putString("profile_email", user_email);
+                    edit.apply();
                 finish();
             }
             });

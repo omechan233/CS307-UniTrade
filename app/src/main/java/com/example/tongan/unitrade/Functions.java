@@ -135,7 +135,7 @@ public class Functions {
      * there are some issues:
      *
      *  1. I made the unique ID of course to be username+posted_time
-     *  So we dont have to have a order list and my item list in
+     *  So we dont have to have a order list and my list in
      *  the user structure.
      *  2. I am not sure if we really need a post class, because it
      *  has nothing special in it.
@@ -453,9 +453,12 @@ public class Functions {
     /********** AT:
      * Call when user buys an item
      */
-    public void create_order(String seller_email, String item_ID, Timestamp order_time, Double item_price, String item_title, boolean face_to_face){
-        final Order order = new Order(item_ID, order_time, seller_email,item_title, item_price, false, face_to_face );
-        final String order_ID = seller_email+order_time.toString();
+    public void create_order(String buyer_email, String seller_email, String item_ID,
+                             Timestamp order_time, Double item_price, String item_title,
+                             boolean face_to_face, int methodpending){
+        final Order order = new Order(item_ID, order_time, seller_email,item_title, item_price,
+                false, face_to_face, methodpending);
+        final String order_ID = buyer_email+order_time.toString();
         final String final_item_ID = item_ID;
         final String final_seller_email = seller_email;
 
@@ -464,7 +467,7 @@ public class Functions {
         db.collection("orders").document(order_ID).set(order);
 
         // add the order in profile
-        DocumentReference user_doc = db.collection("profiles").document(final_seller_email);
+        DocumentReference user_doc = db.collection("profiles").document(buyer_email);
         user_doc.update("my_orders", FieldValue.arrayUnion(order_ID));
 
         //change status of item
@@ -543,7 +546,7 @@ public class Functions {
     }
 
 
-    public void create_comment(String item_name, String buyeremail, String content, int rating, String posted_time,String selleremail){
+    public void create_comment(String item_name, String buyeremail, String content, double rating, Timestamp posted_time,String selleremail){
         Comment comment = new Comment(buyeremail,content,item_name,rating,posted_time,selleremail);
         db.collection("comments").document(buyeremail+posted_time).set(comment);
 
@@ -551,7 +554,7 @@ public class Functions {
         final DocumentReference user_doc = db.collection("profiles").document(selleremail);
         user_doc.update("my_comments", FieldValue.arrayUnion(buyeremail+posted_time));
 
-        final int rate = rating;
+        final double rate = rating;
         //update average rating
         user_doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -559,10 +562,10 @@ public class Functions {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        int rating_number = (int) document.get("rating_number");
+                        int rating_number =document.getLong("rating_number").intValue();
                         if(rating_number!=0) {
                             double prev_rate = (double) document.get("rating");
-                            user_doc.update("rating",(prev_rate*(double)rating_number)+(double)rate/(rating_number+1));
+                            user_doc.update("rating",((prev_rate*(double)rating_number)+(double)rate)/(rating_number+1));
                             user_doc.update("rating_number",rating_number+1);
                         }
                         else{

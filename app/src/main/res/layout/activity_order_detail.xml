@@ -74,16 +74,16 @@
         android:text="Order Time:"/>
 
     <TextView
+        android:id="@+id/trade_order_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/time_order_detail"
         android:layout_marginLeft="10dp"
-        android:id="@+id/trade_order_detail"
         android:layout_marginTop="10dp"
+        android:text="Trade Method:"
+        android:textColor="#365fd1"
         android:textSize="20sp"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:text="Trade Method:"/>
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"

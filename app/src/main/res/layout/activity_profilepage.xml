@@ -125,6 +125,7 @@
     <TextView
         android:layout_width="100dp"
         android:layout_height="30dp"
+        android:visibility="invisible"
         android:text="Edit"
         android:textColor="#365fd1"
         android:id="@+id/edit_profile"
@@ -142,20 +143,7 @@
         android:scaleType="fitCenter"
         android:src="@mipmap/home_page_icon" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="228dp"
-        android:layout_above="@id/profile_back_icon"
-        android:layout_below="@id/input_email"
-        android:layout_marginTop="115dp">
 
-        <LinearLayout
-            android:id="@+id/comment_area"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-    </ScrollView>
 
     <TextView
         android:layout_width="match_parent"
@@ -179,32 +167,51 @@
         android:text="Wishlist" />
 
     <TextView
-        android:id="@+id/comment_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_alignStart="@+id/user_image"
-        android:layout_below="@+id/overall_rating"
-        android:text="Comments:"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <TextView
         android:id="@+id/rating_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_alignStart="@+id/user_image"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="12dp"
+        android:layout_below="@id/email_text"
         android:text="Overall Rating:"
         android:textSize="18sp"
+        android:layout_marginLeft="20dp"
         android:textStyle="bold" />
 
     <RatingBar
         android:id="@+id/overall_rating"
         android:layout_width="wrap_content"
+        android:stepSize="1"
+        android:max="5"
+        android:clickable="false"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_marginTop="18dp"
+        android:layout_below="@id/email_text"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/profile_wishlist_btn"
-        android:layout_centerVertical="true" />
+        android:layout_toRightOf="@id/rating_text" />
+
+    <TextView
+        android:id="@+id/comment_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@+id/rating_text"
+        android:text="Comments:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="228dp"
+        android:layout_above="@id/profile_back_icon"
+        android:layout_below="@id/comment_text"
+        android:layout_marginTop="5dp">
+
+        <LinearLayout
+            android:id="@+id/comment_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </ScrollView>
 
 </RelativeLayout>

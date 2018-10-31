@@ -47,7 +47,8 @@ public class OrderList extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(OrderList.this, SettingActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -61,7 +62,7 @@ public class OrderList extends AppCompatActivity {
                 final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.list_area);
                 linearLayout.removeAllViews();
 
-                String user_email = shared.getString("email", "");
+                final String user_email = shared.getString("email", "");
 
                 DocumentReference prof_doc = db.collection("profiles").document(user_email);
 
@@ -103,7 +104,7 @@ public class OrderList extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(View v) {
                                                         SharedPreferences.Editor edit = shared.edit();
-                                                        String order_id = finalCurrent_Order.getSeller_email()+finalCurrent_Order.getOrder_time().toString();
+                                                        String order_id = user_email+finalCurrent_Order.getOrder_time().toString();
                                                         System.out.println("current order is "+order_id);
                                                         edit.putString("order_ID", order_id);
 
@@ -152,8 +153,6 @@ public class OrderList extends AppCompatActivity {
                         if (document.exists()) {
                             List<String> my_items = new ArrayList<String>();
                             my_items = (List<String>) document.getData().get("my_items");
-                            System.out.println(my_items);
-                            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                             if (my_items == null || my_items.isEmpty()) {
                                 System.out.println("Nothing on the list!");
                             } else {

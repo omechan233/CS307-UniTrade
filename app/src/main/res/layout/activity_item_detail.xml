@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,6 +7,10 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
     tools:context=".ItemDetail">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/detail_title"
@@ -46,11 +50,23 @@
         android:textStyle="bold"
         android:textSize="22sp"
         android:id="@+id/detail_item_name"/>
-    
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/item_category_detail"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/detail_item_name"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:text="category"
+            />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/detail_item_name"
+        android:layout_below="@id/item_category_detail"
         android:layout_centerHorizontal="true"
         android:id="@+id/detail_price"
         android:textSize="18sp"
@@ -143,4 +159,15 @@
         android:textStyle="bold"
         android:layout_alignParentRight="true" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/confirm_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/detail_image"
+            android:layout_alignParentEnd="true"
+            android:text="Confirm"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</ScrollView>

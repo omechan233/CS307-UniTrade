@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.TimeZone;
 
 public class ItemDetail extends AppCompatActivity {
@@ -232,51 +233,48 @@ public class ItemDetail extends AppCompatActivity {
                         .show();
             }
         });
-
         final Button wishListBtn = (Button) findViewById(R.id.detail_wishlist);
+
+        final String add = "+WishList";
+        final String remove = "-WishList";
+        wishListBtn.setText(add);
+
+        DocumentReference profileDocRef = db.collection("profiles").document(email);
+        profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    List<String> my_wishlist = (List<String>) document.getData().get("wish_list");
+                    if (my_wishlist == null || my_wishlist.isEmpty()) {
+                        System.out.println("Nothing on the list!");
+                        // button to be add to wishlist
+                    }
+                    else {
+                        if(my_wishlist.contains(item_id)){
+                            System.out.println("my wish list does contain this item");
+                            wishListBtn.setText(remove);
+                        }
+                    }
+                }
+            }
+        });
+
         wishListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (wishListBtn.getText().toString().equals("+wishList")) {
-
-                    //todo : add to wishList
-                    if (email != null) {
-                        // User is signed in
-                        Functions f = new Functions();
-                        f.add_wishlist(item_id, email);
-                        Toast.makeText(getBaseContext(), "item is added to wishlist!", Toast.LENGTH_LONG).show();
-                        finish();
-                    } else {
-                        // No user is signed in
-                        Toast.makeText(getBaseContext(), "please signin first!", Toast.LENGTH_LONG).show();
-                    }
-
-
-                    String remove = "-wishList";
+                if (wishListBtn.getText().toString().equals(add)) {
+                    // User is signed in
+                    Functions f = new Functions();
+                    f.add_wishlist(item_id, email);
+                    Toast.makeText(getBaseContext(), "item is added to wishlist!", Toast.LENGTH_LONG).show();
                     wishListBtn.setText(remove);
+                    finish();
                 } else {
-
-                    //todo : delete from wishList
                     Functions f = new Functions();
                     f.delete_wishlist(item_id, email);
                     Toast.makeText(getBaseContext(), "item removed!", Toast.LENGTH_LONG).show();
-                    finish();
-                    //get current user
-//                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                    if (user != null) {
-//                        // User is signed in
-//                        Functions f = new Functions();
-//                        String userid = user.getUid();
-//                        f.delete_wishlist(item_id, userid);
-//                        Toast.makeText(getBaseContext(), "item removed!", Toast.LENGTH_LONG).show();
-//                        finish();
-//                    } else {
-//                        // No user is signed in
-//                        Toast.makeText(getBaseContext(), "please signin first!", Toast.LENGTH_LONG).show();
-//                    }
-
-                    String add = "+wishList";
                     wishListBtn.setText(add);
+                    finish();
                 }
             }
         });

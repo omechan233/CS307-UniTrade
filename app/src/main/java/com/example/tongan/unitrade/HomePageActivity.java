@@ -27,20 +27,16 @@ import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Item;
 import com.example.tongan.unitrade.objects.Order;
-import com.example.tongan.unitrade.objects.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -535,84 +531,88 @@ public class HomePageActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot ProfileDoc : task.getResult()) {
                                 ArrayList<String> list = (ArrayList<String>) ProfileDoc.get("my_items"); //get ItemIDs
 
-                                for (String itemID : list) {
-                                    CollectionReference itemsRef = db.collection("items");
-                                    DocumentReference single_itemRef = itemsRef.document(itemID);
-                                    single_itemRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.isComplete()) {
-                                                DocumentSnapshot itemSnapshot = task.getResult();
-                                                //Construct Item Object from each DocSnapshot
+                                try {
+                                    for (String itemID : list) {
+                                        CollectionReference itemsRef = db.collection("items");
+                                        DocumentReference single_itemRef = itemsRef.document(itemID);
+                                        single_itemRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isComplete()) {
+                                                    DocumentSnapshot itemSnapshot = task.getResult();
+                                                    //Construct Item Object from each DocSnapshot
 
-                                                //AT: category
-                                                if (itemSnapshot.getDouble("status").intValue() != 1) { //if item not available, don't display it
-                                                    return;
-                                                }
-                                                if ((!category.equals("All")) && (!itemSnapshot.get("category").equals(category))) { //if item isn't within selected category, don't display it
-                                                    return;
-                                                }
+                                                    //AT: category
+                                                    if (itemSnapshot.getDouble("status").intValue() != 1) { //if item not available, don't display it
+                                                        return;
+                                                    }
+                                                    if ((!category.equals("All")) && (!itemSnapshot.get("category").equals(category))) { //if item isn't within selected category, don't display it
+                                                        return;
+                                                    }
 
-                                                Map<String, Object> itemMap = itemSnapshot.getData();
+                                                    Map<String, Object> itemMap = itemSnapshot.getData();
 
-                                                String itemTitle = (String) itemMap.get("title");
-                                                String itemDesc = (String) itemMap.get("description:");
+                                                    String itemTitle = (String) itemMap.get("title");
+                                                    String itemDesc = (String) itemMap.get("description:");
 
-                                                //check keyword
-                                                boolean contains_keyword = false;
-                                                try {
-                                                    contains_keyword = itemTitle.contains(final_real_keyword) || itemDesc.contains(final_real_keyword);
-                                                } catch (NullPointerException e) {
-                                                    System.out.println("Refresh Home: keyword was null");
-                                                }
-
-                                                if (contains_keyword) { //only display items that contain keyword in their title or description
+                                                    //check keyword
+                                                    boolean contains_keyword = false;
                                                     try {
-                                                        Item itemObj = itemSnapshot.toObject(Item.class);
-
-                                                        //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
-                                                        LinearLayout item = new LinearLayout(getBaseContext());
-                                                        //set layout params for parent layout
-                                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
-                                                        item.setLayoutParams(params);
-
-                                                        //create and set params of image in parent layout
-                                                        ImageView imageView = new ImageView(getBaseContext());
-                                                        imageView.setImageResource(R.mipmap.poi_test_src);
-                                                        params = new LinearLayout.LayoutParams(180, 180);
-                                                        params.setMargins(20, 20, 0, 20);
-                                                        imageView.setLayoutParams(params);
-                                                        item.addView(imageView);
-
-                                                        //create textview in parent layout
-                                                        TextView tv = new TextView(getBaseContext());
-                                                        String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
-                                                        tv.setText(text);
-                                                        item.addView(tv);
-                                                        //==================
-
-                                                        //Set up OnClick for each Item to get ItemDetailPage ==================
-                                                        final Item current_item = itemObj;
-                                                        item.setOnClickListener(new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) { //this is configured the same as OrderList
-                                                                SharedPreferences.Editor edit = shared.edit();
-                                                                edit.putString("itemid", current_item.getid());
-                                                                edit.apply();
-
-                                                                startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
-                                                            }
-                                                        });
-
-                                                        homepage_result.addView(item); //add view to homepage list
-
+                                                        contains_keyword = itemTitle.contains(final_real_keyword) || itemDesc.contains(final_real_keyword);
                                                     } catch (NullPointerException e) {
-                                                        System.out.println("Error Retrieving Item Docs in Profiles, Message: " + e.getLocalizedMessage());
+                                                        System.out.println("Refresh Home: keyword was null");
+                                                    }
+
+                                                    if (contains_keyword) { //only display items that contain keyword in their title or description
+                                                        try {
+                                                            Item itemObj = itemSnapshot.toObject(Item.class);
+
+                                                            //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
+                                                            LinearLayout item = new LinearLayout(getBaseContext());
+                                                            //set layout params for parent layout
+                                                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+                                                            item.setLayoutParams(params);
+
+                                                            //create and set params of image in parent layout
+                                                            ImageView imageView = new ImageView(getBaseContext());
+                                                            imageView.setImageResource(R.mipmap.poi_test_src);
+                                                            params = new LinearLayout.LayoutParams(180, 180);
+                                                            params.setMargins(20, 20, 0, 20);
+                                                            imageView.setLayoutParams(params);
+                                                            item.addView(imageView);
+
+                                                            //create textview in parent layout
+                                                            TextView tv = new TextView(getBaseContext());
+                                                            String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
+                                                            tv.setText(text);
+                                                            item.addView(tv);
+                                                            //==================
+
+                                                            //Set up OnClick for each Item to get ItemDetailPage ==================
+                                                            final Item current_item = itemObj;
+                                                            item.setOnClickListener(new View.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(View v) { //this is configured the same as OrderList
+                                                                    SharedPreferences.Editor edit = shared.edit();
+                                                                    edit.putString("itemid", current_item.getid());
+                                                                    edit.apply();
+
+                                                                    startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
+                                                                }
+                                                            });
+
+                                                            homepage_result.addView(item); //add view to homepage list
+
+                                                        } catch (NullPointerException e) {
+                                                            System.out.println("Error Retrieving Item Docs in Profiles, Message: " + e.getLocalizedMessage());
+                                                        }
                                                     }
                                                 }
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
+                                } catch(NullPointerException e){
+                                    System.out.println("Error Retrieving item list, list was empty! Message: " + e.getLocalizedMessage());
                                 }
                             }
                         }

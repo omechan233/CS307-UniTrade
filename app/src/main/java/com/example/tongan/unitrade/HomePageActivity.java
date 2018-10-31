@@ -329,9 +329,7 @@ public class HomePageActivity extends AppCompatActivity {
         //fill initial homepage
         initHome();
         //set init flag to false now
-        System.out.println("initFlag changed in OnStart()");
         initFlag = false;
-
     }
 
     /**

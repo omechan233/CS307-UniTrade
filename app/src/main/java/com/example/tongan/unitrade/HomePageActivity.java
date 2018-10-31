@@ -109,8 +109,9 @@ public class HomePageActivity extends AppCompatActivity {
         search_sort_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!initFlag) //if initial setup, don't refreshHome else we'll get duplicated items
+                if (!initFlag) { //if initial setup, don't refreshHome else we'll get duplicated items
                     refreshHome(); //refresh home to resort list
+                }
                 else
                     initFlag = false; //set initFlag to false so this function works as intended after init
             }
@@ -124,8 +125,9 @@ public class HomePageActivity extends AppCompatActivity {
         cat_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!initFlag) //if initial setup, don't refreshHome else we'll get duplicated items
+                if (!initFlag) { //if initial setup, don't refreshHome else we'll get duplicated items
                     refreshHome(); //refresh home to resort list
+                }
                 else
                     initFlag = false; //set initFlag to false so this function works as intended after init
             }
@@ -135,11 +137,7 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
-        //fill initial homepage
-       // initHome();
-
         //get users sold notification setting
-        final DocumentReference user_doc = db.collection("users").document(email);
         DocumentReference userDocRef = db.collection("users").document(email);
         userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -219,23 +217,16 @@ public class HomePageActivity extends AppCompatActivity {
                                                     }
                                                 });
                                             }
-
-
                                         }
                                         //result[0] = (String[])document.getData().get("my_items");
                                         Log.e(TAG, "my item list found");
 
-                                    } else
-
-                                    {
+                                    } else                                    {
                                         Log.e(TAG, "my item list not found");
                                     }
                                 }
                             });
-
-
                         }
-
                     } else {
                         Log.d(TAG, "No such document...");
                     }
@@ -244,166 +235,7 @@ public class HomePageActivity extends AppCompatActivity {
                 }
             }
         });
-
-//        //get order list from profile
-//        final DocumentReference profiles = db.collection("profiles").document(email);
-//
-//        profiles.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                DocumentSnapshot document = task.getResult();
-//                if (document.exists()) {
-//                    List<String> my_items = new ArrayList<String>();
-//                    my_items = (List<String>) document.getData().get("my_items");
-//                    if (my_items == null || my_items.isEmpty()) {
-//                        System.out.println("Nothing on the list!");
-//                    } else {
-//                        for (int i = 0; i < my_items.size(); i++) {
-//                            //get item from order list
-//                            final DocumentReference item_doc = db.collection("items").document(my_items.get(i));
-//                            final int finalI = i;
-//                            item_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//                                @Override
-//                                public void onEvent(@Nullable DocumentSnapshot snapshot,
-//                                                    @Nullable FirebaseFirestoreException e) {
-//                                    if (e != null) {
-//                                        Log.w(TAG, "Listen failed.", e);
-//                                        return;
-//                                    }
-//
-//                                    if (snapshot != null && snapshot.exists()) {
-//                                        item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                                            @Override
-//                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                                                Item current_item = new Item();
-//                                                current_item = documentSnapshot.toObject(Item.class);
-//                                                if(current_item.getStatus() == 2 && current_item.getNotified() != 1) {
-//                                                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//                                                    Intent intent = new Intent(HomePageActivity.this, Order.class);
-//                                                    PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
-//                                                    Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "ItemSold")
-//                                                            .setContentTitle("UniTrade:")
-//                                                            .setContentText("Your item is sold!")
-//                                                            .setWhen(System.currentTimeMillis())
-//                                                            .setSmallIcon(R.mipmap.ic_launcher_round)
-//                                                            .setAutoCancel(true)
-//                                                            .setContentIntent(ma)
-//                                                            .build();
-//
-//                                                    manager.notify(1, notification);
-//                                                    item_doc.update("notified", 1)
-//                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                                @Override
-//                                                                public void onSuccess(Void aVoid) {
-//                                                                    Log.d(TAG, "Someone bought your item");
-//                                                                }
-//                                                            })
-//                                                            .addOnFailureListener(new OnFailureListener() {
-//                                                                @Override
-//                                                                public void onFailure(@NonNull Exception e) {
-//                                                                    Log.w(TAG, "item notifacation wrong", e);
-//                                                                }
-//                                                            });
-//                                                }
-//                                            }
-//                                        });
-//                                    } else {
-//                                        Log.d(TAG, "Current data: null");
-//                                    }
-//                                }
-//                            });
-//                    }
-//
-//
-//                }
-//                //result[0] = (String[])document.getData().get("my_items");
-//                Log.e(TAG, "my item list found");
-//
-//            } else
-//
-//            {
-//                Log.e(TAG, "my item list not found");
-//            }
-//        }
-//    });
 }
-
-    /**
-     * Initial layout of the homepage, displaying all items in alphabetical order by default
-     */
-    public void initHome() {
-        final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
-        homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
-
-
-        CollectionReference Items = db.collection("items");
-
-        Items.orderBy("title").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot ItemDoc : task.getResult()) {
-                                Log.d(TAG, ItemDoc.getId() + "=> " + ItemDoc.getData());
-
-                                //Get Map of Item
-                                Map<String, Object> itemMap = ItemDoc.getData();
-
-                                if (ItemDoc.getDouble("status").intValue() != 1) { //if item not available, don't display it
-                                    continue;
-                                }
-
-                                try {
-                                    //Construct Item Object from each DocSnapshot
-                                    Item itemObj = ItemDoc.toObject(Item.class);
-
-                                    //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
-                                    LinearLayout item = new LinearLayout(getBaseContext());
-                                    //set layout params for parent layout
-                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
-                                    item.setLayoutParams(params);
-
-                                    //create and set params of image in parent layout
-                                    ImageView imageView = new ImageView(getBaseContext());
-                                    imageView.setImageResource(R.mipmap.poi_test_src);
-                                    params = new LinearLayout.LayoutParams(180, 180);
-                                    params.setMargins(20, 20, 0, 20);
-                                    imageView.setLayoutParams(params);
-                                    item.addView(imageView);
-
-                                    //create textview in parent layout
-                                    TextView tv = new TextView(getBaseContext());
-                                    String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
-                                    tv.setText(text);
-                                    item.addView(tv);
-                                    //==================
-
-                                    //Set up OnClick for each Item to get ItemDetailPage ==================
-                                    final Item current_item = itemObj;
-                                    item.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) { //this is configured the same as OrderList
-                                            SharedPreferences.Editor edit = shared.edit();
-                                            edit.putString("itemid", current_item.getid());
-                                            edit.apply();
-
-                                            startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
-                                        }
-                                    });
-
-                                    homepage_result.addView(item); //add view to homepage list
-
-                                } catch (NullPointerException e) {
-                                    System.out.println("Null Found: " + e.getLocalizedMessage());
-                                } catch (NoSuchFieldError e) {
-                                    System.out.println("No Such Field: " + e.getLocalizedMessage());
-                                }
-                            }
-                        } else
-                            Log.d(TAG, "Error getting Item documents: ", task.getException());
-                    }
-                });
-    }
 
     /**
      * When called, gets keyword inputted into search bar and searches for items based on input
@@ -413,209 +245,35 @@ public class HomePageActivity extends AppCompatActivity {
      * NOTE: works best with one or two word searches
      */
     public void searchKeyword() {
-        //clear homepage first
         final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
         homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
 
-        final String cate_option = cat_spinner.getSelectedItem().toString();
-        final String category = cate_option;
-
+        //SORT BY PRICE, NAME, POSTDATE, RATING VARS -----------
+        //String criterion = "title"; //default sorting criterion for items
+        String sort_option = search_sort_spinner.getSelectedItem().toString();
+        String cate_option = cat_spinner.getSelectedItem().toString();
         final String keyword = search_word.getText().toString();
-        CollectionReference Items = db.collection("items");
-        Query itemsQuery = Items.orderBy("title");
 
-        itemsQuery.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot ItemDoc : task.getResult()) {
-                                Log.d(TAG, ItemDoc.getId() + "=> " + ItemDoc.getData());
-
-                                //Get Map of Item
-                                Map<String, Object> itemMap = ItemDoc.getData();
-
-                                if (ItemDoc.getDouble("status").intValue() != 1) { //if item not available, don't display it
-                                    continue;
-                                }
-                                if (!category.equals("All") && !ItemDoc.get("category").equals(category)){
-                                    continue;
-                                }
-
-                                //Get Title
-                                String itemTitle = (String) itemMap.get("title");
-                                String itemDesc = (String) itemMap.get("description:");
-                                try {
-                                    if (itemTitle.contains(keyword) || itemDesc.contains(keyword)) { //only display items that contain keyword in their title or description
-                                        try {
-                                            //Construct Item Object from each DocSnapshot
-                                            Item itemObj = ItemDoc.toObject(Item.class);
-
-                                            //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
-                                            LinearLayout item = new LinearLayout(getBaseContext());
-                                            //set layout params for parent layout
-                                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
-                                            item.setLayoutParams(params);
-
-                                            //create and set params of image in parent layout
-                                            ImageView imageView = new ImageView(getBaseContext());
-                                            imageView.setImageResource(R.mipmap.poi_test_src);
-                                            params = new LinearLayout.LayoutParams(180, 180);
-                                            params.setMargins(20, 20, 0, 20);
-                                            imageView.setLayoutParams(params);
-                                            item.addView(imageView);
-
-                                            //create textview in parent layout
-                                            TextView tv = new TextView(getBaseContext());
-                                            String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
-                                            tv.setText(text);
-                                            item.addView(tv);
-                                            //==================
-
-                                            //Set up OnClick for each Item to get ItemDetailPage ==================
-                                            final Item current_item = itemObj;
-                                            item.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) { //this is configured the same as OrderList
-                                                    SharedPreferences.Editor edit = shared.edit();
-                                                    edit.putString("itemid", current_item.getid());
-                                                    edit.apply();
-
-                                                    startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
-                                                }
-                                            });
-
-                                            homepage_result.addView(item); //add view to homepage list
-
-                                        } catch (NullPointerException e) {
-                                            System.out.println("Null Found: " + e.getLocalizedMessage());
-                                        } catch (NoSuchFieldError e) {
-                                            System.out.println("No Such Field: " + e.getLocalizedMessage());
-                                        }
-
-                                    }
-                                } catch (NullPointerException e) {
-                                    System.out.println("Null Pointer when using contains, message: " + e.getLocalizedMessage());
-                                }
-                            }
-                        } else
-                            Log.d(TAG, "Error getting Item documents: ", task.getException());
-                    }
-                });
+        _refreshHome(sort_option, cate_option, keyword);
     }
 
     /**
      * Refreshes the list displayed in the HomePage based on spinner and search values
      * <p>
-     * Checks spinner for sort options and [TODO] checks category spinner
+     * Checks spinner for sort options and
      * and sorts the HomePage List accordingly
      */
     public void refreshHome() {
         final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
         homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
 
-        //SORT BY PRICE, NAME, POSTDATE, RATING VARS -----------
-        String criterion = "title"; //default sorting criterion for items
+               //SORT BY PRICE, NAME, POSTDATE, RATING VARS -----------
+        //String criterion = "title"; //default sorting criterion for items
         String sort_option = search_sort_spinner.getSelectedItem().toString();
         String cate_option = cat_spinner.getSelectedItem().toString();
+        final String keyword = search_word.getText().toString();
 
-
-        // Category default set to be All
-        String category = "All";
-
-        if (!cate_option.equals("All")){
-            category=cate_option;
-        }
-
-
-        if (sort_option.equals("Price"))
-            criterion = "price";
-        else if (sort_option.equals("Most Recent"))
-            criterion = "postTime";
-        else if (sort_option.equals("Seller Rating")) {
-            sortByRating(category);
-            return; //sortByRating takes care of everything else, so return
-        }
-
-        CollectionReference Items = db.collection("items");
-        Query itemsQuery; //query for retrieving docs in a certain order
-
-        //NOTE: special sorting order for post time is descending, the rest can be ascending todo: add more options to allow user to choose ascending/descending order?
-        if (criterion.equals("postTime"))
-            itemsQuery = Items.orderBy(criterion, Query.Direction.DESCENDING);
-        else
-            itemsQuery = Items.orderBy(criterion);
-
-        final String final_cate=category;
-
-        itemsQuery.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot ItemDoc : task.getResult()) {
-                                Log.d(TAG, ItemDoc.getId() + "=> " + ItemDoc.getData());
-
-                                //Get Map of Item
-                                Map<String, Object> itemMap = ItemDoc.getData();
-
-                                if (ItemDoc.getDouble("status").intValue() != 1) { //if item not available, don't display it
-                                    continue;
-                                }
-                                if((!final_cate.equals("All")) && (!ItemDoc.get("category").equals(final_cate))){
-                                    continue;
-                                }
-
-                                try {
-                                    //Construct Item Object from each DocSnapshot
-                                    Item itemObj = ItemDoc.toObject(Item.class);
-
-                                    //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
-                                    LinearLayout item = new LinearLayout(getBaseContext());
-                                    //set layout params for parent layout
-                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
-                                    item.setLayoutParams(params);
-
-                                    //create and set params of image in parent layout
-                                    ImageView imageView = new ImageView(getBaseContext());
-                                    imageView.setImageResource(R.mipmap.poi_test_src);
-                                    params = new LinearLayout.LayoutParams(180, 180);
-                                    params.setMargins(20, 20, 0, 20);
-                                    imageView.setLayoutParams(params);
-                                    item.addView(imageView);
-
-                                    //create textview in parent layout
-                                    TextView tv = new TextView(getBaseContext());
-                                    String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
-                                    tv.setText(text);
-                                    item.addView(tv);
-                                    //==================
-
-                                    //Set up OnClick for each Item to get ItemDetailPage ==================
-                                    final Item current_item = itemObj;
-                                    item.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) { //this is configured the same as OrderList
-                                            SharedPreferences.Editor edit = shared.edit();
-                                            edit.putString("itemid", current_item.getid());
-                                            edit.apply();
-
-                                            startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
-                                        }
-                                    });
-
-                                    homepage_result.addView(item); //add view to homepage list
-
-                                } catch (NullPointerException e) {
-                                    System.out.println("Null Found: " + e.getLocalizedMessage());
-                                } catch (NoSuchFieldError e) {
-                                    System.out.println("No Such Field: " + e.getLocalizedMessage());
-                                }
-                            }
-                        } else
-                            Log.d(TAG, "Error getting Item documents: ", task.getException());
-                    }
-                });
+        _refreshHome(sort_option, cate_option, keyword);
     }
 
     /**
@@ -629,9 +287,23 @@ public class HomePageActivity extends AppCompatActivity {
         final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
         homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
 
+        //SORT BY PRICE, NAME, POSTDATE, RATING VARS -----------
+        //String criterion = "title"; //default sorting criterion for items
+        String sort_option = search_sort_spinner.getSelectedItem().toString();
+        String cate_option = cat_spinner.getSelectedItem().toString();
+        final String keyword = search_word.getText().toString();
+
+        //null check for keyword
+        String real_keyword = "";
+        if(keyword != null) {
+            real_keyword = keyword;
+        }
+        final String final_real_keyword = real_keyword;
+
+
         CollectionReference profilesRef = db.collection("profiles");
 
-        profilesRef.orderBy("rating").get()
+        profilesRef.orderBy("rating", Query.Direction.DESCENDING).get() //want to print highest to lowest
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -653,50 +325,66 @@ public class HomePageActivity extends AppCompatActivity {
                                                 if (itemSnapshot.getDouble("status").intValue() != 1 ) { //if item not available, don't display it
                                                     return;
                                                 }
-                                                if((!category.equals("All")) && (!itemSnapshot.get("category").equals(category))){
+                                                if((!category.equals("All")) && (!itemSnapshot.get("category").equals(category))){ //if item isn't within selected category, don't display it
                                                     return;
                                                 }
-                                                try {
-                                                    Item itemObj = itemSnapshot.toObject(Item.class);
 
-                                                    //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
-                                                    LinearLayout item = new LinearLayout(getBaseContext());
-                                                    //set layout params for parent layout
-                                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
-                                                    item.setLayoutParams(params);
+                                                Map<String, Object> itemMap = itemSnapshot.getData();
 
-                                                    //create and set params of image in parent layout
-                                                    ImageView imageView = new ImageView(getBaseContext());
-                                                    imageView.setImageResource(R.mipmap.poi_test_src);
-                                                    params = new LinearLayout.LayoutParams(180, 180);
-                                                    params.setMargins(20, 20, 0, 20);
-                                                    imageView.setLayoutParams(params);
-                                                    item.addView(imageView);
+                                                String itemTitle = (String) itemMap.get("title");
+                                                String itemDesc = (String) itemMap.get("description:");
 
-                                                    //create textview in parent layout
-                                                    TextView tv = new TextView(getBaseContext());
-                                                    String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
-                                                    tv.setText(text);
-                                                    item.addView(tv);
-                                                    //==================
+                                                //check keyword
+                                                boolean contains_keyword = false;
+                                                try{
+                                                    contains_keyword = itemTitle.contains(final_real_keyword) || itemDesc.contains(final_real_keyword);
+                                                }catch(NullPointerException e){
+                                                    System.out.println("Refresh Home: keyword was null");
+                                                }
 
-                                                    //Set up OnClick for each Item to get ItemDetailPage ==================
-                                                    final Item current_item = itemObj;
-                                                    item.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) { //this is configured the same as OrderList
-                                                            SharedPreferences.Editor edit = shared.edit();
-                                                            edit.putString("itemid", current_item.getid());
-                                                            edit.apply();
+                                                if (contains_keyword) { //only display items that contain keyword in their title or description
+                                                    try {
+                                                        Item itemObj = itemSnapshot.toObject(Item.class);
 
-                                                            startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
-                                                        }
-                                                    });
+                                                        //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
+                                                        LinearLayout item = new LinearLayout(getBaseContext());
+                                                        //set layout params for parent layout
+                                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+                                                        item.setLayoutParams(params);
 
-                                                    homepage_result.addView(item); //add view to homepage list
+                                                        //create and set params of image in parent layout
+                                                        ImageView imageView = new ImageView(getBaseContext());
+                                                        imageView.setImageResource(R.mipmap.poi_test_src);
+                                                        params = new LinearLayout.LayoutParams(180, 180);
+                                                        params.setMargins(20, 20, 0, 20);
+                                                        imageView.setLayoutParams(params);
+                                                        item.addView(imageView);
 
-                                                } catch (NullPointerException e) {
-                                                    System.out.println("Error Retrieving Item Docs in Profiles, Message: " + e.getLocalizedMessage());
+                                                        //create textview in parent layout
+                                                        TextView tv = new TextView(getBaseContext());
+                                                        String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
+                                                        tv.setText(text);
+                                                        item.addView(tv);
+                                                        //==================
+
+                                                        //Set up OnClick for each Item to get ItemDetailPage ==================
+                                                        final Item current_item = itemObj;
+                                                        item.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) { //this is configured the same as OrderList
+                                                                SharedPreferences.Editor edit = shared.edit();
+                                                                edit.putString("itemid", current_item.getid());
+                                                                edit.apply();
+
+                                                                startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
+                                                            }
+                                                        });
+
+                                                        homepage_result.addView(item); //add view to homepage list
+
+                                                    } catch (NullPointerException e) {
+                                                        System.out.println("Error Retrieving Item Docs in Profiles, Message: " + e.getLocalizedMessage());
+                                                    }
                                                 }
                                             }
                                         }
@@ -704,6 +392,126 @@ public class HomePageActivity extends AppCompatActivity {
                                 }
                             }
                         }
+                    }
+                });
+    }
+
+    /**
+     * Functionality behind refreshing the homescreen based on sort_by value, category value, and keyword value
+     *
+     * @param sort_by value from sort_by spinner
+     * @param category value from category spinner
+     * @param keyword value from search bar
+     */
+    public void _refreshHome(final String sort_by, final String category, final String keyword){
+        final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
+        homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
+
+        //null check for keyword
+        String real_keyword = "";
+        if(keyword != null) {
+            real_keyword = keyword;
+        }
+        final String final_real_keyword = real_keyword;
+
+        String criterion = "title";
+        switch (sort_by) {
+            case "Price":
+                criterion = "price";
+                break;
+            case "Most Recent":
+                criterion = "postTime";
+                break;
+            case "Seller Rating":
+                sortByRating(category);
+                return; //sortByRating takes care of everything else, so return
+        }
+
+        Query itemsQuery; //query for retrieving docs in a certain order
+        //NOTE: special sorting order for post time is descending, the rest can be ascending todo: add more options to allow user to choose ascending/descending order?
+        if (criterion.equals("postTime"))
+            itemsQuery = db.collection("items").orderBy(criterion, Query.Direction.DESCENDING);
+        else
+            itemsQuery = db.collection("items").orderBy(criterion);
+
+        itemsQuery.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot ItemDoc : task.getResult()) {
+                                Log.d(TAG, ItemDoc.getId() + "=> " + ItemDoc.getData());
+
+                                //Get Map of Item
+                                Map<String, Object> itemMap = ItemDoc.getData();
+
+                                if (ItemDoc.getDouble("status").intValue() != 1) { //if item not available, don't display it
+                                    continue;
+                                }
+                                if((!category.equals("All")) && (!ItemDoc.get("category").equals(category))){
+                                    continue;
+                                }
+
+                                String itemTitle = (String) itemMap.get("title");
+                                String itemDesc = (String) itemMap.get("description:");
+
+                                boolean contains_keyword = false;
+                                try{
+                                    contains_keyword = itemTitle.contains(final_real_keyword) || itemDesc.contains(final_real_keyword);
+                                }catch(NullPointerException e){
+                                    System.out.println("Refresh Home: keyword was null");
+                                }
+
+                                if (contains_keyword) { //only display items that contain keyword in their title or description
+                                    try {
+                                        //Construct Item Object from each DocSnapshot
+                                        Item itemObj = ItemDoc.toObject(Item.class);
+
+                                        //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
+                                        LinearLayout item = new LinearLayout(getBaseContext());
+                                        //set layout params for parent layout
+                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+                                        item.setLayoutParams(params);
+
+                                        //create and set params of image in parent layout
+                                        ImageView imageView = new ImageView(getBaseContext());
+                                        imageView.setImageResource(R.mipmap.poi_test_src);
+                                        params = new LinearLayout.LayoutParams(180, 180);
+                                        params.setMargins(20, 20, 0, 20);
+                                        imageView.setLayoutParams(params);
+                                        item.addView(imageView);
+
+                                        //create textview in parent layout
+                                        TextView tv = new TextView(getBaseContext());
+                                        String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
+                                        tv.setText(text);
+                                        item.addView(tv);
+                                        //==================
+
+                                        //Set up OnClick for each Item to get ItemDetailPage ==================
+                                        final Item current_item = itemObj;
+                                        item.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) { //this is configured the same as OrderList
+                                                SharedPreferences.Editor edit = shared.edit();
+                                                edit.putString("itemid", current_item.getid());
+                                                edit.apply();
+
+                                                startActivity(new Intent(HomePageActivity.this, ItemDetail.class));
+                                            }
+                                        });
+
+                                        homepage_result.addView(item); //add view to homepage list
+
+                                    } catch (NullPointerException e) {
+                                        System.out.println("Null Found: " + e.getLocalizedMessage());
+                                    } catch (NoSuchFieldError e) {
+                                        System.out.println("No Such Field: " + e.getLocalizedMessage());
+                                    }
+                                }
+                            }
+                        } else
+                            Log.d(TAG, "Error getting Item documents: ", task.getException());
                     }
                 });
     }

@@ -8,10 +8,11 @@ import com.google.firebase.Timestamp;
  * if notification sent:0
  * if norifacation not sent:1
  * methoedepending: whether item method change is comfirmed by seller
- * 0: no change/complete
+ * 0: no change
  * 1: pending(buyer want face to face)
  * 2: pending(buyer want online)
  * 3: seller decline buyer's request
+ * 4: seller accept buyer's request
  */
 
 public class Order {

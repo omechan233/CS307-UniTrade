@@ -38,9 +38,6 @@ public class CommentPage extends AppCompatActivity {
         final String current_email = shared.getString("email", "");
 
 
-
-
-
         Button cancle = (Button)findViewById(R.id.commemt_cancle_btn);
         Button submit = (Button) findViewById(R.id.post_submit_btn);
 
@@ -98,7 +95,7 @@ public class CommentPage extends AppCompatActivity {
                                      final String final_comment = comment;
                                      final double final_rate = ratingNum;
 
-                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                     final FirebaseFirestore db = FirebaseFirestore.getInstance();
                                      DocumentReference item_doc = db.collection("orders").document(order_ID);
                                         item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                     @Override
@@ -109,6 +106,8 @@ public class CommentPage extends AppCompatActivity {
                                                 String seller_email = current_order.getSeller_email();
                                                 Functions f = new Functions();
                                                 f.create_comment(item_name, current_email, final_comment, final_rate, postTime, seller_email);
+                                                DocumentReference profileDocRef = db.collection("orders").document(order_ID);
+                                                profileDocRef.update("commented", true);
                                          }
                                 });
                                         Toast.makeText(CommentPage.this, "Submit Success!",

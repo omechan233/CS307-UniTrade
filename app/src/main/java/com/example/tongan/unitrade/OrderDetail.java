@@ -110,19 +110,20 @@ public class OrderDetail extends AppCompatActivity {
 
         write_comment.setVisibility(View.INVISIBLE);
 
-        DocumentReference profileDocRef = db.collection("orders").document(order_ID);
+        final DocumentReference profileDocRef = db.collection("orders").document(order_ID);
         profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Order current_order = document.toObject(Order.class);
                     boolean is_sold = current_order.isIs_sold();
-                    if (is_sold) {
+                    if (is_sold && !current_order.isCommented()) {
                         write_comment.setVisibility(View.VISIBLE);
                     }
                 }
             }
         });
+
 
         write_comment.setOnClickListener(new View.OnClickListener() {
             @Override

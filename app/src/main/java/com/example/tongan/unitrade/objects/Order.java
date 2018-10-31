@@ -8,9 +8,9 @@ import com.google.firebase.Timestamp;
  * if notification sent:0
  * if norifacation not sent:1
  * methoedepending: whether item method change is comfirmed by seller
- * 0: no change
- * 1: pending
- * 2: seller agree with buyer
+ * 0: no change/complete
+ * 1: pending(buyer want face to face)
+ * 2: pending(buyer want online)
  * 3: seller decline buyer's request
  */
 
@@ -69,4 +69,8 @@ public class Order {
     public int getMethodpending(){ return this.methodpending; }
 
     public void setMethodpending(int methodpending) { this.methodpending = methodpending; }
+
+    public void setFace_to_face(boolean face_to_face) {
+        this.face_to_face = face_to_face;
+    }
 }

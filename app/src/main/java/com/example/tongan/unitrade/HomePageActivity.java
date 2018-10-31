@@ -422,12 +422,12 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                     public void onClick(DialogInterface dialog, int which) {
                                                                                         Toast.makeText(HomePageActivity.this, "Fine!",
                                                                                                 Toast.LENGTH_SHORT).show();
-
+                                                                                        db.collection("orders").document(orders_doc.getId())
+                                                                                                .update("methodpending", 0);
                                                                                     }
                                                                                 });
                                                                         builder.show();
-                                                                        db.collection("orders").document(orders_doc.getId())
-                                                                                .update("methodpending", 3);
+
 
                                                                         //front-end function ends here.
                                                                     }

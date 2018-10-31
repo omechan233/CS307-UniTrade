@@ -135,6 +135,9 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
+        /***
+         * item sold notification to seller
+         */
         //get users sold notification setting
         DocumentReference userDocRef = db.collection("users").document(email);
         userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -275,7 +278,8 @@ public class HomePageActivity extends AppCompatActivity {
                                                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                                 Order current_order = new Order();
                                                                 current_order = documentSnapshot.toObject(Order.class);
-                                                                if (current_order.getMethodpending() != 0 && current_order.getMethodpending() != 3) {
+                                                                if (current_order.getMethodpending() != 0 && current_order.getMethodpending() != 3
+                                                                        && current_order.getMethodpending() != 4) {
                                                                     System.out.println("home page: current method need change!!!!!!");
 //                                //Todo: front-end functionality starts here, combine them with back-end.
 
@@ -292,18 +296,20 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                 @Override
                                                                                 public void onClick(DialogInterface dialog, int which) {
                                                                                     if (finalCurrent_order.getMethodpending() == 1 && finalCurrent_order.getMethodpending() != 0
-                                                                                            && finalCurrent_order.getMethodpending() != 3) {
+                                                                                            && finalCurrent_order.getMethodpending() != 3
+                                                                                            && finalCurrent_order.getMethodpending() != 4) {
                                                                                         db.collection("orders").document(order_doc.getId())
                                                                                                 .update("face_to_face", true);
                                                                                         db.collection("orders").document(order_doc.getId())
-                                                                                                .update("methodpending", 0);
+                                                                                                .update("methodpending", 4);
 
                                                                                     } else if (finalCurrent_order.getMethodpending() == 2 && finalCurrent_order.getMethodpending() != 0
-                                                                                            && finalCurrent_order.getMethodpending() != 3) {
+                                                                                            && finalCurrent_order.getMethodpending() != 3
+                                                                                            && finalCurrent_order.getMethodpending() != 4) {
                                                                                         db.collection("orders").document(order_doc.getId())
                                                                                                 .update("face_to_face", false);
                                                                                         db.collection("orders").document(order_doc.getId())
-                                                                                                .update("methodpending", 0);
+                                                                                                .update("methodpending", 4);
 
                                                                                     }
                                                                                     Toast.makeText(HomePageActivity.this, "You accepted!",
@@ -322,7 +328,9 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                             Toast.LENGTH_SHORT).show();
                                                                                     // Todo: user decline this method change request, then back-end should change the order's trading method to the other one.
                                                                                     // Todo: then call the front-end pop-up dialog function (the code is following) again to notify user that request was declined by current user.
-                                                                                    if (finalCurrent_order.getMethodpending() != 0 && finalCurrent_order.getMethodpending() != 3) {
+                                                                                    if (finalCurrent_order.getMethodpending() != 0 &&
+                                                                                            finalCurrent_order.getMethodpending() != 3
+                                                                                            && finalCurrent_order.getMethodpending() != 4) {
                                                                                         db.collection("orders").document(order_doc.getId())
                                                                                                 .update("methodpending", 3);
 
@@ -426,6 +434,23 @@ public class HomePageActivity extends AppCompatActivity {
 
 
                                                                         //front-end function ends here.
+                                                                    }
+                                                                    if (current_order.getMethodpending() == 4) {
+                                                                        //Todo: front-end functionality starts here, combine them with back-end.
+                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
+                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this,0,intent,0);
+                                                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
+                                                                                .setContentTitle("UniTrade:")
+                                                                                .setContentText("Your item's trading method is changed!")
+                                                                                .setWhen(System.currentTimeMillis())
+                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                                .setAutoCancel(true)
+                                                                                .setContentIntent(ma)
+                                                                                .build();
+
+                                                                        manager.notify(1, notification);
+                                                                        //front-end functionality ends here.
                                                                     }
                                                                 }
                                                             });

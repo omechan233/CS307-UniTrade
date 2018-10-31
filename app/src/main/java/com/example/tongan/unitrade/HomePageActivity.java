@@ -434,12 +434,12 @@ public class HomePageActivity extends AppCompatActivity {
 
 
                                                                         //front-end function ends here.
-                                                                    }
-                                                                    if (current_order.getMethodpending() == 4) {
+                                                                    } else if (current_order.getMethodpending() == 4) {
+                                                                        System.out.println("trade change!!!!!!!");
                                                                         //Todo: front-end functionality starts here, combine them with back-end.
                                                                         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                                                         Intent intent = new Intent(HomePageActivity.this, Order.class);
-                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this,0,intent,0);
+                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
                                                                         Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
                                                                                 .setContentTitle("UniTrade:")
                                                                                 .setContentText("Your item's trading method is changed!")
@@ -450,10 +450,11 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                 .build();
 
                                                                         manager.notify(1, notification);
+                                                                        //front-end functionality ends here.
                                                                         db.collection("orders").document(orders_doc.getId())
                                                                                 .update("methodpending", 0);
-                                                                        //front-end functionality ends here.
                                                                     }
+
                                                                 }
                                                             });
                                                         } else {
@@ -638,7 +639,7 @@ public class HomePageActivity extends AppCompatActivity {
                                             }
                                         });
                                     }
-                                } catch(NullPointerException e){
+                                } catch (NullPointerException e) {
                                     System.out.println("Error Retrieving item list, list was empty! Message: " + e.getLocalizedMessage());
                                 }
                             }

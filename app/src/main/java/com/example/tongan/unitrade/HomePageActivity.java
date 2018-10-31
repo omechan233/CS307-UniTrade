@@ -1,9 +1,11 @@
 package com.example.tongan.unitrade;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -244,6 +246,78 @@ public class HomePageActivity extends AppCompatActivity {
                 }
             }
         });
+
+        /***
+         * method_notification
+         */
+        Query query = db.collection("orders").whereEqualTo("seller_email", email);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (final QueryDocumentSnapshot document: task.getResult()) {
+                        if (document.exists()) {
+                            final Order order = document.toObject(Order.class);
+                            if(order.getMethodpending()!=0){
+                                //Todo display the course c in front end
+                                System.out.println("order id in homepageactivity: " + order.getItem_ID());
+                                //Todo: front-end functionality starts here, combine them with back-end.
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(HomePageActivity.this);
+                                builder.setTitle("Notice:");
+                                builder.setMessage("Your trading method is changed!");
+                                builder.setCancelable(true);
+
+                                // user choose "Accepted" button:
+                                builder.setPositiveButton(
+                                        "Accept",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Toast.makeText(HomePageActivity.this, "You accepted!",
+                                                        Toast.LENGTH_SHORT).show();
+                                                if(order.getMethodpending() == 1){
+                                                    db.collection("orders").document(document.getId())
+                                                            .update("face_to_face", true);
+                                                }
+                                                if(order.getMethodpending() == 2){
+                                                    db.collection("orders").document(document.getId())
+                                                            .update("face_to_face", false);
+                                                }
+                                                db.collection("orders").document(document.getId())
+                                                        .update("methodpending", 0);
+                                            }
+                                        });
+
+                                //user choose "Declined" button:
+                                builder.setNegativeButton(
+                                        "Decline",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Toast.makeText(HomePageActivity.this, "You declined!",
+                                                        Toast.LENGTH_SHORT).show();
+                                                // Todo: user decline this method change request, then back-end should change the order's trading method to the other one.
+                                                // Todo: then call the front-end pop-up dialog function (the code is following) again to notify user that request was declined by current user.
+                                                db.collection("orders").document(document.getId())
+                                                        .update("methodpending", 3);
+
+                                            }
+                                        });
+                                builder.show();
+                                //front-end functionality ends here.
+                            }
+                        } else {
+                            // display empty list
+                            Log.d(TAG, "No such document");
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "get failed with homepage ", task.getException());
+                }
+            }
+        });
+
 
 //        //get order list from profile
 //        final DocumentReference profiles = db.collection("profiles").document(email);

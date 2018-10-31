@@ -23,13 +23,15 @@ public class Order {
     private Timestamp order_time;
     private boolean face_to_face;
     private int methodpending;
+    private String order_ID;
+    private boolean commented;
 
     /**
      * Constructor; Creates an order based on a purchased Item
      *
      */
     public Order(){}
-    public Order(String item_ID, Timestamp order_time, String seller_email, String item_title, Double item_price, boolean is_sold, boolean face_to_face, int methodpending){
+    public Order(String item_ID, Timestamp order_time, String seller_email, String item_title, Double item_price, boolean is_sold, boolean face_to_face, int methodpending, String order_ID, boolean commented){
         this.seller_email=seller_email;
         this.is_sold=is_sold;
         this.item_ID=item_ID;
@@ -38,7 +40,15 @@ public class Order {
         this.order_time=order_time;
         this.face_to_face=face_to_face;
         this.methodpending = methodpending;
+        this.order_ID = order_ID;
+        this.commented = commented;
     }
+
+    public String getOrder_ID() {
+        return order_ID;
+    }
+
+    public boolean isCommented (){return this.commented;}
 
     public Double getItem_price() {
         return item_price;

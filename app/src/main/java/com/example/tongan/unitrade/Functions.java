@@ -456,9 +456,10 @@ public class Functions {
     public void create_order(String buyer_email, String seller_email, String item_ID,
                              Timestamp order_time, Double item_price, String item_title,
                              boolean face_to_face, int methodpending){
-        final Order order = new Order(item_ID, order_time, seller_email,item_title, item_price,
-                false, face_to_face, methodpending);
         final String order_ID = buyer_email+order_time.toString();
+        final Order order = new Order(item_ID, order_time, seller_email,item_title, item_price,
+                false, face_to_face, methodpending,order_ID, false);
+
         final String final_item_ID = item_ID;
         final String final_seller_email = seller_email;
 
@@ -549,6 +550,8 @@ public class Functions {
     public void create_comment(String item_name, String buyeremail, String content, double rating, Timestamp posted_time,String selleremail){
         Comment comment = new Comment(buyeremail,content,item_name,rating,posted_time,selleremail);
         db.collection("comments").document(buyeremail+posted_time).set(comment);
+
+
 
         // add the comment to profile
         final DocumentReference user_doc = db.collection("profiles").document(selleremail);

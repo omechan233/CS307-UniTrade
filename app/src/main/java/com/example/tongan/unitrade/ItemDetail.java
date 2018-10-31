@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Item;
+import com.example.tongan.unitrade.objects.Order;
 import com.example.tongan.unitrade.objects.Profile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,11 +26,16 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.TimeZone;
 
 public class ItemDetail extends AppCompatActivity {
+    private static final String TAG = "Item detail page";
     SharedPreferences shared;
 
     @Override
@@ -107,8 +114,7 @@ public class ItemDetail extends AppCompatActivity {
                 TextView seller_name = (TextView) findViewById(R.id.detail_seller);
                 seller = "Seller : " + seller;
                 seller_name.setText(seller);
-                /*todo : check username and redirect user to profile page and show information about seller user
-                ps: frontend here is pretty simple........ just set an onclicklistener.......)*/
+                //ps: frontend here is pretty simple........ just set an onclicklistener.......)*/
                 final String profile_email = item.getSeller_name();
                 seller_name.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -216,7 +222,6 @@ public class ItemDetail extends AppCompatActivity {
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
-                                //todo : delete post function
                                 Functions f = new Functions();
                                 f.delete_post(item_id,email);
                                 Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();
@@ -232,51 +237,48 @@ public class ItemDetail extends AppCompatActivity {
                         .show();
             }
         });
-
         final Button wishListBtn = (Button) findViewById(R.id.detail_wishlist);
+
+        final String add = "+WishList";
+        final String remove = "-WishList";
+        wishListBtn.setText(add);
+
+        DocumentReference profileDocRef = db.collection("profiles").document(email);
+        profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    List<String> my_wishlist = (List<String>) document.getData().get("wish_list");
+                    if (my_wishlist == null || my_wishlist.isEmpty()) {
+                        System.out.println("Nothing on the list!");
+                        // button to be add to wishlist
+                    }
+                    else {
+                        if(my_wishlist.contains(item_id)){
+                            System.out.println("my wish list does contain this item");
+                            wishListBtn.setText(remove);
+                        }
+                    }
+                }
+            }
+        });
+
         wishListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (wishListBtn.getText().toString().equals("+wishList")) {
-
-                    //todo : add to wishList
-                    if (email != null) {
-                        // User is signed in
-                        Functions f = new Functions();
-                        f.add_wishlist(item_id, email);
-                        Toast.makeText(getBaseContext(), "item is added to wishlist!", Toast.LENGTH_LONG).show();
-                        finish();
-                    } else {
-                        // No user is signed in
-                        Toast.makeText(getBaseContext(), "please signin first!", Toast.LENGTH_LONG).show();
-                    }
-
-
-                    String remove = "-wishList";
+                if (wishListBtn.getText().toString().equals(add)) {
+                    // User is signed in
+                    Functions f = new Functions();
+                    f.add_wishlist(item_id, email);
+                    Toast.makeText(getBaseContext(), "item is added to wishlist!", Toast.LENGTH_LONG).show();
                     wishListBtn.setText(remove);
+                    finish();
                 } else {
-
-                    //todo : delete from wishList
                     Functions f = new Functions();
                     f.delete_wishlist(item_id, email);
                     Toast.makeText(getBaseContext(), "item removed!", Toast.LENGTH_LONG).show();
-                    finish();
-                    //get current user
-//                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                    if (user != null) {
-//                        // User is signed in
-//                        Functions f = new Functions();
-//                        String userid = user.getUid();
-//                        f.delete_wishlist(item_id, userid);
-//                        Toast.makeText(getBaseContext(), "item removed!", Toast.LENGTH_LONG).show();
-//                        finish();
-//                    } else {
-//                        // No user is signed in
-//                        Toast.makeText(getBaseContext(), "please signin first!", Toast.LENGTH_LONG).show();
-//                    }
-
-                    String add = "+wishList";
                     wishListBtn.setText(add);
+                    finish();
                 }
             }
         });
@@ -297,23 +299,63 @@ public class ItemDetail extends AppCompatActivity {
         /********************************************************
          * seller confirm payment after an item was sold by others
          ******************************************************/
-        Button confirm_btn = (Button) findViewById(R.id.confirm_btn);
+        final Button confirm_btn = (Button) findViewById(R.id.confirm_btn);
+        confirm_btn.setVisibility(View.INVISIBLE);
         //get item status from back-end;
         Boolean item_sold = true;
         //if item status is sold, set confirm btn visible by seller.
-        if (item_sold ){
-            confirm_btn.setVisibility(View.VISIBLE);
-            confirm_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getBaseContext(), "You confirm this payment!", Toast.LENGTH_LONG).show();
 
+        final Query query = db.collection("orders").whereEqualTo("item_ID", itemid);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document: task.getResult()) {
+                        if (document.exists()) {
+                            Order order= document.toObject(Order.class);
+                            if(!order.isIs_sold()){
+                                confirm_btn.setVisibility(View.VISIBLE);
+                            }
+                            return;
+                        } else {
+                            // display empty list
+                            Log.d(TAG, "No such document");
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
                 }
-            });
-        }
-        else {
-            confirm_btn.setVisibility(View.INVISIBLE);
-        }
+            }
+        });
+
+        confirm_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document: task.getResult()) {
+                                if (document.exists()) {
+                                    Order order= document.toObject(Order.class);
+
+                                    DocumentReference profiles_doc = db.collection("orders").document(order.getOrder_ID());
+                                    profiles_doc.update("is_sold", true);
+                                    confirm_btn.setVisibility(View.INVISIBLE);
+                                    return;
+                                } else {
+                                    // display empty list
+                                    Log.d(TAG, "No such document");
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+                Toast.makeText(getBaseContext(), "You confirm this payment!", Toast.LENGTH_LONG).show();
+            }
+        });
 
 
 

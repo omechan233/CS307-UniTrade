@@ -34,11 +34,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -113,8 +115,7 @@ public class HomePageActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!initFlag) { //if initial setup, don't refreshHome else we'll get duplicated items
                     refreshHome(); //refresh home to resort list
-                }
-                else
+                } else
                     initFlag = false; //set initFlag to false so this function works as intended after init
             }
 
@@ -129,8 +130,7 @@ public class HomePageActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!initFlag) { //if initial setup, don't refreshHome else we'll get duplicated items
                     refreshHome(); //refresh home to resort list
-                }
-                else
+                } else
                     initFlag = false; //set initFlag to false so this function works as intended after init
             }
 
@@ -149,8 +149,8 @@ public class HomePageActivity extends AppCompatActivity {
                     if (doc.exists()) {
                         //update text boxes with user info from database
                         String sold_notify = doc.get("Itemsold_notification").toString();
-                        if(sold_notify.equals("0")){
-                        }else{
+                        if (sold_notify.equals("0")) {
+                        } else {
                             //get order list from profile
                             final DocumentReference profiles = db.collection("profiles").document(email);
 
@@ -183,7 +183,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                                     Item current_item = new Item();
                                                                     current_item = documentSnapshot.toObject(Item.class);
-                                                                    if(current_item.getStatus() == 2 && current_item.getNotified() != 1) {
+                                                                    if (current_item.getStatus() == 2 && current_item.getNotified() != 1) {
                                                                         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                                                         Intent intent = new Intent(HomePageActivity.this, Order.class);
                                                                         PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
@@ -223,7 +223,7 @@ public class HomePageActivity extends AppCompatActivity {
                                         //result[0] = (String[])document.getData().get("my_items");
                                         Log.e(TAG, "my item list found");
 
-                                    } else                                    {
+                                    } else {
                                         Log.e(TAG, "my item list not found");
                                     }
                                 }
@@ -239,77 +239,227 @@ public class HomePageActivity extends AppCompatActivity {
         });
 
 
-        /*
-         * method_notification
-         */
-        Query query = db.collection("orders").whereEqualTo("seller_email", email);
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+/***
+ * method notification test same way as sold
+ */
+        //get users sold notification setting
+        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (final QueryDocumentSnapshot document: task.getResult()) {
-                        if (document.exists()) {
-                            final Order order = document.toObject(Order.class);
-                            if(order.getMethodpending()!=0){
-                                //Todo display the course c in front end
-                                System.out.println("order id in homepageactivity: " + order.getItem_ID());
-                                //Todo: front-end functionality starts here, combine them with back-end.
-
-                                AlertDialog.Builder builder = new AlertDialog.Builder(HomePageActivity.this);
-                                builder.setTitle("Notice:");
-                                builder.setMessage("Your trading method is changed!");
-                                builder.setCancelable(true);
-
-                                // user choose "Accepted" button:
-                                builder.setPositiveButton(
-                                        "Accept",
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                Toast.makeText(HomePageActivity.this, "You accepted!",
-                                                        Toast.LENGTH_SHORT).show();
-                                                if(order.getMethodpending() == 1){
-                                                    db.collection("orders").document(document.getId())
-                                                            .update("face_to_face", true);
-                                                }
-                                                if(order.getMethodpending() == 2){
-                                                    db.collection("orders").document(document.getId())
-                                                            .update("face_to_face", false);
-                                                }
-                                                db.collection("orders").document(document.getId())
-                                                        .update("methodpending", 0);
-                                            }
-                                        });
-
-                                //user choose "Declined" button:
-                                builder.setNegativeButton(
-                                        "Decline",
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                Toast.makeText(HomePageActivity.this, "You declined!",
-                                                        Toast.LENGTH_SHORT).show();
-                                                // Todo: user decline this method change request, then back-end should change the order's trading method to the other one.
-                                                // Todo: then call the front-end pop-up dialog function (the code is following) again to notify user that request was declined by current user.
-                                                db.collection("orders").document(document.getId())
-                                                        .update("methodpending", 3);
-
-                                            }
-                                        });
-                                builder.show();
-                                //front-end functionality ends here.
-                            }
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        //update text boxes with user info from database
+                        String method_notification = doc.get("method_notification").toString();
+                        if (method_notification.equals("0")) {
                         } else {
-                            // display empty list
-                            Log.d(TAG, "No such document");
+                            //get order list from profile
+                            // final DocumentReference profiles = db.collection("profiles").document(email);
+                            Query query = db.collection("orders").whereEqualTo("seller_email", email);
+
+                            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            //get item from order list
+                                            final DocumentReference order_doc = db.collection("orders").document(document.getId());
+                                            order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                                                    @Nullable FirebaseFirestoreException e) {
+                                                    if (e != null) {
+                                                        Log.w(TAG, "Listen failed.", e);
+                                                        return;
+                                                    }
+
+                                                    if (snapshot != null && snapshot.exists()) {
+                                                        order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                Order current_order = new Order();
+                                                                current_order = documentSnapshot.toObject(Order.class);
+                                                                if (current_order.getMethodpending() != 0 && current_order.getMethodpending() != 3) {
+                                                                    System.out.println("home page: current method need change!!!!!!");
+//                                //Todo: front-end functionality starts here, combine them with back-end.
+
+                                                                    AlertDialog.Builder builder = new AlertDialog.Builder(HomePageActivity.this);
+                                                                    builder.setTitle("Notice:");
+                                                                    builder.setMessage("Your trading method is changed!");
+                                                                    builder.setCancelable(true);
+
+                                                                    // user choose "Accepted" button:
+                                                                    final Order finalCurrent_order = current_order;
+                                                                    builder.setPositiveButton(
+                                                                            "Accept",
+                                                                            new DialogInterface.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                                    if (finalCurrent_order.getMethodpending() == 1 && finalCurrent_order.getMethodpending() != 0
+                                                                                            && finalCurrent_order.getMethodpending() != 3) {
+                                                                                        db.collection("orders").document(order_doc.getId())
+                                                                                                .update("face_to_face", true);
+                                                                                        db.collection("orders").document(order_doc.getId())
+                                                                                                .update("methodpending", 0);
+
+                                                                                    } else if (finalCurrent_order.getMethodpending() == 2 && finalCurrent_order.getMethodpending() != 0
+                                                                                            && finalCurrent_order.getMethodpending() != 3) {
+                                                                                        db.collection("orders").document(order_doc.getId())
+                                                                                                .update("face_to_face", false);
+                                                                                        db.collection("orders").document(order_doc.getId())
+                                                                                                .update("methodpending", 0);
+
+                                                                                    }
+                                                                                    Toast.makeText(HomePageActivity.this, "You accepted!",
+                                                                                            Toast.LENGTH_SHORT).show();
+
+                                                                                }
+                                                                            });
+
+                                                                    //user choose "Declined" button:
+                                                                    builder.setNegativeButton(
+                                                                            "Decline",
+                                                                            new DialogInterface.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                                    Toast.makeText(HomePageActivity.this, "You declined!",
+                                                                                            Toast.LENGTH_SHORT).show();
+                                                                                    // Todo: user decline this method change request, then back-end should change the order's trading method to the other one.
+                                                                                    // Todo: then call the front-end pop-up dialog function (the code is following) again to notify user that request was declined by current user.
+                                                                                    if (finalCurrent_order.getMethodpending() != 0 && finalCurrent_order.getMethodpending() != 3) {
+                                                                                        db.collection("orders").document(order_doc.getId())
+                                                                                                .update("methodpending", 3);
+
+                                                                                    }
+
+                                                                                }
+                                                                            });
+                                                                    builder.show();
+                                                                    //front-end functionality ends here.
+                                                                }
+                                                            }
+                                                        });
+                                                    } else {
+                                                        Log.d(TAG, "Current data: null");
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        Log.e(TAG, "my item list found");
+
+                                    } else {
+                                        Log.e(TAG, "my item list not found");
+                                    }
+                                }
+                            });
                         }
+                    } else {
+                        Log.d(TAG, "No such document...");
                     }
                 } else {
-                    Log.d(TAG, "get failed with homepage ", task.getException());
+                    Log.d(TAG, "get failed with ", task.getException());
                 }
             }
         });
+        /**
+         * if buyer's method change request got declined, send the buyer a declined notification
+         */
+        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        //update text boxes with user info from database
+                        String method_notification = doc.get("method_notification").toString();
+                        if (method_notification.equals("0")) {
+                        } else {
+                            //get order list from profile
+                            final DocumentReference profiles = db.collection("profiles").document(email);
+
+                            profiles.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        List<String> my_order = new ArrayList<String>();
+                                        my_order = (List<String>) document.getData().get("my_orders");
+                                        if (my_order == null || my_order.isEmpty()) {
+                                            System.out.println("Nothing on the list!");
+                                        } else {
+                                            for (int i = 0; i < my_order.size(); i++) {
+                                                //get item from order list
+                                                final DocumentReference orders_doc = db.collection("orders").document(my_order.get(i));
+                                                final int finalI = i;
+                                                orders_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                                                        @Nullable FirebaseFirestoreException e) {
+                                                        if (e != null) {
+                                                            Log.w(TAG, "Listen failed.", e);
+                                                            return;
+                                                        }
+
+                                                        if (snapshot != null && snapshot.exists()) {
+                                                            orders_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                    Order current_order = new Order();
+                                                                    current_order = documentSnapshot.toObject(Order.class);
+                                                                    if (current_order.getMethodpending() == 3) {
+                                                                        //Todo: front-end functionality starts here, combine them with back-end.
+
+                                                                        AlertDialog.Builder builder = new AlertDialog.Builder(HomePageActivity.this);
+                                                                        builder.setTitle("Notice:");
+                                                                        builder.setMessage("Your trading method request was declined by the user!");
+                                                                        builder.setCancelable(true);
+
+                                                                        // user choose "Accepted" button:
+                                                                        builder.setPositiveButton(
+                                                                                "Fine!",
+                                                                                new DialogInterface.OnClickListener() {
+                                                                                    @Override
+                                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                                        Toast.makeText(HomePageActivity.this, "Fine!",
+                                                                                                Toast.LENGTH_SHORT).show();
+
+                                                                                    }
+                                                                                });
+                                                                        builder.show();
+                                                                        db.collection("orders").document(orders_doc.getId())
+                                                                                .update("methodpending", 3);
+
+                                                                        //front-end function ends here.
+                                                                    }
+                                                                }
+                                                            });
+                                                        } else {
+                                                            Log.d(TAG, "Current data: null");
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                        //result[0] = (String[])document.getData().get("my_items");
+                                        Log.e(TAG, "my item list found");
+
+                                    } else {
+                                        Log.e(TAG, "my item list not found");
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        Log.d(TAG, "No such document...");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
     }
+
 
     /**
      * When called, gets keyword inputted into search bar and searches for items based on input
@@ -369,7 +519,7 @@ public class HomePageActivity extends AppCompatActivity {
 
         //null check for keyword
         String real_keyword = "";
-        if(keyword != null) {
+        if (keyword != null) {
             real_keyword = keyword;
         }
         final String final_real_keyword = real_keyword;
@@ -396,10 +546,10 @@ public class HomePageActivity extends AppCompatActivity {
                                                 //Construct Item Object from each DocSnapshot
 
                                                 //AT: category
-                                                if (itemSnapshot.getDouble("status").intValue() != 1 ) { //if item not available, don't display it
+                                                if (itemSnapshot.getDouble("status").intValue() != 1) { //if item not available, don't display it
                                                     return;
                                                 }
-                                                if((!category.equals("All")) && (!itemSnapshot.get("category").equals(category))){ //if item isn't within selected category, don't display it
+                                                if ((!category.equals("All")) && (!itemSnapshot.get("category").equals(category))) { //if item isn't within selected category, don't display it
                                                     return;
                                                 }
 
@@ -410,9 +560,9 @@ public class HomePageActivity extends AppCompatActivity {
 
                                                 //check keyword
                                                 boolean contains_keyword = false;
-                                                try{
+                                                try {
                                                     contains_keyword = itemTitle.contains(final_real_keyword) || itemDesc.contains(final_real_keyword);
-                                                }catch(NullPointerException e){
+                                                } catch (NullPointerException e) {
                                                     System.out.println("Refresh Home: keyword was null");
                                                 }
 
@@ -473,17 +623,17 @@ public class HomePageActivity extends AppCompatActivity {
     /**
      * Functionality behind refreshing the homescreen based on sort_by value, category value, and keyword value
      *
-     * @param sort_by value from sort_by spinner
+     * @param sort_by  value from sort_by spinner
      * @param category value from category spinner
-     * @param keyword value from search bar
+     * @param keyword  value from search bar
      */
-    public void _refreshHome(final String sort_by, final String category, final String keyword){
+    public void _refreshHome(final String sort_by, final String category, final String keyword) {
         final LinearLayout homepage_result = (LinearLayout) findViewById(R.id.hmpage_results);
         homepage_result.removeAllViews(); //clear to ensure duplicates aren't added
 
         //null check for keyword
         String real_keyword = "";
-        if(keyword != null) {
+        if (keyword != null) {
             real_keyword = keyword;
         }
         final String final_real_keyword = real_keyword;
@@ -522,7 +672,7 @@ public class HomePageActivity extends AppCompatActivity {
                                 if (ItemDoc.getDouble("status").intValue() != 1) { //if item not available, don't display it
                                     continue;
                                 }
-                                if((!category.equals("All")) && (!ItemDoc.get("category").equals(category))){
+                                if ((!category.equals("All")) && (!ItemDoc.get("category").equals(category))) {
                                     continue;
                                 }
 
@@ -530,9 +680,9 @@ public class HomePageActivity extends AppCompatActivity {
                                 String itemDesc = (String) itemMap.get("description:");
 
                                 boolean contains_keyword = false;
-                                try{
+                                try {
                                     contains_keyword = itemTitle.contains(final_real_keyword) || itemDesc.contains(final_real_keyword);
-                                }catch(NullPointerException e){
+                                } catch (NullPointerException e) {
                                     System.out.println("Refresh Home: keyword was null");
                                 }
 

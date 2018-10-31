@@ -30,9 +30,13 @@ import java.util.regex.Pattern;
 
 
 
+
 public class MainActivity extends AppCompatActivity{
     private SharedPreferences shared;
     private FirebaseAuth mAuth;
+
+    //IMPORTANT: static strings are used in Toasts and needed for Testing
+    public static final String bad_email_or_password = "Authentication failed. Email or Password is incorrect.";
 //    private Button sendEmailLinkBtn;
 //    private TextView sendEmailLinkTxt;
 
@@ -243,7 +247,7 @@ public class MainActivity extends AppCompatActivity{
                                 finish();
                             } else {
                                 // If sign in fails, display a message to the user.
-                                Toast.makeText(MainActivity.this, "Authentication failed. Email or Password is incorrect.",
+                                Toast.makeText(MainActivity.this, bad_email_or_password,
                                         Toast.LENGTH_SHORT).show();
                             }
                         }

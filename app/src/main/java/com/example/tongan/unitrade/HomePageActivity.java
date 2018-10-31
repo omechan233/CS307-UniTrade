@@ -450,6 +450,8 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                 .build();
 
                                                                         manager.notify(1, notification);
+                                                                        db.collection("orders").document(orders_doc.getId())
+                                                                                .update("methodpending", 0);
                                                                         //front-end functionality ends here.
                                                                     }
                                                                 }

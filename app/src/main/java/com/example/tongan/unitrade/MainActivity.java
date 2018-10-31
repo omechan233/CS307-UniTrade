@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity{
 
     //IMPORTANT: static strings are used in Toasts and needed for Testing
     public static final String bad_email_or_password = "Authentication failed. Email or Password is incorrect.";
+    public static final String invalid_email_or_password = "Cannot Authenticate. Invalid Username or Password given.";
+    public static final String check_email = "Make sure to verify your email before logging in!";
+
 //    private Button sendEmailLinkBtn;
 //    private TextView sendEmailLinkTxt;
 
@@ -166,7 +169,7 @@ public class MainActivity extends AppCompatActivity{
             return true;
         }
         else{
-            Toast.makeText(MainActivity.this, "Make sure to verify your email before logging in!",
+            Toast.makeText(MainActivity.this, check_email,
                     Toast.LENGTH_SHORT).show();
 
             //have these appear
@@ -254,7 +257,7 @@ public class MainActivity extends AppCompatActivity{
                     });
         } else {
             // If sign in fails, display a message to the user.
-            Toast.makeText(MainActivity.this, "Cannot Authenticate. Invalid Username or Password given.",
+            Toast.makeText(MainActivity.this, invalid_email_or_password,
                     Toast.LENGTH_SHORT).show();
         }
     }

@@ -1,27 +1,38 @@
 package com.example.tongan.unitrade;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tongan.unitrade.objects.Item;
 import com.example.tongan.unitrade.objects.Order;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
@@ -53,10 +64,30 @@ public class OrderDetail extends AppCompatActivity {
         //get info from backend here
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference item_doc = db.collection("orders").document(order_ID);
+        /**
+         * real time method update
+         */
+        item_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d(TAG, "Current data: " + snapshot.getData());
+                    //Todo: refresh order detail page here
+                } else {
+                    Log.d(TAG, "Current data: null");
+                }
+            }
+        });
         item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Order current_order = documentSnapshot.toObject(Order.class);
+                final Order current_order = documentSnapshot.toObject(Order.class);
 
                 String itemName_String = "Item Name : " + current_order.getItem_title();
                 String price_String = "Price : " + current_order.getItem_price();/*+ get price from backend*/;
@@ -92,6 +123,7 @@ public class OrderDetail extends AppCompatActivity {
                 seller.setText(seller_String);
                 status.setText(status_String);
             }
+
         });
 
         Button return_button = (Button)findViewById(R.id.order_detail_previous_page);

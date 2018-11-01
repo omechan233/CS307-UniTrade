@@ -273,6 +273,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                     }
 
                                                     if (snapshot != null && snapshot.exists()) {
+
                                                         order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                                             @Override
                                                             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -280,9 +281,27 @@ public class HomePageActivity extends AppCompatActivity {
                                                                 current_order = documentSnapshot.toObject(Order.class);
                                                                 if (current_order.getMethodpending() != 0 && current_order.getMethodpending() != 3
                                                                         && current_order.getMethodpending() != 4) {
-                                                                    System.out.println("home page: current method need change!!!!!!");
-//                                //Todo: front-end functionality starts here, combine them with back-end.
+                                                                    /**
+                                                                     * notification bar
+                                                                     */
+                                                                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                                    Intent intent = new Intent(HomePageActivity.this, Order.class);
+                                                                    PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
+                                                                    Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
+                                                                            .setContentTitle("UniTrade:")
+                                                                            .setContentText("Buyer send a request!")
+                                                                            .setWhen(System.currentTimeMillis())
+                                                                            .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                            .setAutoCancel(true)
+                                                                            .setContentIntent(ma)
+                                                                            .build();
 
+                                                                    manager.notify(1, notification);
+
+                                                                    /**
+                                                                     * dialog pop up
+                                                                     */
+//                                                                  //Todo: front-end functionality starts here, combine them with back-end.
                                                                     AlertDialog.Builder builder = new AlertDialog.Builder(HomePageActivity.this);
                                                                     builder.setTitle("Notice:");
                                                                     builder.setMessage("Your trading method is changed!");

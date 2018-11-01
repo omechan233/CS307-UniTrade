@@ -143,14 +143,21 @@
         android:scaleType="fitCenter"
         android:src="@mipmap/home_page_icon" />
 
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@id/profile_back_icon"
+        android:layout_marginLeft="100dp"
+        android:text="VIEW USER ITEMS"
+        android:id="@+id/view_items"
+        android:layout_alignParentBottom="true"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:text="Back"
+        android:text="                Back"
         android:textSize="15sp"
         android:textStyle="bold" />
 

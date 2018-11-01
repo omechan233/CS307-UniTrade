@@ -188,7 +188,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                                         PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
                                                                         Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "ItemSold")
                                                                                 .setContentTitle("UniTrade:")
-                                                                                .setContentText("Your item is sold!")
+                                                                                .setContentText("some one buy your " + current_item.getTitle())
                                                                                 .setWhen(System.currentTimeMillis())
                                                                                 .setSmallIcon(R.mipmap.ic_launcher_round)
                                                                                 .setAutoCancel(true)

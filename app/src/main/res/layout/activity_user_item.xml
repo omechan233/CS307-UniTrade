@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    tools:context=".UserItem">
+
+    <TextView
+        android:id="@+id/userItem_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#FF9900"
+        android:text="Items posted by #username"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/userItem_title"
+        android:layout_above="@id/user_item_back">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/user_items_list">
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:id="@+id/user_item_back"
+        android:layout_alignParentBottom="true"
+        android:text="RETURN"/>
+
+</RelativeLayout>

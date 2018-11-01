@@ -39,20 +39,15 @@
         <activity android:name=".Wishlist" />
         <activity android:name=".SettingActivity" />
         <activity android:name=".NewPostActivity" />
-        <activity android:name=".OrderList"/>
-        <activity android:name=".ItemDetail"/>
-        <activity android:name=".NotificationPage"/>
-        <activity android:name=".Purchase"/>
-        <activity android:name=".SendNotification"/>
-        <activity android:name=".OrderDetail"/>
-        <activity android:name=".CommentPage"/>
-
-
-
-
-
-
-
+        <activity android:name=".OrderList" />
+        <activity android:name=".ItemDetail" />
+        <activity android:name=".NotificationPage" />
+        <activity android:name=".Purchase" />
+        <activity android:name=".SendNotification" />
+        <activity android:name=".OrderDetail" />
+        <activity android:name=".CommentPage" />
+        <activity android:name=".UserItem"></activity>
+        
     </application>
 
 </manifest>

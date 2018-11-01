@@ -32,7 +32,7 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class WishlistInstrumentedTests {
-    private final String email = "smerritt987@gmail.com";
+    private final String EMAIL = "smerritt987@gmail.com";
     private Instrumentation.ActivityMonitor monitor;
 
     @Rule
@@ -49,7 +49,7 @@ public class WishlistInstrumentedTests {
         Wishlist wishlistAct = wishlistActivityTestRule.getActivity();
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final DocumentReference user_doc = db.collection("profiles").document(email);
+        final DocumentReference user_doc = db.collection("profiles").document(EMAIL);
 
         monitor.waitForActivityWithTimeout(2000);
 

@@ -69,7 +69,7 @@ public class Purchase extends AppCompatActivity {
                         }
                         else {
                             Timestamp orderTime = Timestamp.now();
-                            f.create_order(useremail,item.getSeller_name(), itemid, orderTime, item.getPrice(), item.getTitle(), finalFace_to_face,0,0);
+                            f.create_order(useremail,item.getSeller_name(), itemid, orderTime, item.getPrice(), item.getTitle(), finalFace_to_face,0);
                             f.changeItemStatusToBought(itemid);
                             Toast.makeText(Purchase.this, "Submit Success! You choose " + radioButton.getText(), Toast.LENGTH_LONG).show();
 

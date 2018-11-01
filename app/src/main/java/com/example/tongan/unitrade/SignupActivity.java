@@ -27,6 +27,13 @@ public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
     private Functions f = new Functions();
 
+    //Toast Fields
+    public static final String INVALID_USERNAME = "Username was invalid! It may already exist...";
+    public static final String INVALID_EMAIL = "Email  was invalid";
+    public static final String INVALID_PASSWORD = "User password was invalid! Passwords must have at least one capital letter, a digit, and between 6 and 20 characters total";
+    public static final String EXISTING_EMAIL = "Email  already exists! Try again with a different email.";
+    public static final String SUCCESS = "Success! Check your email for a verification link";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,22 +42,11 @@ public class SignupActivity extends AppCompatActivity {
         //get shared instance of FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
 
-        /*********************************
-         * AT:
-         * Change the authenticate() function return type from bool to int
-         * So that the app can show the exact error message
-         * when it fails to create a user.
+        /**
+         * Authentication through Firebase
          *
-         * Also Create an user when successful.
-         *
-         * Status code:
-         * -1, firebase authentication error
-         * 0, success.
-         * 1, username invalid
-         * 2, email invalid
-         * 3, password invalid
-         ***********************************/
-
+         * Checks for valid inputs and if email already exists
+         */
         Button btnCreateAccount = (Button) findViewById(R.id.register_createAccount_btn);
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,15 +57,15 @@ public class SignupActivity extends AppCompatActivity {
 
                 //check inputs for validity before passing them to firebase
                 if(!isEmailValid(email)){
-                    Toast.makeText(getBaseContext(), "Email  was invalid", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), INVALID_EMAIL, Toast.LENGTH_LONG).show();
                     return;
                 }
                 else if(!isPasswordValid(password)) {
-                    Toast.makeText(getBaseContext(), "User password was invalid! Passwords must have at least one capital letter, a digit, and between 6 and 20 characters total", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), INVALID_PASSWORD, Toast.LENGTH_LONG).show();
                     return;
                 }
                 else if(!isUsernameValid(username)) {
-                    Toast.makeText(getBaseContext(), "Username was invalid!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), INVALID_USERNAME, Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -83,8 +79,7 @@ public class SignupActivity extends AppCompatActivity {
 
                                     int create_user = f.create_user(username,email,"",2,"",0,"","");
                                     System.out.println("Create User status: " +create_user);
-                                    Toast.makeText(getBaseContext(),
-                                            "Success! Check your email for a verification link", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getBaseContext(), SUCCESS , Toast.LENGTH_LONG).show();
 
                                     Runnable r = new Runnable() {
                                         @Override
@@ -102,8 +97,7 @@ public class SignupActivity extends AppCompatActivity {
                                         throw task.getException();
                                     }catch(FirebaseAuthUserCollisionException userExists){
                                         Log.d(TAG, "create new user: email already exists in authentication! Message: " + userExists.getLocalizedMessage());
-                                        Toast.makeText(getBaseContext(),
-                                                "Email  already exists! Try again with a different email.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getBaseContext(), EXISTING_EMAIL, Toast.LENGTH_LONG).show();
                                     }catch(NullPointerException e){
                                         Log.d(TAG, "Null pointer when attempting to add new user. Message: " +e.getLocalizedMessage());
                                     }
@@ -123,10 +117,8 @@ public class SignupActivity extends AppCompatActivity {
         super.onStart();
         //check if user is already signed in
         FirebaseUser fUser = mAuth.getCurrentUser();
-        if (fUser != null) {
-            Toast.makeText(SignupActivity.this, "Sign out first before registering another account!",
-                    Toast.LENGTH_SHORT).show();
-        }
+        if (fUser != null)
+            Toast.makeText(SignupActivity.this, "Sign out first before registering another account!", Toast.LENGTH_SHORT).show();
     }
 
     private String getEmail() {
@@ -188,76 +180,9 @@ public class SignupActivity extends AppCompatActivity {
         return email.matches(emailRegex);
     }
 
-
-
-    /*********************************
-     * AT:
-     * Change the authenticate() function return type from bool to int
-     * So that the app can show the exact error message
-     * when it fails to create a user.
-     *
-     * Status code:
-     * -1, firebase authentication error
-     * 0, success.
-     * 1, username invalid
-     * 2, email invalid
-     * 3, password invalid
-     ***********************************/
-
-    public int authentication() {
-        //get text field inputs
-        String username = getUsername();
-        String email = getEmail();
-        String password = getPassword();
-
-        if (!isUsernameValid(username)){
-            return 1;
-        }
-        if (!isEmailValid(email)){
-            return 2;
-        }
-        if (!isPasswordValid(password)){
-            return 3;
-        }
-
-        final int result[] ={0};
-          mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            result[0]=0;
-                            try{
-                                throw task.getException();
-                            }
-                            catch (FirebaseAuthUserCollisionException existsEmail){
-                                Log.d(TAG, "onComplete: email exists in authentication");
-                                result[0] = 2; //it failed! not sure why task.isSuccessful returned true though...
-                            }
-                            catch (Exception e){
-                                Log.d(TAG, "onComplete: " + e.getMessage());
-                            }
-                            sendEmailVerification();
-                        }
-                        else {
-                            result[0]=-1;
-                            try{
-                                throw task.getException();
-                            }
-                            catch (FirebaseAuthUserCollisionException existsEmail){
-                                Log.d(TAG, "onComplete: email exists in authentication");
-                                result[0] = 2; //user already exists
-                            }
-                            catch (Exception e){
-                                Log.d(TAG, "onComplete: " + e.getMessage());
-                            }
-                        }
-                    }
-                });
-
-        return result[0];
-    }
-
+    /**
+     * Sends Email Verification through Firebase to the newly-registered user
+     */
     private void sendEmailVerification() {
         // Send verification email
         final FirebaseUser user = mAuth.getCurrentUser();

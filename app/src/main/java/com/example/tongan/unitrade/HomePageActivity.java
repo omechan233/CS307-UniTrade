@@ -188,7 +188,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                                         PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
                                                                         Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "ItemSold")
                                                                                 .setContentTitle("UniTrade:")
-                                                                                .setContentText("Your item is sold!")
+                                                                                .setContentText("Someone bought your iem!" + current_item.getTitle())
                                                                                 .setWhen(System.currentTimeMillis())
                                                                                 .setSmallIcon(R.mipmap.ic_launcher_round)
                                                                                 .setAutoCancel(true)
@@ -281,7 +281,8 @@ public class HomePageActivity extends AppCompatActivity {
                                                                 current_order = documentSnapshot.toObject(Order.class);
                                                                 if (current_order.getMethodpending() != 0 && current_order.getMethodpending() != 3
                                                                         && current_order.getMethodpending() != 4) {
-                                                                    System.out.println("method is pending!!!");
+                                                                    db.collection("orders").document(order_doc.getId())
+                                                                            .update("buyerrequest", 0);
                                                                     if(current_order.getBuyerrequest() != 1) {
                                                                         /**
                                                                          * notification bar
@@ -299,7 +300,6 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                 .build();
 
                                                                         manager.notify(1, notification);
-                                                                        System.out.println("why you show twice!!!" + current_order.getMethodpending());
                                                                         db.collection("orders").document(order_doc.getId())
                                                                                 .update("buyerrequest", 1);
 
@@ -437,6 +437,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                                     Order current_order = new Order();
                                                                     current_order = documentSnapshot.toObject(Order.class);
                                                                     if (current_order.getMethodpending() == 3) {
+                                                                        System.out.println("find decline");
                                                                         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                                                         Intent intent = new Intent(HomePageActivity.this, Order.class);
                                                                         PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this,0,intent,0);
@@ -456,7 +457,6 @@ public class HomePageActivity extends AppCompatActivity {
 
                                                                         //front-end function ends here.
                                                                     } else if (current_order.getMethodpending() == 4) {
-                                                                        System.out.println("trade change!!!!!!!");
                                                                         //Todo: front-end functionality starts here, combine them with back-end.
                                                                         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                                                         Intent intent = new Intent(HomePageActivity.this, Order.class);

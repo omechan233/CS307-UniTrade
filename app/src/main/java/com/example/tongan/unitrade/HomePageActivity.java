@@ -280,24 +280,27 @@ public class HomePageActivity extends AppCompatActivity {
                                                                 Order current_order = new Order();
                                                                 current_order = documentSnapshot.toObject(Order.class);
                                                                 if (current_order.getMethodpending() != 0 && current_order.getMethodpending() != 3
-                                                                        && current_order.getMethodpending() != 4) {
-                                                                    /**
-                                                                     * notification bar
-                                                                     */
-                                                                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                                                    Intent intent = new Intent(HomePageActivity.this, Order.class);
-                                                                    PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
-                                                                    Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
-                                                                            .setContentTitle("UniTrade:")
-                                                                            .setContentText("Buyer send a request!")
-                                                                            .setWhen(System.currentTimeMillis())
-                                                                            .setSmallIcon(R.mipmap.ic_launcher_round)
-                                                                            .setAutoCancel(true)
-                                                                            .setContentIntent(ma)
-                                                                            .build();
+                                                                        && current_order.getMethodpending() != 4 ) {
+                                                                    if(current_order.getRequest() != 1) {
+                                                                        /**
+                                                                         * notification bar
+                                                                         */
+                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
+                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
+                                                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
+                                                                                .setContentTitle("UniTrade:")
+                                                                                .setContentText("Buyer send a request!")
+                                                                                .setWhen(System.currentTimeMillis())
+                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                                .setAutoCancel(true)
+                                                                                .setContentIntent(ma)
+                                                                                .build();
 
-                                                                    manager.notify(1, notification);
-
+                                                                        manager.notify(1, notification);
+                                                                        db.collection("orders").document(order_doc.getId())
+                                                                                .update("request", 1);
+                                                                    }
                                                                     /**
                                                                      * dialog pop up
                                                                      */
@@ -321,6 +324,8 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                                 .update("face_to_face", true);
                                                                                         db.collection("orders").document(order_doc.getId())
                                                                                                 .update("methodpending", 4);
+                                                                                        db.collection("orders").document(order_doc.getId())
+                                                                                                .update("request", 0);
 
                                                                                     } else if (finalCurrent_order.getMethodpending() == 2 && finalCurrent_order.getMethodpending() != 0
                                                                                             && finalCurrent_order.getMethodpending() != 3
@@ -329,6 +334,8 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                                 .update("face_to_face", false);
                                                                                         db.collection("orders").document(order_doc.getId())
                                                                                                 .update("methodpending", 4);
+                                                                                        db.collection("orders").document(order_doc.getId())
+                                                                                                .update("request", 0);
 
                                                                                     }
                                                                                     Toast.makeText(HomePageActivity.this, "You accepted!",
@@ -352,6 +359,8 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                             && finalCurrent_order.getMethodpending() != 4) {
                                                                                         db.collection("orders").document(order_doc.getId())
                                                                                                 .update("methodpending", 3);
+                                                                                        db.collection("orders").document(order_doc.getId())
+                                                                                                .update("request", 0);
 
                                                                                     }
 

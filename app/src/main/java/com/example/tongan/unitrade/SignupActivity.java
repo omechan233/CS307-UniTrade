@@ -55,42 +55,64 @@ public class SignupActivity extends AppCompatActivity {
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int auth_result = authentication();
-                if (auth_result==0) {
-                    int create_user = f.create_user(getUsername(),getEmail(),"",2,"",0,"","");
-                    System.out.println("Create User status: "+create_user);
-                    Toast.makeText(getBaseContext(),
-                            "Success! Check your email for a verification link", Toast.LENGTH_LONG).show();
+                final String username = getUsername();
+                final String email = getEmail();
+                final String password = getPassword();
 
-                    Runnable r = new Runnable() {
-                        @Override
-                        public void run() {
-                            // if you are redirecting from a fragment then use getActivity() as the context.
-                            startActivity(new Intent(SignupActivity.this, MainActivity.class));
-                        }
-                    };
-                    Handler h = new Handler();
-                    // The Runnable will be executed after the given delay time
-                    h.postDelayed(r, 1000); // will be delayed for 1.0 second
-
+                //check inputs for validity before passing them to firebase
+                if(!isEmailValid(email)){
+                    Toast.makeText(getBaseContext(), "Email  was invalid", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                else if(!isPasswordValid(password)) {
+                    Toast.makeText(getBaseContext(), "User password was invalid! Passwords must have at least one capital letter, a digit, and between 6 and 20 characters total", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                else if(!isUsernameValid(username)) {
+                    Toast.makeText(getBaseContext(), "Username was invalid!", Toast.LENGTH_LONG).show();
+                    return;
                 }
 
-                else if(auth_result==-1){
-                    Toast.makeText(getBaseContext(),
-                            "Firestore Authentication failed!", Toast.LENGTH_LONG).show();
-                }
-                else if(auth_result==1){
-                    Toast.makeText(getBaseContext(),
-                            "Username was invalid!", Toast.LENGTH_LONG).show();
-                }
-                else if(auth_result==2){
-                    Toast.makeText(getBaseContext(),
-                            "User email was invalid or may already exist!", Toast.LENGTH_LONG).show();
-                }
-                else if(auth_result==3){
-                    Toast.makeText(getBaseContext(),
-                            "User password was invalid!", Toast.LENGTH_LONG).show();
-                }
+                //if inputs are valid, proceed with authentication
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if(task.isSuccessful()){
+                                    sendEmailVerification();
+
+                                    int create_user = f.create_user(username,email,"",2,"",0,"","");
+                                    System.out.println("Create User status: " +create_user);
+                                    Toast.makeText(getBaseContext(),
+                                            "Success! Check your email for a verification link", Toast.LENGTH_LONG).show();
+
+                                    Runnable r = new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            // if you are redirecting from a fragment then use getActivity() as the context.
+                                            startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                                        }
+                                    };
+                                    Handler h = new Handler();
+                                    // The Runnable will be executed after the given delay time
+                                    h.postDelayed(r, 1000); // will be delayed for 1.0 second
+
+                                }else{
+                                    try{
+                                        throw task.getException();
+                                    }catch(FirebaseAuthUserCollisionException userExists){
+                                        Log.d(TAG, "create new user: email already exists in authentication! Message: " + userExists.getLocalizedMessage());
+                                        Toast.makeText(getBaseContext(),
+                                                "Email  already exists! Try again with a different email.", Toast.LENGTH_LONG).show();
+                                    }catch(NullPointerException e){
+                                        Log.d(TAG, "Null pointer when attempting to add new user. Message: " +e.getLocalizedMessage());
+                                    }
+                                    catch(Exception e){
+                                        Log.e(TAG, "General Exception caught. Message: " + e.getLocalizedMessage());
+                                    }
+                                }
+                            }
+                        });
             }
         });
 
@@ -224,6 +246,7 @@ public class SignupActivity extends AppCompatActivity {
                             }
                             catch (FirebaseAuthUserCollisionException existsEmail){
                                 Log.d(TAG, "onComplete: email exists in authentication");
+                                result[0] = 2; //user already exists
                             }
                             catch (Exception e){
                                 Log.d(TAG, "onComplete: " + e.getMessage());

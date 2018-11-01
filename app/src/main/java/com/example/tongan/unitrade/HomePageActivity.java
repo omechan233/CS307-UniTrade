@@ -281,8 +281,6 @@ public class HomePageActivity extends AppCompatActivity {
                                                                 current_order = documentSnapshot.toObject(Order.class);
                                                                 if (current_order.getMethodpending() != 0 && current_order.getMethodpending() != 3
                                                                         && current_order.getMethodpending() != 4) {
-                                                                    db.collection("orders").document(order_doc.getId())
-                                                                            .update("buyerrequest", 0);
                                                                     if(current_order.getBuyerrequest() != 1) {
                                                                         /**
                                                                          * notification bar

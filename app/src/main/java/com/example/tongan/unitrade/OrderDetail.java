@@ -77,7 +77,6 @@ public class OrderDetail extends AppCompatActivity {
                 }
 
                 if (snapshot != null && snapshot.exists()) {
-                    System.out.println("order detail change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     Log.d(TAG, "Current data: " + snapshot.getData());
                     //Todo: refresh order detail page here
                     final Order current_order = snapshot.toObject(Order.class);

@@ -77,8 +77,46 @@ public class OrderDetail extends AppCompatActivity {
                 }
 
                 if (snapshot != null && snapshot.exists()) {
+                    System.out.println("order detail change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     Log.d(TAG, "Current data: " + snapshot.getData());
                     //Todo: refresh order detail page here
+                    final Order current_order = snapshot.toObject(Order.class);
+
+                    String itemName_String = "Item Name : " + current_order.getItem_title();
+                    String price_String = "Price : " + current_order.getItem_price();/*+ get price from backend*/;
+
+                    Timestamp time_stamp = current_order.getOrder_time();
+
+                    //format post date
+                    SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
+                    format.setTimeZone(TimeZone.getTimeZone("EDT"));
+                    String posted_time = "Posted: " +format.format(time_stamp.toDate());
+
+
+                    String time_String = "Order Time : " + posted_time; /*+ get time from backend*/;
+                    String method_String = "Trade Method : ";
+
+
+                    if(current_order.getFace_to_face()) {
+                        method_String += "Face to Face";
+                    }else{
+                        method_String += "Online";
+                    }
+                    String seller_String = "Seller Name : " +current_order.getSeller_email(); /*+ get seller from backend*/
+                    String status_String = "Order Status : ";
+                    if (current_order.isIs_sold()){
+                        status_String += "Closed";
+                    }else{
+                        status_String += "In progress";
+                    }
+                    itemName.setText(itemName_String);
+                    price.setText(price_String);
+                    time.setText(time_String);
+                    method.setText(method_String);
+                    seller.setText(seller_String);
+                    status.setText(status_String);
+                  
+
                 } else {
                     Log.d(TAG, "Current data: null");
                 }
@@ -87,41 +125,41 @@ public class OrderDetail extends AppCompatActivity {
         item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                final Order current_order = documentSnapshot.toObject(Order.class);
-
-                String itemName_String = "Item Name : " + current_order.getItem_title();
-                String price_String = "Price : " + current_order.getItem_price();/*+ get price from backend*/;
-
-                Timestamp time_stamp = current_order.getOrder_time();
-
-                //format post date
-                SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
-                format.setTimeZone(TimeZone.getTimeZone("EDT"));
-                String posted_time = "Posted: " +format.format(time_stamp.toDate());
-
-
-                String time_String = "Order Time : " + posted_time; /*+ get time from backend*/;
-                String method_String = "Trade Method : ";
-
-
-                if(current_order.getFace_to_face()) {
-                    method_String += "Face to Face";
-                }else{
-                    method_String += "Online";
-                }
-                String seller_String = "Seller Name : " +current_order.getSeller_email(); /*+ get seller from backend*/
-                String status_String = "Order Status : ";
-                if (current_order.isIs_sold()){
-                    status_String += "Closed";
-                }else{
-                    status_String += "In progress";
-                }
-                itemName.setText(itemName_String);
-                price.setText(price_String);
-                time.setText(time_String);
-                method.setText(method_String);
-                seller.setText(seller_String);
-                status.setText(status_String);
+//                final Order current_order = documentSnapshot.toObject(Order.class);
+//
+//                String itemName_String = "Item Name : " + current_order.getItem_title();
+//                String price_String = "Price : " + current_order.getItem_price();/*+ get price from backend*/;
+//
+//                Timestamp time_stamp = current_order.getOrder_time();
+//
+//                //format post date
+//                SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
+//                format.setTimeZone(TimeZone.getTimeZone("EDT"));
+//                String posted_time = "Posted: " +format.format(time_stamp.toDate());
+//
+//
+//                String time_String = "Order Time : " + posted_time; /*+ get time from backend*/;
+//                String method_String = "Trade Method : ";
+//
+//
+//                if(current_order.getFace_to_face()) {
+//                    method_String += "Face to Face";
+//                }else{
+//                    method_String += "Online";
+//                }
+//                String seller_String = "Seller Name : " +current_order.getSeller_email(); /*+ get seller from backend*/
+//                String status_String = "Order Status : ";
+//                if (current_order.isIs_sold()){
+//                    status_String += "Closed";
+//                }else{
+//                    status_String += "In progress";
+//                }
+//                itemName.setText(itemName_String);
+//                price.setText(price_String);
+//                time.setText(time_String);
+//                method.setText(method_String);
+//                seller.setText(seller_String);
+//                status.setText(status_String);
             }
 
         });

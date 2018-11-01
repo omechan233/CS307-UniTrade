@@ -13,6 +13,9 @@ import com.google.firebase.Timestamp;
  * 2: pending(buyer want online)
  * 3: seller decline buyer's request
  * 4: seller accept buyer's request
+ * buyerrequest: whether the "buyer sent you a request" show or not
+ * 0: not
+ * 1:shown
  */
 
 public class Order {
@@ -26,13 +29,16 @@ public class Order {
     private int methodpending;
     private String order_ID;
     private boolean commented;
+    private int buyerrequest;
 
     /**
      * Constructor; Creates an order based on a purchased Item
      *
      */
     public Order(){}
-    public Order(String item_ID, Timestamp order_time, String seller_email, String item_title, Double item_price, boolean is_sold, boolean face_to_face, int methodpending, String order_ID, boolean commented){
+    public Order(String item_ID, Timestamp order_time, String seller_email, String item_title,
+                 Double item_price, boolean is_sold, boolean face_to_face, int methodpending,
+                 String order_ID, boolean commented, int buyerrequest){
         this.seller_email=seller_email;
         this.is_sold=is_sold;
         this.item_ID=item_ID;
@@ -43,6 +49,7 @@ public class Order {
         this.methodpending = methodpending;
         this.order_ID = order_ID;
         this.commented = commented;
+        this.buyerrequest = buyerrequest;
     }
 
     public String getOrder_ID() {
@@ -78,6 +85,7 @@ public class Order {
     }
 
     public int getMethodpending(){ return this.methodpending; }
+    public int getBuyerrequest(){return this.buyerrequest;}
 
     public void setMethodpending(int methodpending) { this.methodpending = methodpending; }
 

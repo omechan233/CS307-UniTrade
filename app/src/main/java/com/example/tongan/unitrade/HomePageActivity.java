@@ -281,22 +281,29 @@ public class HomePageActivity extends AppCompatActivity {
                                                                 current_order = documentSnapshot.toObject(Order.class);
                                                                 if (current_order.getMethodpending() != 0 && current_order.getMethodpending() != 3
                                                                         && current_order.getMethodpending() != 4) {
-                                                                    /**
-                                                                     * notification bar
-                                                                     */
-                                                                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                                                    Intent intent = new Intent(HomePageActivity.this, Order.class);
-                                                                    PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
-                                                                    Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
-                                                                            .setContentTitle("UniTrade:")
-                                                                            .setContentText("Buyer send a request!")
-                                                                            .setWhen(System.currentTimeMillis())
-                                                                            .setSmallIcon(R.mipmap.ic_launcher_round)
-                                                                            .setAutoCancel(true)
-                                                                            .setContentIntent(ma)
-                                                                            .build();
+                                                                    System.out.println("method is pending!!!");
+                                                                    if(current_order.getBuyerrequest() != 1) {
+                                                                        /**
+                                                                         * notification bar
+                                                                         */
+                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
+                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
+                                                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
+                                                                                .setContentTitle("UniTrade:")
+                                                                                .setContentText("Buyer send a request!")
+                                                                                .setWhen(System.currentTimeMillis())
+                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                                .setAutoCancel(true)
+                                                                                .setContentIntent(ma)
+                                                                                .build();
 
-                                                                    manager.notify(1, notification);
+                                                                        manager.notify(1, notification);
+                                                                        System.out.println("why you show twice!!!" + current_order.getMethodpending());
+                                                                        db.collection("orders").document(order_doc.getId())
+                                                                                .update("buyerrequest", 1);
+
+                                                                    }
 
                                                                     /**
                                                                      * dialog pop up

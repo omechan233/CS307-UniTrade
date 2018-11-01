@@ -48,6 +48,16 @@ public class ProfileActivity extends AppCompatActivity {
         f = new Functions();
         sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
 
+        Button view_items = (Button)findViewById(R.id.view_items);
+        //todo : check user and set button visible/invisible
+        //view_items.setVisibility(View.INVISIBLE);
+        //view_items.setClickable(false);
+        view_items.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v){
+                startActivity(new Intent(ProfileActivity.this, UserItem.class));
+            }
+        });
 
         ImageButton homebtn = (ImageButton) findViewById(R.id.profile_back_icon);
         Button wishlistbtn = (Button) findViewById(R.id.profile_wishlist_btn);

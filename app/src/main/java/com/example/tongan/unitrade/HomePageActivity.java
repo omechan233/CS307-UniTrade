@@ -430,26 +430,21 @@ public class HomePageActivity extends AppCompatActivity {
                                                                     Order current_order = new Order();
                                                                     current_order = documentSnapshot.toObject(Order.class);
                                                                     if (current_order.getMethodpending() == 3) {
-                                                                        //Todo: front-end functionality starts here, combine them with back-end.
+                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
+                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this,0,intent,0);
+                                                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
+                                                                                .setContentTitle("UniTrade:")
+                                                                                .setContentText("Your method change request is declined by the seller!")
+                                                                                .setWhen(System.currentTimeMillis())
+                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                                .setAutoCancel(true)
+                                                                                .setContentIntent(ma)
+                                                                                .build();
 
-                                                                        AlertDialog.Builder builder = new AlertDialog.Builder(HomePageActivity.this);
-                                                                        builder.setTitle("Notice:");
-                                                                        builder.setMessage("Your trading method request was declined by the user!");
-                                                                        builder.setCancelable(true);
-
-                                                                        // user choose "Accepted" button:
-                                                                        builder.setPositiveButton(
-                                                                                "Fine!",
-                                                                                new DialogInterface.OnClickListener() {
-                                                                                    @Override
-                                                                                    public void onClick(DialogInterface dialog, int which) {
-                                                                                        Toast.makeText(HomePageActivity.this, "Fine!",
-                                                                                                Toast.LENGTH_SHORT).show();
+                                                                        manager.notify(1, notification);
                                                                                         db.collection("orders").document(orders_doc.getId())
                                                                                                 .update("methodpending", 0);
-                                                                                    }
-                                                                                });
-                                                                        builder.show();
 
 
                                                                         //front-end function ends here.

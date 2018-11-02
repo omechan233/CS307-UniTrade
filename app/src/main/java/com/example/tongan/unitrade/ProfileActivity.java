@@ -165,7 +165,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     LinearLayout comment = new LinearLayout(getBaseContext());
                                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
                                     comment.setLayoutParams(params);
-                                    params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 200);
+                                    params = new LinearLayout.LayoutParams(800, 400);
                                     TextView tv = new TextView(getBaseContext());
                                     tv.setLayoutParams(params);
 

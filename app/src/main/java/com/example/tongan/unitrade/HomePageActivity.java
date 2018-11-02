@@ -281,6 +281,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                                 current_order = documentSnapshot.toObject(Order.class);
                                                                 if (current_order.getMethodpending() != 0 && current_order.getMethodpending() != 3
                                                                         && current_order.getMethodpending() != 4 ) {
+                                                                    System.out.println("under big if!!!!!!!!!!!!!!!!!!!!!!!!!");
                                                                     if(current_order.getRequest() != 1) {
                                                                         /**
                                                                          * notification bar
@@ -298,12 +299,15 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                 .build();
 
                                                                         manager.notify(1, notification);
-                                                                        db.collection("orders").document(order_doc.getId())
-                                                                                .update("request", 1);
+//                                                                        db.collection("orders").document(order_doc.getId())
+//                                                                                .update("request", 1);
+
                                                                     }
+
                                                                     /**
                                                                      * dialog pop up
                                                                      */
+                                                                    System.out.println("pop up on homepage!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 //                                                                  //Todo: front-end functionality starts here, combine them with back-end.
                                                                     AlertDialog.Builder builder = new AlertDialog.Builder(HomePageActivity.this);
                                                                     builder.setTitle("Notice:");
@@ -317,15 +321,22 @@ public class HomePageActivity extends AppCompatActivity {
                                                                             new DialogInterface.OnClickListener() {
                                                                                 @Override
                                                                                 public void onClick(DialogInterface dialog, int which) {
-                                                                                    if (finalCurrent_order.getMethodpending() == 1 && finalCurrent_order.getMethodpending() != 0
-                                                                                            && finalCurrent_order.getMethodpending() != 3
-                                                                                            && finalCurrent_order.getMethodpending() != 4) {
+                                                                                    /**
+                                                                                     * finalCurrent_order.getMethodpending() != 0
+                                                                                     && finalCurrent_order.getMethodpending() != 3
+                                                                                     && finalCurrent_order.getMethodpending() != 4
+                                                                                     */
+
+                                                                                    if (finalCurrent_order.getMethodpending() == 1 ) {
                                                                                         db.collection("orders").document(order_doc.getId())
                                                                                                 .update("face_to_face", true);
                                                                                         db.collection("orders").document(order_doc.getId())
                                                                                                 .update("methodpending", 4);
                                                                                         db.collection("orders").document(order_doc.getId())
                                                                                                 .update("request", 0);
+//                                                                                        db.collection("orders").document(order_doc.getId())
+//                                                                                                .update("request", 1);
+                                                                                        System.out.println("do you capture the change!!!");
 
                                                                                     } else if (finalCurrent_order.getMethodpending() == 2 && finalCurrent_order.getMethodpending() != 0
                                                                                             && finalCurrent_order.getMethodpending() != 3

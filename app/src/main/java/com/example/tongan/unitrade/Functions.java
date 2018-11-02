@@ -567,7 +567,7 @@ public class Functions {
                     if (document.exists()) {
                         int rating_number =document.getLong("rating_number").intValue();
                         if(rating_number!=0) {
-                            double prev_rate = (double) document.get("rating");
+                            double prev_rate = (double) document.getLong("rating");
                             user_doc.update("rating",((prev_rate*(double)rating_number)+(double)rate)/(rating_number+1));
                             user_doc.update("rating_number",rating_number+1);
                         }

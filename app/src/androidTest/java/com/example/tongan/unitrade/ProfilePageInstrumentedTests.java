@@ -24,12 +24,17 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.MissingFormatArgumentException;
 
+import androidx.test.espresso.Espresso;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withInputType;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -119,6 +124,8 @@ public class ProfilePageInstrumentedTests {
             }
         });
 
+        monitor.waitForActivityWithTimeout(1500);
+
         //get comments currently being displayed in the profile page
         ArrayList<String> commentTexts = new ArrayList<>();
         LinearLayout commentLayout = profileActivity.findViewById(R.id.comment_area);
@@ -141,6 +148,60 @@ public class ProfilePageInstrumentedTests {
         for(int i = 0; i < comments.size() && i < commentTexts.size(); i++){
             assert(commentTexts.get(i).contains(comments.get(i).getItem_name()));
         }
+
+    }
+
+    @Test
+    public void testEdit(){
+        ProfileActivity profileActivity = profileActivityActivityTestRule.getActivity();
+        TextView tv = profileActivity.findViewById(R.id.input_username);
+        String old_username = tv.getText().toString();
+
+        //wait for everything to load
+        monitor.waitForActivityWithTimeout(2000);
+
+        //click edit button
+        onView(withId(R.id.edit_profile)).perform(click());
+
+        //change a field
+        onView(withId(R.id.input_username)).perform(clearText());
+        onView(withId(R.id.input_username)).perform(typeText("testUsername"));
+
+        //close keyboard
+        Espresso.closeSoftKeyboard();
+
+        //click edit button (should be submit now)
+        onView(withId(R.id.edit_profile)).perform(click());
+
+        //check to make sure database was updated
+        DocumentReference profileDocRef = db.collection("profiles").document(EMAIL);
+        profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    String db_field = task.getResult().getString("user_name");
+
+                    assert(db_field.equals("testUsername"));
+                }
+            }
+        });
+
+        //change it back
+        //wait for everything to load
+        monitor.waitForActivityWithTimeout(2000);
+
+        //click edit button
+        onView(withId(R.id.edit_profile)).perform(click());
+
+        //change a field
+        onView(withId(R.id.input_username)).perform(clearText());
+        onView(withId(R.id.input_username)).perform(typeText(old_username));
+
+        //close keyboard
+        Espresso.closeSoftKeyboard();
+
+        //click edit button (should be submit now)
+        onView(withId(R.id.edit_profile)).perform(click());
 
     }
 }

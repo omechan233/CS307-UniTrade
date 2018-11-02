@@ -523,7 +523,7 @@ public class HomePageActivity extends AppCompatActivity {
         //String criterion = "title"; //default sorting criterion for items
         String sort_option = search_sort_spinner.getSelectedItem().toString();
         String cate_option = cat_spinner.getSelectedItem().toString();
-        final String keyword = search_word.getText().toString();
+        final String keyword = search_word.getText().toString().toLowerCase();
 
         _refreshHome(sort_option, cate_option, keyword);
     }

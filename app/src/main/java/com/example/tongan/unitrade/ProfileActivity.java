@@ -85,11 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
         // get the profile owner email, it may be different from the user email
         // todo: if the profile_email and owner email are not the same, disabled edit function and add a button to view item list
         final String user_email = sharedPreferences.getString("email", "");
-        String profile_email = sharedPreferences.getString("profile_email", user_email);
-
-        final String username = "";
-        String phone = "";
-        String address = "";
+        final String profile_email = sharedPreferences.getString("profile_email", user_email);
 
         /*
          * Retrieving data from the database to fill in EditText fields. Documents are specific to Firestore,
@@ -110,6 +106,8 @@ public class ProfileActivity extends AppCompatActivity {
                         //update text boxes with user info from database
                         address_edit.setText(doc.get("address").toString());
                         phone_edit.setText(doc.get("phone_number").toString());
+
+                        email_edit.setText(profile_email);
 
                         // view the rating
                         overall_rating.setNumStars(doc.getLong("rating").intValue());
@@ -192,11 +190,6 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
 
-//        username_edit.setText(username);
-//        phone_edit.setText(phone);
-//        address_edit.setText(address);
-//        email_edit.setText(user_email);
-
 
             TextView edit = (TextView) findViewById(R.id.edit_profile);
             if (user_email.equals(profile_email)){
@@ -215,7 +208,7 @@ public class ProfileActivity extends AppCompatActivity {
                     phone_edit.setFocusable(true);
                     username_edit.setTextIsSelectable(true);
                     address_edit.setTextIsSelectable(true);
-                    email_edit.setTextIsSelectable(true);
+                    //email_edit.setTextIsSelectable(true);
                     phone_edit.setTextIsSelectable(true);
                     String text = "Confirm";
                     temp.setText(text);

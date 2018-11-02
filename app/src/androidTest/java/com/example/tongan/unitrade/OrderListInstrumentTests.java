@@ -2,12 +2,8 @@ package com.example.tongan.unitrade;
 
 
 import android.app.Instrumentation;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,7 +15,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,7 +22,6 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
-import androidx.test.espresso.intent.Intents;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;

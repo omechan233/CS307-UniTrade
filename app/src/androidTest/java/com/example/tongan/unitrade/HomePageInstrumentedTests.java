@@ -319,11 +319,11 @@ public class HomePageInstrumentedTests {
     public void testSearchInput(){
         HomePageActivity homeAct = homepageActivityRule.getActivity();
 
-        onView(withId(R.id.search_input)).perform(typeText("item"));
+        onView(withId(R.id.search_input)).perform(typeText("book"));
         //close keyboard
         Espresso.closeSoftKeyboard();
         //make sure inputs match
-        onView(withId(R.id.search_input)).check(matches(withText("item")));
+        onView(withId(R.id.search_input)).check(matches(withText("book")));
 
         //click search
         onView(withId(R.id.hmpage_search_button)).perform(click());

@@ -61,6 +61,9 @@ public class ItemDetail extends AppCompatActivity {
         final EditText name_edit = (EditText) findViewById(R.id.detail_item_name);
         final EditText price_edit = (EditText) findViewById(R.id.detail_price);
         final EditText time_edit = (EditText) findViewById(R.id.detail_posttime);
+        time_edit.setTextIsSelectable(false);
+        time_edit.setFocusable(false);
+
 
         desc_edit.setTextIsSelectable(false);
         name_edit.setTextIsSelectable(false);

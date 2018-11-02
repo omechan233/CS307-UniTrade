@@ -22,13 +22,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -62,6 +65,8 @@ public class ProfileActivity extends AppCompatActivity {
         ImageButton homebtn = (ImageButton) findViewById(R.id.profile_back_icon);
         Button wishlistbtn = (Button) findViewById(R.id.profile_wishlist_btn);
 
+        wishlistbtn.setVisibility(View.INVISIBLE);
+
         final EditText username_edit = (EditText) findViewById(R.id.input_username);
         username_edit.setFocusable(false);
         username_edit.setTextIsSelectable(false);
@@ -85,7 +90,7 @@ public class ProfileActivity extends AppCompatActivity {
         // get the profile owner email, it may be different from the user email
         // todo: if the profile_email and owner email are not the same, disabled edit function and add a button to view item list
         final String user_email = sharedPreferences.getString("email", "");
-        String profile_email = sharedPreferences.getString("profile_email", user_email);
+        final String profile_email = sharedPreferences.getString("profile_email", user_email);
 
         final String username = "";
         String phone = "";
@@ -110,6 +115,7 @@ public class ProfileActivity extends AppCompatActivity {
                         //update text boxes with user info from database
                         address_edit.setText(doc.get("address").toString());
                         phone_edit.setText(doc.get("phone_number").toString());
+                        email_edit.setText(profile_email.toString());
 
                         // view the rating
                         overall_rating.setNumStars(doc.getLong("rating").intValue());
@@ -164,10 +170,19 @@ public class ProfileActivity extends AppCompatActivity {
                                     TextView tv = new TextView(getBaseContext());
                                     tv.setLayoutParams(params);
 
+                                    Timestamp time_stamp = current_com.getPosted_time();
+
+                                    //format post date
+                                    SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
+                                    format.setTimeZone(TimeZone.getTimeZone("EDT"));
+                                    String posted_time = "Posted: " +format.format(time_stamp.toDate());
+
+
+
                                     //todo : Set the text here to actual comment
-                                    String text = "Sender:" + current_com.getSender_name() + "\n" +
+                                    String text = "Sender: " + current_com.getSender_name() + "\nComment: " +
                                             current_com.getContent() + "\n" +
-                                            current_com.getPosted_time() + "\n";
+                                            posted_time + "\n";
                                     tv.setText(text);
                                     tv.setTextColor(Color.parseColor("#000000"));
                                     comment.addView(tv);
@@ -201,6 +216,7 @@ public class ProfileActivity extends AppCompatActivity {
             TextView edit = (TextView) findViewById(R.id.edit_profile);
             if (user_email.equals(profile_email)){
                 edit.setVisibility(View.VISIBLE);
+                wishlistbtn.setVisibility(View.VISIBLE);
             }
         edit.setOnClickListener(new View.OnClickListener()
 
@@ -215,7 +231,7 @@ public class ProfileActivity extends AppCompatActivity {
                     phone_edit.setFocusable(true);
                     username_edit.setTextIsSelectable(true);
                     address_edit.setTextIsSelectable(true);
-                    email_edit.setTextIsSelectable(true);
+                    email_edit.setTextIsSelectable(false);
                     phone_edit.setTextIsSelectable(true);
                     String text = "Confirm";
                     temp.setText(text);

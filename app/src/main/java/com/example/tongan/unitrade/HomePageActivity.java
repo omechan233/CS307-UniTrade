@@ -380,6 +380,49 @@ public class HomePageActivity extends AppCompatActivity {
                                                                     builder.show();
                                                                     //front-end functionality ends here.
                                                                 }
+
+
+                                                                if (current_order.getMethodpending() == 3) {
+                                                                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                                    Intent intent = new Intent(HomePageActivity.this, Order.class);
+                                                                    PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this,0,intent,0);
+                                                                    Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
+                                                                            .setContentTitle("UniTrade:")
+                                                                            .setContentText("Your method change request is declined by the seller!")
+                                                                            .setWhen(System.currentTimeMillis())
+                                                                            .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                            .setAutoCancel(true)
+                                                                            .setContentIntent(ma)
+                                                                            .build();
+
+                                                                    manager.notify(1, notification);
+                                                                    db.collection("orders").document(order_doc.getId())
+                                                                            .update("methodpending", 0);
+
+
+                                                                    //front-end function ends here.
+                                                                } else if (current_order.getMethodpending() == 4) {
+                                                                    System.out.println("trade change!!!!!!!");
+                                                                    //Todo: front-end functionality starts here, combine them with back-end.
+                                                                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                                    Intent intent = new Intent(HomePageActivity.this, Order.class);
+                                                                    PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
+                                                                    Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
+                                                                            .setContentTitle("UniTrade:")
+                                                                            .setContentText("Your item's trading method is changed!")
+                                                                            .setWhen(System.currentTimeMillis())
+                                                                            .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                            .setAutoCancel(true)
+                                                                            .setContentIntent(ma)
+                                                                            .build();
+
+                                                                    manager.notify(1, notification);
+                                                                    //front-end functionality ends here.
+                                                                    db.collection("orders").document(order_doc.getId())
+                                                                            .update("methodpending", 0);
+                                                                }
+
+
                                                             }
                                                         });
                                                     } else {
@@ -407,114 +450,114 @@ public class HomePageActivity extends AppCompatActivity {
         /**
          * if buyer's method change request got declined, send the buyer a declined notification
          */
-        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    if (doc.exists()) {
-                        //update text boxes with user info from database
-                        String method_notification = doc.get("method_notification").toString();
-                        if (method_notification.equals("0")) {
-                        } else {
-                            //get order list from profile
-                            final DocumentReference profiles = db.collection("profiles").document(email);
-
-                            profiles.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        List<String> my_order = new ArrayList<String>();
-                                        my_order = (List<String>) document.getData().get("my_orders");
-                                        if (my_order == null || my_order.isEmpty()) {
-                                            System.out.println("Nothing on the list!");
-                                        } else {
-                                            for (int i = 0; i < my_order.size(); i++) {
-                                                //get item from order list
-                                                final DocumentReference orders_doc = db.collection("orders").document(my_order.get(i));
-                                                final int finalI = i;
-                                                orders_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                                                        @Nullable FirebaseFirestoreException e) {
-                                                        if (e != null) {
-                                                            Log.w(TAG, "Listen failed.", e);
-                                                            return;
-                                                        }
-
-                                                        if (snapshot != null && snapshot.exists()) {
-                                                            orders_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                                @Override
-                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                                    Order current_order = new Order();
-                                                                    current_order = documentSnapshot.toObject(Order.class);
-                                                                    if (current_order.getMethodpending() == 3) {
-                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
-                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this,0,intent,0);
-                                                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
-                                                                                .setContentTitle("UniTrade:")
-                                                                                .setContentText("Your method change request is declined by the seller!")
-                                                                                .setWhen(System.currentTimeMillis())
-                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
-                                                                                .setAutoCancel(true)
-                                                                                .setContentIntent(ma)
-                                                                                .build();
-
-                                                                        manager.notify(1, notification);
-                                                                                        db.collection("orders").document(orders_doc.getId())
-                                                                                                .update("methodpending", 0);
-
-
-                                                                        //front-end function ends here.
-                                                                    } else if (current_order.getMethodpending() == 4) {
-                                                                        System.out.println("trade change!!!!!!!");
-                                                                        //Todo: front-end functionality starts here, combine them with back-end.
-                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
-                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
-                                                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
-                                                                                .setContentTitle("UniTrade:")
-                                                                                .setContentText("Your item's trading method is changed!")
-                                                                                .setWhen(System.currentTimeMillis())
-                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
-                                                                                .setAutoCancel(true)
-                                                                                .setContentIntent(ma)
-                                                                                .build();
-
-                                                                        manager.notify(1, notification);
-                                                                        //front-end functionality ends here.
-                                                                        db.collection("orders").document(orders_doc.getId())
-                                                                                .update("methodpending", 0);
-                                                                    }
-
-                                                                }
-                                                            });
-                                                        } else {
-                                                            Log.d(TAG, "Current data: null");
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        }
-                                        //result[0] = (String[])document.getData().get("my_items");
-                                        Log.e(TAG, "my item list found");
-
-                                    } else {
-                                        Log.e(TAG, "my item list not found");
-                                    }
-                                }
-                            });
-                        }
-                    } else {
-                        Log.d(TAG, "No such document...");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
+//        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot doc = task.getResult();
+//                    if (doc.exists()) {
+//                        //update text boxes with user info from database
+//                        String method_notification = doc.get("method_notification").toString();
+//                        if (method_notification.equals("0")) {
+//                        } else {
+//                            //get order list from profile
+//                            final DocumentReference profiles = db.collection("profiles").document(email);
+//
+//                            profiles.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                    DocumentSnapshot document = task.getResult();
+//                                    if (document.exists()) {
+//                                        List<String> my_order = new ArrayList<String>();
+//                                        my_order = (List<String>) document.getData().get("my_orders");
+//                                        if (my_order == null || my_order.isEmpty()) {
+//                                            System.out.println("Nothing on the list!");
+//                                        } else {
+//                                            for (int i = 0; i < my_order.size(); i++) {
+//                                                //get item from order list
+//                                                final DocumentReference orders_doc = db.collection("orders").document(my_order.get(i));
+//                                                final int finalI = i;
+//                                                orders_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                                                    @Override
+//                                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
+//                                                                        @Nullable FirebaseFirestoreException e) {
+//                                                        if (e != null) {
+//                                                            Log.w(TAG, "Listen failed.", e);
+//                                                            return;
+//                                                        }
+//
+//                                                        if (snapshot != null && snapshot.exists()) {
+//                                                            orders_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                                                                @Override
+//                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                                                                    Order current_order = new Order();
+//                                                                    current_order = documentSnapshot.toObject(Order.class);
+//                                                                    if (current_order.getMethodpending() == 3) {
+//                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                                                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
+//                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this,0,intent,0);
+//                                                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
+//                                                                                .setContentTitle("UniTrade:")
+//                                                                                .setContentText("Your method change request is declined by the seller!")
+//                                                                                .setWhen(System.currentTimeMillis())
+//                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+//                                                                                .setAutoCancel(true)
+//                                                                                .setContentIntent(ma)
+//                                                                                .build();
+//
+//                                                                        manager.notify(1, notification);
+//                                                                                        db.collection("orders").document(orders_doc.getId())
+//                                                                                                .update("methodpending", 0);
+//
+//
+//                                                                        //front-end function ends here.
+//                                                                    } else if (current_order.getMethodpending() == 4) {
+//                                                                        System.out.println("trade change!!!!!!!");
+//                                                                        //Todo: front-end functionality starts here, combine them with back-end.
+//                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                                                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
+//                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
+//                                                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
+//                                                                                .setContentTitle("UniTrade:")
+//                                                                                .setContentText("Your item's trading method is changed!")
+//                                                                                .setWhen(System.currentTimeMillis())
+//                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+//                                                                                .setAutoCancel(true)
+//                                                                                .setContentIntent(ma)
+//                                                                                .build();
+//
+//                                                                        manager.notify(1, notification);
+//                                                                        //front-end functionality ends here.
+//                                                                        db.collection("orders").document(orders_doc.getId())
+//                                                                                .update("methodpending", 0);
+//                                                                    }
+//
+//                                                                }
+//                                                            });
+//                                                        } else {
+//                                                            Log.d(TAG, "Current data: null");
+//                                                        }
+//                                                    }
+//                                                });
+//                                            }
+//                                        }
+//                                        //result[0] = (String[])document.getData().get("my_items");
+//                                        Log.e(TAG, "my item list found");
+//
+//                                    } else {
+//                                        Log.e(TAG, "my item list not found");
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    } else {
+//                        Log.d(TAG, "No such document...");
+//                    }
+//                } else {
+//                    Log.d(TAG, "get failed with ", task.getException());
+//                }
+//            }
+//        });
 
     }
 

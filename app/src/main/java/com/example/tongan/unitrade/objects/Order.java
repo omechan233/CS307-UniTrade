@@ -16,9 +16,13 @@ import com.google.firebase.Timestamp;
  * request: whether the buyer send request notification is showed
  * 0: no
  * 1: shown
+ * soldnotify: if the confirm message is send
+ * 0: no
+ * 1:yes
  */
 
 public class Order {
+    private  int soldnotify;
     private String item_title;
     private Double item_price;
     private boolean is_sold;
@@ -38,7 +42,7 @@ public class Order {
     public Order(){}
     public Order(String item_ID, Timestamp order_time, String seller_email, String item_title,
                  Double item_price, boolean is_sold, boolean face_to_face, int methodpending,
-                 String order_ID, boolean commented, int request){
+                 String order_ID, boolean commented, int request, int soldnotify){
         this.seller_email=seller_email;
         this.is_sold=is_sold;
         this.item_ID=item_ID;
@@ -50,6 +54,7 @@ public class Order {
         this.order_ID = order_ID;
         this.commented = commented;
         this.request = request;
+        this.soldnotify = soldnotify;
     }
 
     public String getOrder_ID() {
@@ -87,6 +92,8 @@ public class Order {
     public int getMethodpending(){ return this.methodpending; }
 
     public int getRequest(){return  this.request; }
+
+    public int getSoldnotify(){return  this.soldnotify;}
 
     public void setMethodpending(int methodpending) { this.methodpending = methodpending; }
 

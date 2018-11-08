@@ -3,8 +3,12 @@ package com.example.tongan.unitrade;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,11 +17,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Comment;
+import com.example.tongan.unitrade.objects.Profile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,7 +34,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOError;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,68 +52,81 @@ import java.util.TimeZone;
 public class ProfileActivity extends AppCompatActivity {
 
     private String TAG = "ProfileActivity";
-    private FirebaseAuth mAuth;
     FirebaseFirestore db;
+    FirebaseStorage storage;
     private SharedPreferences sharedPreferences;
     private Functions f;
+
+    private static final int RESULT_LOAD_IMAGE = 1; //constant for loading images
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profilepage);
 
         //initialize fields
-        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
         f = new Functions();
         sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
 
-        Button view_items = (Button)findViewById(R.id.view_items);
-        //todo : check user and set button visible/invisible
-        //view_items.setVisibility(View.INVISIBLE);
-        //view_items.setClickable(false);
-        view_items.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v){
-                startActivity(new Intent(ProfileActivity.this, UserItem.class));
-            }
-        });
+        //init local variables for different components on page
+        final ImageButton homebtn =         findViewById(R.id.profile_back_icon);
+        final Button wishlistbtn =          findViewById(R.id.profile_wishlist_btn);
+        final Button view_items =           findViewById(R.id.view_items);
+        final EditText username_edit =      findViewById(R.id.input_username);
+        final EditText phone_edit =         findViewById(R.id.input_phone);
+        final EditText address_edit =       findViewById(R.id.input_address);
+        final EditText email_edit =         findViewById(R.id.input_email);
+        final RatingBar overall_rating =    findViewById(R.id.overall_rating);
+        final TextView edit =               findViewById(R.id.edit_profile);
+        final LinearLayout comment_view =   findViewById(R.id.comment_area);
+        final TextView change_icon =        findViewById(R.id.change_icon);
+        final ImageView user_pic =          findViewById(R.id.user_image);
 
-        ImageButton homebtn = (ImageButton) findViewById(R.id.profile_back_icon);
-        Button wishlistbtn = (Button) findViewById(R.id.profile_wishlist_btn);
-
-        wishlistbtn.setVisibility(View.INVISIBLE);
-
-        final EditText username_edit = (EditText) findViewById(R.id.input_username);
-        username_edit.setFocusable(false);
-        username_edit.setTextIsSelectable(false);
-
-        final EditText phone_edit = (EditText) findViewById(R.id.input_phone);
-        phone_edit.setFocusable(false);
-        phone_edit.setTextIsSelectable(false);
-
-        final EditText address_edit = (EditText) findViewById(R.id.input_address);
-        address_edit.setFocusable(false);
-        address_edit.setTextIsSelectable(false);
-
-        final EditText email_edit = (EditText) findViewById(R.id.input_email);
-        email_edit.setFocusable(false);
-        email_edit.setTextIsSelectable(false);
-
-        final RatingBar overall_rating = (RatingBar) findViewById(R.id.overall_rating);
-        overall_rating.setClickable(false);
-
-        // AT:
-        // get the profile owner email, it may be different from the user email
-        // todo: if the profile_email and owner email are not the same, disabled edit function and add a button to view item list
+        //values from shared preferences
         final String user_email = sharedPreferences.getString("email", "");
         final String profile_email = sharedPreferences.getString("profile_email", user_email);
 
+        //only display certain features if person viewing the profile is the owner of that profile
+        if (user_email.equals(profile_email)) {
+            edit.setVisibility(View.VISIBLE);
+            wishlistbtn.setVisibility(View.VISIBLE);
+            change_icon.setVisibility(View.VISIBLE);
+        }else {
+            edit.setVisibility(View.INVISIBLE);
+            wishlistbtn.setVisibility(View.INVISIBLE);
+            change_icon.setVisibility(View.INVISIBLE);
+        }
+
+        //Don't allow these EditText fields to usable unless edit functionality is being used ====
+        username_edit.setFocusable(false);
+        username_edit.setTextIsSelectable(false);
+
+        phone_edit.setFocusable(false);
+        phone_edit.setTextIsSelectable(false);
+
+        address_edit.setFocusable(false);
+        address_edit.setTextIsSelectable(false);
+
+        email_edit.setFocusable(false);
+        email_edit.setTextIsSelectable(false);
+
+        overall_rating.setClickable(false);
+
+        //===========
+
+
+        view_items.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfileActivity.this, UserItem.class));
+            }
+        });
 
         /*
          * Retrieving data from the database to fill in EditText fields. Documents are specific to Firestore,
          * DO NOT CHANGE doc.get("[document]")
          */
-
         //retrieve data from profile document
         // AT: changed user email to profile email
         DocumentReference profileDocRef = db.collection("profiles").document(profile_email);
@@ -119,6 +148,36 @@ public class ProfileActivity extends AppCompatActivity {
                         // view the rating
                         overall_rating.setNumStars(doc.getLong("rating").intValue());
                         overall_rating.setRating(overall_rating.getNumStars());
+
+                        //Get User's saved profile pic (if they have one), else display default profile icon
+                        StorageReference storageRef = storage.getReference();
+                        String picPath = (String) doc.get("profile_image");
+
+                        StorageReference picRef = storageRef.child(picPath);
+                        System.out.println("PIC PATH: " +picPath);
+
+                        try{
+                            //TODO: add logic to allow for different file types
+                            final File localFile = File.createTempFile("Images", "jpg");
+                            if(localFile != null) {
+                                picRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                        user_pic.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        System.out.println("Something went wrong with getting the profile image! Message: " + e.getLocalizedMessage());
+                                    }
+                                });
+                            }else{
+                                Log.e(TAG, "Improper File Type!");
+                            }
+                        }catch(IOException e){
+                            e.printStackTrace();
+                        }
+
                         Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
                     } else {
                         Log.d(TAG, "No such document...");
@@ -136,14 +195,10 @@ public class ProfileActivity extends AppCompatActivity {
 // added in the above back end part
 
 
-
 /***********************************************************
  * Display comments
  * ***********************************************************/
         //display comments
-        final LinearLayout comment_view = (LinearLayout) findViewById(R.id.comment_area);
-        //THIS IS A HARD CODING STRING COMMENT ARRAY!
-       // final String[] comments = new String[] {"comment1", "comment2", "comment3", "4", "5"};
         profileDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot document = task.getResult();
@@ -160,8 +215,7 @@ public class ProfileActivity extends AppCompatActivity {
                             com_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    Comment current_com = new Comment();
-                                    current_com = documentSnapshot.toObject(Comment.class);
+                                    Comment current_com = documentSnapshot.toObject(Comment.class);
                                     LinearLayout comment = new LinearLayout(getBaseContext());
                                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
                                     comment.setLayoutParams(params);
@@ -174,8 +228,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     //format post date
                                     SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
                                     format.setTimeZone(TimeZone.getTimeZone("EDT"));
-                                    String posted_time = "Posted: " +format.format(time_stamp.toDate());
-
+                                    String posted_time = "Posted: " + format.format(time_stamp.toDate());
 
 
                                     //todo : Set the text here to actual comment
@@ -194,29 +247,23 @@ public class ProfileActivity extends AppCompatActivity {
                                     comment.addView(rating);
                                     comment_view.addView(comment);
                                 }
-                                });
-                            }
+                            });
                         }
-                        //result[0] = (String[])document.getData().get("my_items");
-                        Log.e(TAG, "comment list found");
-
-                    } else{
-                        Log.e(TAG, "comment list not found");
                     }
+                    //result[0] = (String[])document.getData().get("my_items");
+                    Log.e(TAG, "comment list found");
+
+                } else {
+                    Log.e(TAG, "comment list not found");
                 }
-            });
-
-
-            TextView edit = (TextView) findViewById(R.id.edit_profile);
-            if (user_email.equals(profile_email)){
-                edit.setVisibility(View.VISIBLE);
-                wishlistbtn.setVisibility(View.VISIBLE);
             }
-        edit.setOnClickListener(new View.OnClickListener()
+        });
 
-            {
-                @Override
-                public void onClick (View v){
+        //***** Edit Profile Functionality
+        edit.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
                 TextView temp = (TextView) findViewById(R.id.edit_profile);
                 if (temp.getText().toString().equals("Edit")) {
                     username_edit.setFocusable(true);
@@ -232,7 +279,6 @@ public class ProfileActivity extends AppCompatActivity {
                 } else {
                     f.update_profile(email_edit.getText().toString(), phone_edit.getText().toString(), 1, "", "", address_edit.getText().toString());
 
-
                     username_edit.setFocusable(false);
                     address_edit.setFocusable(false);
                     email_edit.setFocusable(false);
@@ -245,66 +291,124 @@ public class ProfileActivity extends AppCompatActivity {
                     temp.setText(text);
                 }
             }
-            });
+        });
 
         homebtn.setOnClickListener(new View.OnClickListener()
-
-            {
-                @Override
-                public void onClick (View v){
+        {
+            @Override
+            public void onClick(View v) {
              /*   Intent intent = new Intent(ProfileActivity.this, HomePageActivity.class);
                 startActivity(intent);*/
-                    SharedPreferences.Editor edit = sharedPreferences.edit();
-                    edit.putString("profile_email", user_email);
-                    edit.apply();
+                SharedPreferences.Editor edit = sharedPreferences.edit();
+                edit.putString("profile_email", user_email);
+                edit.apply();
                 finish();
             }
-            });
+        });
 
         wishlistbtn.setOnClickListener(new View.OnClickListener()
-
-            {
-                @Override
-                public void onClick (View v){
+        {
+            @Override
+            public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this, Wishlist.class);
                 //intent.putExtra("name", name.getText().toString());
                 startActivity(intent);
             }
-            });
+        });
 
-        }
 
-        private String getUserNameFromFirestore (String email){
-            String ret = "";
-            ret = f.get_username_by_email(email);
-            return ret;
-        }
-
-        public String get_username_by_email (String email){
-            final String[] result = {""};
-            final Task<DocumentSnapshot> task = db.collection("users").document(email).get();
-            task.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot snapshot) {
-                    result[0] = task.getResult().toString();
-                    Log.d(TAG, "get_username_by_email: onSuccess: found result: " + result[0], task.getException());
-                }
-            });
-            task.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "get_username_by_email: onFailure: did not find result ", task.getException());
-                }
-            });
-
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        //Upload Profile Image Functionality ---------------
+        change_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getImage();
             }
+        });
+    }
 
-            if (result[0].isEmpty())
-                System.out.println("OOOOOOOOOOOOF?");
-            return result[0];
+    /**
+     * Helper Function for onClick to change profile image
+     */
+    private void getImage(){
+        try{
+            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+            photoPickerIntent.setType("image/*");
+            startActivityForResult(photoPickerIntent, RESULT_LOAD_IMAGE);
+        }catch(Exception e){
+            Log.e(TAG, "Error retrieving image! Message: " + e.getLocalizedMessage());
         }
     }
+
+    /**
+     * Used to upload images from the phone into the app
+     *
+     * @param requestCode inherited, see Android Developer Docs
+     * @param resultCode result of activity (RESULT_OK means image was uploaded properly)
+     * @param data In this case, the image we want
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (resultCode == RESULT_OK) {
+            try {
+                //get URI from data
+                final Uri imageURI = data.getData();
+
+                //create input stream for image
+                final InputStream imageStream = getContentResolver().openInputStream(imageURI);
+
+                //create bitmap of image
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
+                //display image in place of profile icon
+                final ImageView user_pic = findViewById(R.id.user_image);
+                user_pic.setImageBitmap(selectedImage);
+
+                //now store image in Firebase Storage so we can always associate it with the user
+                //create storage reference first to link references together
+                StorageReference storageRef = storage.getReference();
+
+                //create new reference child to the image we just uploaded with the imageURI
+                //TODO: Add logic to delete Reference to old picture, not vital for scope of this project but will help reduce clutter!
+                //TODO: Add better name logic?
+                final StorageReference profileRef = storageRef.child("images/" + imageURI.getLastPathSegment());
+
+                //create task to upload file
+                UploadTask uploadTask = profileRef.putFile(imageURI);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(ProfileActivity.this, "Image added to Firebase Storage", Toast.LENGTH_LONG).show();
+                        //add reference to user's profile in the database
+                        addImageToProfile(sharedPreferences.getString("email", ""), profileRef);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ProfileActivity.this, "Image was not added to Firebase Storage :(", Toast.LENGTH_LONG).show();
+                        Log.e(TAG, "Error uploading image to Firebase Storage! Message: " + e.getLocalizedMessage());
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(ProfileActivity.this, "Something went wrong! :(", Toast.LENGTH_LONG).show();
+            }
+
+        }else {
+            Toast.makeText(ProfileActivity.this, "You haven't picked Image",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void addImageToProfile(String email, StorageReference imageRef){
+        if (imageRef != null) {
+            try {
+                db.collection("profiles").document(email)
+                        .update("profile_image", imageRef.getPath());
+            }catch(Exception e){
+                System.out.println("Error Adding Image to Profile! Message: " +e.getLocalizedMessage());
+            }
+        }
+    }
+}

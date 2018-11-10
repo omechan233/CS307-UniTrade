@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -40,7 +41,12 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,16 +54,15 @@ import java.util.Map;
 public class HomePageActivity extends AppCompatActivity {
 
     private static final String TAG = "HomePage";
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private boolean initFlag = true;
 
     private Spinner cat_spinner;
     private EditText search_word;
     private Spinner search_sort_spinner;
-    SharedPreferences shared;
-    private final Functions f = new Functions();
-
+    private SharedPreferences shared;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -754,18 +759,58 @@ public class HomePageActivity extends AppCompatActivity {
                                         Item itemObj = ItemDoc.toObject(Item.class);
 
                                         //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
-                                        LinearLayout item = new LinearLayout(getBaseContext());
+                                        final LinearLayout item = new LinearLayout(getBaseContext());
                                         //set layout params for parent layout
                                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
                                         item.setLayoutParams(params);
 
-                                        //create and set params of image in parent layout
-                                        ImageView imageView = new ImageView(getBaseContext());
-                                        imageView.setImageResource(R.mipmap.poi_test_src);
-                                        params = new LinearLayout.LayoutParams(180, 180);
-                                        params.setMargins(20, 20, 0, 20);
-                                        imageView.setLayoutParams(params);
-                                        item.addView(imageView);
+                                        //Display Item's image, if it has one ===================
+                                        //get item's image from storage
+                                        StorageReference storageRef = storage.getReference();
+                                        String picPath = ItemDoc.getString("item_image");
+
+                                        StorageReference picRef = null;
+                                        if(picPath != null)
+                                          picRef = storageRef.child(picPath);
+
+                                        if(picRef != null){
+                                            try{
+                                                //TODO: add logic to allow for different file types
+                                                final File localFile = File.createTempFile("Images", "jpg");
+                                                if(localFile != null) {
+                                                    picRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                        @Override
+                                                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                            //create and set params of image in parent layout
+                                                            ImageView imageView = new ImageView(getBaseContext());
+                                                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(180, 180);
+                                                            params.setMargins(20, 20, 0, 20);
+                                                            imageView.setLayoutParams(params);
+                                                            item.addView(imageView);
+                                                            imageView.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            System.out.println("Something went wrong with getting the profile image! Message: " + e.getLocalizedMessage());
+                                                        }
+                                                    });
+                                                }else{
+                                                    Log.e(TAG, "Improper File Type!");
+                                                }
+                                            }catch(IOException e){
+                                                Log.e(TAG, "IOError attempting to get image from Storage, message: " +e.getLocalizedMessage());
+                                            }
+                                        }else {
+                                            //create and set params of image in parent layout
+                                            ImageView imageView = new ImageView(getBaseContext());
+                                            imageView.setImageResource(R.mipmap.poi_test_src);
+                                            params = new LinearLayout.LayoutParams(180, 180);
+                                            params.setMargins(20, 20, 0, 20);
+                                            imageView.setLayoutParams(params);
+                                            item.addView(imageView);
+                                        }
+                                        // Done with image ==================
 
                                         //create textview in parent layout
                                         TextView tv = new TextView(getBaseContext());

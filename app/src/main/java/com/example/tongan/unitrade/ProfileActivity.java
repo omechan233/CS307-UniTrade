@@ -151,7 +151,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                         //Get User's saved profile pic (if they have one), else display default profile icon
                         StorageReference storageRef = storage.getReference();
-                        String picPath = (String) doc.get("profile_image");
+                        String picPath = doc.getString("profile_image");
 
                         StorageReference picRef = storageRef.child(picPath);
                         System.out.println("PIC PATH: " +picPath);
@@ -372,8 +372,8 @@ public class ProfileActivity extends AppCompatActivity {
 
                 //create new reference child to the image we just uploaded with the imageURI
                 //TODO: Add logic to delete Reference to old picture, not vital for scope of this project but will help reduce clutter!
-                //TODO: Add better name logic?
-                final StorageReference profileRef = storageRef.child("images/" + imageURI.getLastPathSegment());
+                final String user_email = sharedPreferences.getString("email", "");
+                final StorageReference profileRef = storageRef.child("images/" + user_email + "Profile");
 
                 //create task to upload file
                 UploadTask uploadTask = profileRef.putFile(imageURI);
@@ -401,6 +401,12 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Helper function that adds Storage Reference to the user's profile, so it can be
+     * retrieved later
+     * @param email user's email
+     * @param imageRef reference to image for user's profile
+     */
     private void addImageToProfile(String email, StorageReference imageRef){
         if (imageRef != null) {
             try {

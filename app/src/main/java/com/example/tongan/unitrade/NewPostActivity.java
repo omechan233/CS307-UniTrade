@@ -1,24 +1,58 @@
 package com.example.tongan.unitrade;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Gallery;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
 
+import org.w3c.dom.Text;
 
 public class NewPostActivity extends AppCompatActivity {
     SharedPreferences shared;
     private Spinner post_spinner;
     private String category;
+    public static final int PICK_IMAGE = 1;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null) {
+            try {
+                Uri photoUri = data.getData();
+                Bitmap selectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                ImageView image = (ImageView) findViewById(R.id.item_image);
+                image.setImageBitmap(selectedImage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void pickImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +64,14 @@ public class NewPostActivity extends AppCompatActivity {
         Button submit = (Button) findViewById(R.id.post_submit_btn);
         post_spinner = (Spinner) findViewById(R.id.post_spinner);
 
+        TextView upload_image = (TextView)findViewById(R.id.upload_image);
+        upload_image.setClickable(true);
+        upload_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickImage();
+            }
+        });
 
         post_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

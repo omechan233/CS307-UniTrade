@@ -70,8 +70,8 @@ public class Functions {
         user_doc.put("notification", notification);
         user_doc.put("user_email", email);
         user_doc.put("user_name", user_name);
-        user_doc.put("method_notification", 1);
-        user_doc.put("Itemsold_notification", 1);
+        user_doc.put("method_notification", 0);
+        user_doc.put("Itemsold_notification", 0);
 
         Map<String, Object> profile_doc = new HashMap<>();
         profile_doc.put("phone_number", phone);
@@ -434,7 +434,7 @@ public class Functions {
                              boolean face_to_face, int methodpending){
         final String order_ID = buyer_email+order_time.toString();
         final Order order = new Order(item_ID, order_time, seller_email,item_title, item_price,
-                false, face_to_face, methodpending,order_ID, false, 0);
+                false, face_to_face, methodpending,order_ID, false, 0,0);
 
         final String final_item_ID = item_ID;
         final String final_seller_email = seller_email;

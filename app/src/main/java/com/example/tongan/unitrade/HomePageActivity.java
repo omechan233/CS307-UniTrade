@@ -337,10 +337,10 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                                 .update("face_to_face", true);
                                                                                         db.collection("orders").document(order_doc.getId())
                                                                                                 .update("methodpending", 4);
-                                                                                        db.collection("orders").document(order_doc.getId())
-                                                                                                .update("request", 0);
 //                                                                                        db.collection("orders").document(order_doc.getId())
-//                                                                                                .update("request", 1);
+//                                                                                                .update("request", 0);
+                                                                                        db.collection("orders").document(order_doc.getId())
+                                                                                                .update("request", 1);
                                                                                         System.out.println("do you capture the change!!!");
 
                                                                                     } else if (finalCurrent_order.getMethodpending() == 2 && finalCurrent_order.getMethodpending() != 0
@@ -350,8 +350,10 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                                 .update("face_to_face", false);
                                                                                         db.collection("orders").document(order_doc.getId())
                                                                                                 .update("methodpending", 4);
+//                                                                                        db.collection("orders").document(order_doc.getId())
+//                                                                                                .update("request", 0);
                                                                                         db.collection("orders").document(order_doc.getId())
-                                                                                                .update("request", 0);
+                                                                                                .update("request", 1);
 
                                                                                     }
                                                                                     Toast.makeText(HomePageActivity.this, "You accepted!",
@@ -375,8 +377,10 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                             && finalCurrent_order.getMethodpending() != 4) {
                                                                                         db.collection("orders").document(order_doc.getId())
                                                                                                 .update("methodpending", 3);
+//                                                                                        db.collection("orders").document(order_doc.getId())
+//                                                                                                .update("request", 0);
                                                                                         db.collection("orders").document(order_doc.getId())
-                                                                                                .update("request", 0);
+                                                                                                .update("request", 1);
 
                                                                                     }
 
@@ -385,6 +389,8 @@ public class HomePageActivity extends AppCompatActivity {
                                                                     builder.show();
                                                                     //front-end functionality ends here.
                                                                 }
+                                                                db.collection("orders").document(order_doc.getId())
+                                                                        .update("request", 0);
                                                             }
                                                         });
                                                     } else {

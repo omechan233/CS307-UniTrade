@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,13 +14,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Item;
 import com.example.tongan.unitrade.objects.Order;
-import com.example.tongan.unitrade.objects.Profile;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -29,7 +32,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.TimeZone;
@@ -37,16 +45,19 @@ import java.util.TimeZone;
 public class ItemDetail extends AppCompatActivity {
     private static final String TAG = "Item detail page";
     SharedPreferences shared;
+    FirebaseStorage storage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_item_detail);
 
         shared = getSharedPreferences("app", Context.MODE_PRIVATE);
         final String email = shared.getString("email","");
         final String itemid = shared.getString("itemid","");
         final String item_id = itemid;
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_item_detail);
+        storage = FirebaseStorage.getInstance();
 
         Button back = (Button) findViewById(R.id.detail_previous_page);
         back.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +72,8 @@ public class ItemDetail extends AppCompatActivity {
         final EditText name_edit = (EditText) findViewById(R.id.detail_item_name);
         final EditText price_edit = (EditText) findViewById(R.id.detail_price);
         final EditText time_edit = (EditText) findViewById(R.id.detail_posttime);
+        final ImageView item_pic = findViewById(R.id.detail_image);
+
         time_edit.setTextIsSelectable(false);
         time_edit.setFocusable(false);
 
@@ -132,27 +145,41 @@ public class ItemDetail extends AppCompatActivity {
                 price_edit.setText(temp);
 
 
+                //Set Item image to one uploaded with the post, if it exists
+                StorageReference storageRef = storage.getReference();
+                String picPath = documentSnapshot.getString("item_image");
+                if(picPath != null) {
+                    StorageReference picRef = storageRef.child(picPath);
 
+                    try {
+                        //TODO: add logic to allow for different file types
+                        final File localFile = File.createTempFile("Images", "jpg");
+                        if (localFile != null) {
+                            picRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    item_pic.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    System.out.println("Something went wrong with getting the profile image! Message: " + e.getLocalizedMessage());
+                                }
+                            });
+                        } else {
+                            Log.e(TAG, "Improper File Type!");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (NullPointerException e) {
+                        Log.e(TAG, "Null pointer found when attempting to retrieve image, message: " + e.getLocalizedMessage());
+                    }
+                }
+                else{ //default image
+                    item_pic.setImageResource(R.mipmap.poi_test_src);
+                }
             }
         });
-
-        /*
-        String item_name = "TEST NAME";
-        final Double price = -999.0;
-        String description = "TEST INFORMATION";
-        String seller = "TEST SELLER";
-        final String item_id = "TongAn12:03:5909212019";
-        //final String user_id ="guo361@purdue.edu";
-
-
-        desc_edit.setText(description);
-        name_edit.setText(item_name);
-        TextView seller_name = (TextView) findViewById(R.id.detail_seller);
-        seller = "Seller : " + seller;
-        seller_name.setText(seller);
-        String temp = price + "";
-        price_edit.setText(temp);
-        */
 
         final TextView delBtn = (TextView) findViewById(R.id.detail_delete);
         delBtn.setClickable(false);

@@ -16,7 +16,7 @@ public class Item {
     private String seller_name;
     private int status;
     private String location;
-    // private Image picture; 
+    //private String imagePath; //based on Firebase Storage
     //private int SellerID;
     private String description;
     private Timestamp postTime;

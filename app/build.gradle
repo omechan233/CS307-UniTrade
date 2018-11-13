@@ -34,6 +34,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.google.firebase:firebase-firestore:17.1.0'
     implementation 'com.google.firebase:firebase-dynamic-links:16.1.2'
+    implementation 'com.google.firebase:firebase-storage:16.0.4'
 
     //test stuff
     //testImplementation 'junit:junit:4.12'

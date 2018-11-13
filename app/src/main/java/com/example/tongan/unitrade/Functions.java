@@ -391,30 +391,6 @@ public class Functions {
             db.collection("profiles").document(email)
                     .update("address", address);
         }
-
-        /*
-        Map<String, Object> profile_doc = new HashMap<>();
-        profile_doc.put("phone_number", phone);
-        profile_doc.put("gender", gender);
-        profile_doc.put("description", description);
-        profile_doc.put("address",address);
-        profile_doc.put("real_name",real_name);
-
-        db.collection("profiles").document(email)
-                .set(profile_doc)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });
-                */
     }
 
     /**************** AT

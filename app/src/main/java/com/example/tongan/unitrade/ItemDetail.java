@@ -148,31 +148,35 @@ public class ItemDetail extends AppCompatActivity {
                 //Set Item image to one uploaded with the post, if it exists
                 StorageReference storageRef = storage.getReference();
                 String picPath = documentSnapshot.getString("item_image");
+                if(picPath != null) {
+                    StorageReference picRef = storageRef.child(picPath);
 
-                StorageReference picRef = storageRef.child(picPath);
-
-                try{
-                    //TODO: add logic to allow for different file types
-                    final File localFile = File.createTempFile("Images", "jpg");
-                    if(localFile != null) {
-                        picRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                item_pic.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                System.out.println("Something went wrong with getting the profile image! Message: " + e.getLocalizedMessage());
-                            }
-                        });
-                    }else{
-                        Log.e(TAG, "Improper File Type!");
+                    try {
+                        //TODO: add logic to allow for different file types
+                        final File localFile = File.createTempFile("Images", "jpg");
+                        if (localFile != null) {
+                            picRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    item_pic.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    System.out.println("Something went wrong with getting the profile image! Message: " + e.getLocalizedMessage());
+                                }
+                            });
+                        } else {
+                            Log.e(TAG, "Improper File Type!");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (NullPointerException e) {
+                        Log.e(TAG, "Null pointer found when attempting to retrieve image, message: " + e.getLocalizedMessage());
                     }
-                }catch(IOException e){
-                    e.printStackTrace();
-                }catch(NullPointerException e){
-                    Log.e(TAG, "Null pointer found when attempting to retrieve image, message: " +e.getLocalizedMessage());
+                }
+                else{ //default image
+                    item_pic.setImageResource(R.mipmap.poi_test_src);
                 }
             }
         });

@@ -601,7 +601,8 @@ public class HomePageActivity extends AppCompatActivity {
                                 try {
                                     for (String itemID : list) {
                                         CollectionReference itemsRef = db.collection("items");
-                                        DocumentReference single_itemRef = itemsRef.document(itemID);
+                                        final DocumentReference single_itemRef = itemsRef.document(itemID);
+
                                         single_itemRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -632,27 +633,71 @@ public class HomePageActivity extends AppCompatActivity {
 
                                                     if (contains_keyword) { //only display items that contain keyword in their title or description
                                                         try {
-                                                            Item itemObj = itemSnapshot.toObject(Item.class);
+                                                            final Item itemObj = itemSnapshot.toObject(Item.class);
 
                                                             //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
-                                                            LinearLayout item = new LinearLayout(getBaseContext());
+                                                            final LinearLayout item = new LinearLayout(getBaseContext());
                                                             //set layout params for parent layout
                                                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
                                                             item.setLayoutParams(params);
 
-                                                            //create and set params of image in parent layout
-                                                            ImageView imageView = new ImageView(getBaseContext());
-                                                            imageView.setImageResource(R.mipmap.poi_test_src);
-                                                            params = new LinearLayout.LayoutParams(180, 180);
-                                                            params.setMargins(20, 20, 0, 20);
-                                                            imageView.setLayoutParams(params);
-                                                            item.addView(imageView);
+                                                            //get item's image from storage
+                                                            StorageReference storageRef = storage.getReference();
+                                                            String picPath = itemSnapshot.getString("item_image");
 
-                                                            //create textview in parent layout
-                                                            TextView tv = new TextView(getBaseContext());
-                                                            String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
-                                                            tv.setText(text);
-                                                            item.addView(tv);
+                                                            StorageReference picRef = null;
+                                                            if(picPath != null)
+                                                                picRef = storageRef.child(picPath);
+
+                                                            if(picRef != null){
+                                                                try{
+                                                                    //TODO: add logic to allow for different file types
+                                                                    final File localFile = File.createTempFile("Images", "jpg");
+                                                                    if(localFile != null) {
+                                                                        picRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                                            @Override
+                                                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                                                //create and set params of image in parent layout
+                                                                                ImageView imageView = new ImageView(getBaseContext());
+                                                                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(180, 180);
+                                                                                params.setMargins(20, 20, 0, 20);
+                                                                                imageView.setLayoutParams(params);
+                                                                                item.addView(imageView);
+                                                                                imageView.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
+
+                                                                                //create textview in parent layout
+                                                                                TextView tv = new TextView(getBaseContext());
+                                                                                String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
+                                                                                tv.setText(text);
+                                                                                item.addView(tv);
+                                                                            }
+                                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                                            @Override
+                                                                            public void onFailure(@NonNull Exception e) {
+                                                                                System.out.println("Something went wrong with getting the profile image! Message: " + e.getLocalizedMessage());
+                                                                            }
+                                                                        });
+                                                                    }else
+                                                                        Log.e(TAG, "Improper File Type!");
+                                                                }catch(IOException e) {
+                                                                    Log.e(TAG, "IOError attempting to get image from Storage, message: " + e.getLocalizedMessage());
+                                                                }
+                                                            }
+                                                            else { //display default image
+                                                                //create and set params of image in parent layout
+                                                                ImageView imageView = new ImageView(getBaseContext());
+                                                                imageView.setImageResource(R.mipmap.poi_test_src);
+                                                                params = new LinearLayout.LayoutParams(180, 180);
+                                                                params.setMargins(20, 20, 0, 20);
+                                                                imageView.setLayoutParams(params);
+                                                                item.addView(imageView);
+
+                                                                //create textview in parent layout
+                                                                TextView tv = new TextView(getBaseContext());
+                                                                String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
+                                                                tv.setText(text);
+                                                                item.addView(tv);
+                                                            }
                                                             //==================
 
                                                             //Set up OnClick for each Item to get ItemDetailPage ==================
@@ -822,10 +867,7 @@ public class HomePageActivity extends AppCompatActivity {
                                             tv.setText(text);
                                             item.addView(tv);
                                         }
-                                        // Done with image ==================
-
-
-                                        //==================
+                                        // Done creating ItemView ==================
 
                                         //Set up OnClick for each Item to get ItemDetailPage ==================
                                         final Item current_item = itemObj;

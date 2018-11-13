@@ -72,8 +72,16 @@ public class Purchase extends AppCompatActivity {
                             f.create_order(useremail,item.getSeller_name(), itemid, orderTime, item.getPrice(), item.getTitle(), finalFace_to_face,0);
                             f.changeItemStatusToBought(itemid);
                             Toast.makeText(Purchase.this, "Submit Success! You choose " + radioButton.getText(), Toast.LENGTH_LONG).show();
+                            /**************************************
+                             * PayPal test page
+                             ***************************************/
+                            if (radioButton.getText().equals("Online Payment")){
+                                    startActivity(new Intent(Purchase.this, Paypal.class));
+                            }
+                            else {
+                                finish();
+                            }
 
-                            finish();
 
                         }
                     }

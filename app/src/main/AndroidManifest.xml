@@ -47,6 +47,8 @@
         <activity android:name=".SendNotification" />
         <activity android:name=".OrderDetail" />
         <activity android:name=".CommentPage" />
+        <activity android:name=".Paypal" />
+        <activity android:name=".PaymentDetails" />
         <activity android:name=".UserItem"></activity>
         
     </application>

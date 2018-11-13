@@ -756,7 +756,7 @@ public class HomePageActivity extends AppCompatActivity {
                                 if (contains_keyword) { //only display items that contain keyword in their title or description
                                     try {
                                         //Construct Item Object from each DocSnapshot
-                                        Item itemObj = ItemDoc.toObject(Item.class);
+                                        final Item itemObj = ItemDoc.toObject(Item.class);
 
                                         //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
                                         final LinearLayout item = new LinearLayout(getBaseContext());
@@ -788,6 +788,12 @@ public class HomePageActivity extends AppCompatActivity {
                                                             imageView.setLayoutParams(params);
                                                             item.addView(imageView);
                                                             imageView.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
+
+                                                            //create textview in parent layout
+                                                            TextView tv = new TextView(getBaseContext());
+                                                            String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
+                                                            tv.setText(text);
+                                                            item.addView(tv);
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {
                                                         @Override
@@ -795,13 +801,13 @@ public class HomePageActivity extends AppCompatActivity {
                                                             System.out.println("Something went wrong with getting the profile image! Message: " + e.getLocalizedMessage());
                                                         }
                                                     });
-                                                }else{
+                                                }else
                                                     Log.e(TAG, "Improper File Type!");
-                                                }
-                                            }catch(IOException e){
-                                                Log.e(TAG, "IOError attempting to get image from Storage, message: " +e.getLocalizedMessage());
+                                            }catch(IOException e) {
+                                                Log.e(TAG, "IOError attempting to get image from Storage, message: " + e.getLocalizedMessage());
                                             }
-                                        }else {
+                                        }
+                                        else { //display default image
                                             //create and set params of image in parent layout
                                             ImageView imageView = new ImageView(getBaseContext());
                                             imageView.setImageResource(R.mipmap.poi_test_src);
@@ -809,14 +815,16 @@ public class HomePageActivity extends AppCompatActivity {
                                             params.setMargins(20, 20, 0, 20);
                                             imageView.setLayoutParams(params);
                                             item.addView(imageView);
+
+                                            //create textview in parent layout
+                                            TextView tv = new TextView(getBaseContext());
+                                            String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
+                                            tv.setText(text);
+                                            item.addView(tv);
                                         }
                                         // Done with image ==================
 
-                                        //create textview in parent layout
-                                        TextView tv = new TextView(getBaseContext());
-                                        String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
-                                        tv.setText(text);
-                                        item.addView(tv);
+
                                         //==================
 
                                         //Set up OnClick for each Item to get ItemDetailPage ==================

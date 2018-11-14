@@ -121,31 +121,32 @@ public class NewPostActivity extends AppCompatActivity {
                     int ret = f.create_post(itemName,email,price,category,address,description,status, postTime, notified);
                     final String itemID = email + postTime.toString();
 
-                    //now store image in Firebase Storage so we can always associate it with this item
-                    //create storage reference first to link references together
-                    StorageReference storageRef = storage.getReference();
+                    if(itemImage != null) {
+                        //now store image in Firebase Storage so we can always associate it with this item
+                        //create storage reference first to link references together
+                        StorageReference storageRef = storage.getReference();
 
-                    //create new reference child to the image we just uploaded with the imageURI
-                    //TODO: improve naming convention for posts' image
-                    final StorageReference imageRef = storageRef.child("images/" + itemID + "Image");
+                        //create new reference child to the image we just uploaded with the imageURI
+                        //TODO: improve naming convention for posts' image
+                        final StorageReference imageRef = storageRef.child("images/" + itemID + "Image");
 
-                    //create task to upload file
-                    UploadTask uploadTask = imageRef.putFile(itemImage);
-                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(NewPostActivity.this, "Image added to Firebase Storage", Toast.LENGTH_LONG).show();
-                            //add reference to user's profile in the database
-                            addImageToPost(itemID, imageRef);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(NewPostActivity.this, "Image was not added to Firebase Storage :(", Toast.LENGTH_LONG).show();
-                            Log.e(TAG, "Error uploading image to Firebase Storage! Message: " + e.getLocalizedMessage());
-                        }
-                    });
-
+                        //create task to upload file
+                        UploadTask uploadTask = imageRef.putFile(itemImage);
+                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Toast.makeText(NewPostActivity.this, "Image added to Firebase Storage", Toast.LENGTH_LONG).show();
+                                //add reference to user's profile in the database
+                                addImageToPost(itemID, imageRef);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(NewPostActivity.this, "Image was not added to Firebase Storage :(", Toast.LENGTH_LONG).show();
+                                Log.e(TAG, "Error uploading image to Firebase Storage! Message: " + e.getLocalizedMessage());
+                            }
+                        });
+                    }
                     //back to homepage
                     Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(NewPostActivity.this, HomePageActivity.class);

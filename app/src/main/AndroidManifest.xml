@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.tongan.unitrade">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -50,6 +51,10 @@
         <activity android:name=".Paypal" />
         <activity android:name=".PaymentDetails" />
         <activity android:name=".UserItem"></activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAegSp_NPryeyi4M6pmFQhyYvtCxcJSS20"/>
         
     </application>
 

@@ -1,10 +1,15 @@
 package com.example.tongan.unitrade;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,18 +18,33 @@ import android.content.Intent;
 
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.tongan.unitrade.objects.Item;
+import com.example.tongan.unitrade.objects.Order;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +54,8 @@ import java.util.regex.Pattern;
 public class MainActivity extends AppCompatActivity{
     private SharedPreferences shared;
     private FirebaseAuth mAuth;
+    private static final String TAG = "MainActivity";
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     //IMPORTANT: static strings are used in Toasts and needed for Testing
     public static final String bad_email_or_password = "Authentication failed. Email or Password is incorrect.";
@@ -154,6 +176,96 @@ public class MainActivity extends AppCompatActivity{
             // The Runnable will be executed after the given delay time
             h.postDelayed(r, 500); // will be delayed for 0.5 seconds
         }
+
+        final String email = shared.getString("email", "");
+        DocumentReference userDocRef = db.collection("users").document(email);
+        System.out.println("______________________________________email in main" + email);
+
+/***
+ * method notification test same way as sold
+ */
+        //get users sold notification setting
+        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        //update text boxes with user info from database
+                        String notification = doc.get("notification").toString();
+                        if (notification.equals("0")) {
+                        } else {
+                            //get order list from profile
+                            // final DocumentReference profiles = db.collection("profiles").document(email);
+                            Query query = db.collection("orders").whereEqualTo("seller_email", email);
+                            System.out.println("currrent seller!!!!!!!!!!!!!!!!!in main   " + email);
+
+                            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            //get item from order list
+                                            final DocumentReference order_doc = db.collection("orders").document(document.getId());
+                                            System.out.println("currrent order!!!!!!!!!!!!!!!!!in main   " + document.getId());
+                                            order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                                                    @Nullable FirebaseFirestoreException e) {
+                                                    if (e != null) {
+                                                        Log.w(TAG, "Listen failed.", e);
+                                                        return;
+                                                    }
+
+                                                    if (snapshot != null && snapshot.exists()) {
+                                                        order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                Order current_order = new Order();
+                                                                current_order = documentSnapshot.toObject(Order.class);
+                                                                if (current_order.isIs_paid()) {
+                                                                        /**
+                                                                         * notification bar
+                                                                         */
+                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                                        Intent intent = new Intent(MainActivity.this, Order.class);
+                                                                        PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+                                                                        Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
+                                                                                .setContentTitle("UniTrade:")
+                                                                                .setContentText("new payment received")
+                                                                                .setWhen(System.currentTimeMillis())
+                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                                .setAutoCancel(true)
+                                                                                .setContentIntent(ma)
+                                                                                .build();
+
+                                                                        manager.notify(1, notification);
+//                                                           
+                                                                }
+                                                            }
+                                                        });
+                                                    } else {
+                                                        Log.d(TAG, "Current data: null");
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        Log.e(TAG, "my item list found");
+
+                                    } else {
+                                        Log.e(TAG, "my item list not found");
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        Log.d(TAG, "No such document...");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
     private boolean isEmailVerified(){

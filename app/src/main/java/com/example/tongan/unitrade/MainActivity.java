@@ -178,6 +178,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
         final String email = shared.getString("email", "");
+        final String notification = shared.getString("notification", "");
         DocumentReference userDocRef = db.collection("users").document(email);
         System.out.println("______________________________________email in main" + email);
 
@@ -192,14 +193,15 @@ public class MainActivity extends AppCompatActivity{
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
                         //update text boxes with user info from database
-                        String notification = doc.get("notification").toString();
+//                        String notification = doc.get("notification").toString();
+//                        System.out.println("notification!!!" + notification);
                         if (notification.equals("0")) {
                         } else {
+                             System.out.println("notification!!!" + notification);
+
                             //get order list from profile
                             // final DocumentReference profiles = db.collection("profiles").document(email);
                             Query query = db.collection("orders").whereEqualTo("seller_email", email);
-                            System.out.println("currrent seller!!!!!!!!!!!!!!!!!in main   " + email);
-
                             query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -207,7 +209,6 @@ public class MainActivity extends AppCompatActivity{
                                         for (QueryDocumentSnapshot document : task.getResult()) {
                                             //get item from order list
                                             final DocumentReference order_doc = db.collection("orders").document(document.getId());
-                                            System.out.println("currrent order!!!!!!!!!!!!!!!!!in main   " + document.getId());
                                             order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                                 @Override
                                                 public void onEvent(@Nullable DocumentSnapshot snapshot,
@@ -223,10 +224,11 @@ public class MainActivity extends AppCompatActivity{
                                                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                                 Order current_order = new Order();
                                                                 current_order = documentSnapshot.toObject(Order.class);
-                                                                if (current_order.isIs_paid()) {
-                                                                        /**
-                                                                         * notification bar
-                                                                         */
+                                                                final String notifi = shared.getString("notification", "");
+                                                                if (current_order.isIs_paid() & notifi.equals("1")) {
+                                                                    /**
+                                                                     * notification bar
+                                                                     */
                                                                         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                                                         Intent intent = new Intent(MainActivity.this, Order.class);
                                                                         PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
@@ -240,7 +242,7 @@ public class MainActivity extends AppCompatActivity{
                                                                                 .build();
 
                                                                         manager.notify(1, notification);
-//                                                           
+//
                                                                 }
                                                             }
                                                         });

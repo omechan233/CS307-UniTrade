@@ -161,6 +161,9 @@ public class ProfileActivity extends AppCompatActivity {
                         StorageReference storageRef = storage.getReference();
                         String picPath = doc.getString("profile_image");
 
+                        if(picPath == null) //skip image fetch if there is no image to fetch
+                            return;
+
                         StorageReference picRef = storageRef.child(picPath);
                         System.out.println("PIC PATH: " +picPath);
 
@@ -390,7 +393,9 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(ProfileActivity.this, "Image added to Firebase Storage", Toast.LENGTH_LONG).show();
                         //add reference to user's profile in the database
-                        addImageToProfile(sharedPreferences.getString("email", ""), profileRef);
+                        if(addImageToProfile(sharedPreferences.getString("email", ""), profileRef)){
+                            Toast.makeText(ProfileActivity.this, "Image was not added to Firebase Storage :(", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -415,15 +420,18 @@ public class ProfileActivity extends AppCompatActivity {
      * @param email user's email
      * @param imageRef reference to image for user's profile
      */
-    private void addImageToProfile(String email, StorageReference imageRef){
+    private boolean addImageToProfile(String email, StorageReference imageRef){
         if (imageRef != null) {
             try {
                 db.collection("profiles").document(email)
                         .update("profile_image", imageRef.getPath());
+                return true;
             }catch(Exception e){
                 System.out.println("Error Adding Image to Profile! Message: " +e.getLocalizedMessage());
+                return false;
             }
         }
+        return false;
     }
 
     private String get_address(double latitude, double longitude){

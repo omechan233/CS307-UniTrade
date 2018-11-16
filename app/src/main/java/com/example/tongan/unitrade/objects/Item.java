@@ -16,7 +16,7 @@ public class Item {
     private String seller_name;
     private int status;
     private String location;
-    //private String imagePath; //based on Firebase Storage
+    private String imagePath; //based on Firebase Storage
     //private int SellerID;
     private String description;
     private Timestamp postTime;
@@ -85,6 +85,7 @@ public class Item {
     }
     public Timestamp getPostTime() { return this.postTime; }
     public int getNotified(){ return this.notified; }
+    public String getImagePath(){ return this.imagePath; }
 
     /** Setter Methods **/
     public void setPrice(double price){
@@ -106,6 +107,7 @@ public class Item {
         this.location=location;
     }
     public void setNotified(int notified){this.notified = notified;}
+    public void setImagePath(String path){ this.imagePath = path; }
 
     @Override
     /**

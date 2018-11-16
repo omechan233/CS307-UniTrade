@@ -96,11 +96,11 @@ PLEASSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!-->
     <LinearLayout
         android:id="@+id/homepage_buttons"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal"
-        android:weightSum="2"
+        android:weightSum="3"
         android:layout_alignParentLeft="true">
 
         <Button
@@ -115,7 +115,14 @@ PLEASSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!-->
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Settings and profile" />
+            android:text="Settings &amp; profile" />
+
+        <Button
+            android:id="@+id/nearby_item_btn"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Nearby Item" />
 
     </LinearLayout>
 

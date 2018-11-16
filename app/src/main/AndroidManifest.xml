@@ -50,7 +50,8 @@
         <activity android:name=".CommentPage" />
         <activity android:name=".Paypal" />
         <activity android:name=".PaymentDetails" />
-        <activity android:name=".UserItem"></activity>
+        <activity android:name=".UserItem">
+        <activity android:name=".NearbyItem"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

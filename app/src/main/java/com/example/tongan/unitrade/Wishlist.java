@@ -57,8 +57,7 @@ public class Wishlist extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    List<String> my_items = new ArrayList<String>();
-                    my_items = (List<String>) document.getData().get("wish_list");
+                    List<String> my_items = (List<String>) document.getData().get("wish_list");
                     if (my_items == null || my_items.isEmpty()) {
                         System.out.println("Nothing on the list!");
                     } else {
@@ -135,14 +134,6 @@ public class Wishlist extends AppCompatActivity {
                                         item.addView(tv);
                                     }
 
-
-
-
-                                    TextView tv = new TextView(getBaseContext());
-                                    //todo : the String below is getting information from a hard coding ArrayList<Item>, change it to adapt the actual data retrieved from backend
-                                    String text = "\n" + current_item.getTitle() + "\n" + current_item.getPrice() + "\n" + current_item.getSeller_name();
-                                    tv.setText(text);
-                                    item.addView(tv);
                                     item.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {

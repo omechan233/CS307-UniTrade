@@ -78,6 +78,7 @@ public class HomePageActivity extends AppCompatActivity {
         Button clickToPost = (Button) findViewById(R.id.home_post_btn);
         Button clickToSetting = (Button) findViewById(R.id.home_settings_btn);
         Button search_button = (Button) findViewById(R.id.hmpage_search_button);
+        Button nearby_button = (Button) findViewById(R.id.nearby_item_btn);
 
         //init fields
         cat_spinner = (Spinner) findViewById(R.id.category_sp);
@@ -89,6 +90,16 @@ public class HomePageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //direct to profile page and ask backend for current login user's information.
                 Intent intent = new Intent(HomePageActivity.this, SettingActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        nearby_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //direct to profile page and ask backend for current login user's information.
+                Intent intent = new Intent(HomePageActivity.this, NearbyItem.class);
                 startActivity(intent);
 
             }

@@ -21,6 +21,9 @@ public class Item {
     private String description;
     private Timestamp postTime;
     private int notified;
+    private double latitude;
+    private double longitude;
+
 
     /******** AT:
      * Updated the constructor, because having both post and item class seems redundant
@@ -46,7 +49,8 @@ public class Item {
      *
      */
     public Item(String category, String title, String seller_name, double price, String description,
-                String location, int status, Timestamp postTime, int notified){
+                String location, int status, Timestamp postTime, int notified,
+                double latitude, double longitude){
         this.id=seller_name+postTime.toString();
         this.category=category;
         this.title=title;
@@ -58,6 +62,8 @@ public class Item {
         this.description = description;
         this.postTime = postTime;
         this.notified = notified;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     /** Getter Methods **/
@@ -86,6 +92,12 @@ public class Item {
     public Timestamp getPostTime() { return this.postTime; }
     public int getNotified(){ return this.notified; }
     public String getImagePath(){ return this.imagePath; }
+    public double getLatitude() {
+        return latitude;
+    }
+    public double getLongitude() {
+        return longitude;
+    }
 
     /** Setter Methods **/
     public void setPrice(double price){
@@ -108,6 +120,12 @@ public class Item {
     }
     public void setNotified(int notified){this.notified = notified;}
     public void setImagePath(String path){ this.imagePath = path; }
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     @Override
     /**
@@ -123,7 +141,8 @@ public class Item {
                 "\nDescription: " + getDescription() +
                 "\nStatus: " + getStatus() +
                 "\nPosted Time: " + getPostTime().toString() +
-                "\nNotified: " + getNotified();
+                "\nNotified: " + getNotified() +
+                "\nCoordinates: " + getLatitude() + getLongitude();
     }
 
 }

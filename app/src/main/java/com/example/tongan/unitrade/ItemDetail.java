@@ -10,7 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,6 +45,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class ItemDetail extends AppCompatActivity {
+    private String trackingNumber;
     private static final String TAG = "Item detail page";
     SharedPreferences shared;
     FirebaseStorage storage;
@@ -58,6 +61,43 @@ public class ItemDetail extends AppCompatActivity {
         final String itemid = shared.getString("itemid","");
         final String item_id = itemid;
         storage = FirebaseStorage.getInstance();
+
+        final Button tracking_number = (Button)findViewById(R.id.tracking_number);
+        //todo : set this button to invisible if user is not seller
+        //tracking_number.setVisibility(View.INVISIBLE);
+        //tracking_number.setClickable(false);
+        tracking_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater layoutInflater = LayoutInflater.from(ItemDetail.this);
+                View promptView = layoutInflater.inflate(R.layout.input_dialog, null);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ItemDetail.this);
+                alertDialogBuilder.setView(promptView);
+
+                final EditText editText = (EditText) promptView.findViewById(R.id.tracking_number_edittext);
+                // setup a dialog window
+                alertDialogBuilder.setCancelable(false)
+                        .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                trackingNumber = editText.getText().toString();
+                                //todo : store the tracking number into database
+
+                                //Test the trackingNumber variable get correct input
+                                //Toast.makeText(getBaseContext(), "Your tracking number is " + trackingNumber, Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                // create an alert dialog
+                AlertDialog alert = alertDialogBuilder.create();
+                alert.show();
+            }
+        });
 
         Button back = (Button) findViewById(R.id.detail_previous_page);
         back.setOnClickListener(new View.OnClickListener() {

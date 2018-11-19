@@ -134,10 +134,14 @@ public class Wishlist extends AppCompatActivity {
                                         item.addView(tv);
                                     }
 
+                                    final Item final_cur_item = current_item;
                                     item.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            //todo:get the item_id of the selected item and store it into a global variable that can be used in the ItemDetail page(need to know which item to display detail)
+                                            SharedPreferences.Editor edit = shared.edit();
+                                            edit.putString("itemid", final_cur_item.getid());
+                                            edit.apply();
+
                                             startActivity(new Intent(Wishlist.this, ItemDetail.class));
 
                                         }

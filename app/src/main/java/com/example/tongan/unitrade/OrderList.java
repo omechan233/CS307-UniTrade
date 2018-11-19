@@ -294,7 +294,6 @@ public class OrderList extends AppCompatActivity {
                                                     edit.putString("itemid", finalCurrent_item.getid());
                                                     edit.apply();
 
-                                                    //todo:get the item_id of the selected item and store it into a global variable that can be used in the ItemDetail page(need to know which item to display detail)
                                                     startActivity(new Intent(OrderList.this, ItemDetail.class));
                                                 }
                                             });

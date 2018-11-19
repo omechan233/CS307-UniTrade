@@ -177,14 +177,19 @@ public class MainActivity extends AppCompatActivity{
             h.postDelayed(r, 500); // will be delayed for 0.5 seconds
         }
 
+        //TODO THIS SHOULD NOT BE HERE, move this to a different activity OR have it run AFTER the user has logged in on this page
         final String email = shared.getString("email", "");
         final String notification = shared.getString("notification", "");
+
+        if(email == null || email.isEmpty())
+            return;
+
         DocumentReference userDocRef = db.collection("users").document(email);
         System.out.println("______________________________________email in main" + email);
 
-/***
- * method notification test same way as sold
- */
+        /***
+         * method notification test same way as sold
+         */
         //get users sold notification setting
         userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -268,6 +273,7 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         });
+        ///////////////////^^^^^^ MOVE THIS CODE SOMEWHERE ELSE ^^^^^///////////////
     }
 
     private boolean isEmailVerified(){

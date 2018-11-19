@@ -39,75 +39,115 @@
         android:textStyle="bold"
         android:layout_alignParentLeft="true" />
 
+
     <TextView
         android:id="@+id/item_name_text"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_below="@id/upload_image"
-        android:layout_marginLeft="30dp"
-        android:text="Item Name"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/item_name_text2"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_below="@id/upload_image"
-        android:layout_marginLeft="30dp"
+        android:layout_alignStart="@+id/price_text"
+        android:layout_below="@+id/upload_image"
         android:text="Item Name"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <EditText
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/item_name_text"
-        android:layout_marginLeft="30dp"
-        android:inputType="text"
-        android:lines="1"
         android:id="@+id/item_name_input"
-        android:hint="Enter your item name here"/>
+        android:layout_width="227dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/upload_image"
+        android:layout_toEndOf="@+id/item_name_text"
+        android:hint="Enter your item name here"
+        android:inputType="text"
+        android:lines="1" />
 
     <TextView
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:textStyle="bold"
+        android:id="@+id/price_text"
+        android:layout_width="89dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_name_input"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="6dp"
         android:text="Price"
         android:textSize="18sp"
-        android:layout_below="@id/item_name_input"
-        android:layout_marginTop="1dp"
-        android:id="@+id/price_text"
-        android:layout_marginLeft="30dp" />
+        android:textStyle="bold" />
 
     <EditText
-        android:layout_width="300dp"
+        android:id="@+id/price_input"
+        android:layout_width="227dp"
         android:layout_height="40dp"
-        android:layout_below="@id/price_text"
-        android:lines="1"
-        android:layout_marginLeft="30dp"
-        android:inputType="numberDecimal"
+        android:layout_below="@+id/item_name_input"
+        android:layout_marginStart="-15dp"
+        android:layout_toEndOf="@+id/item_image"
         android:hint="Enter the item price here"
-        android:id="@+id/price_input"/>
+        android:inputType="numberDecimal"
+        android:lines="1" />
 
     <TextView
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:textStyle="bold"
+        android:id="@+id/address_text"
+        android:layout_width="89dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/price_text"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="6dp"
+        android:text="Address"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+    <EditText
+        android:id="@+id/address_input"
+        android:layout_width="312dp"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/price_text"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        android:lines="1" />
+
+    <EditText
+        android:id="@+id/address_lat"
+        android:layout_width="312dp"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/price_text"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        android:lines="1" />
+
+    <EditText
+        android:id="@+id/address_lon"
+        android:layout_width="312dp"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/price_text"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        android:lines="1" />
+
+    <fragment
+        android:id="@+id/place_autocomplete_fragment"
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        android:layout_width="315dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/address_text"
+        android:layout_alignStart="@+id/address_text"
+        android:layout_centerVertical="true" />
+
+
+    <TextView
+        android:id="@+id/desc_text"
+        android:layout_width="101dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_below="@+id/place_autocomplete_fragment"
         android:text="Description"
         android:textSize="18sp"
-        android:layout_below="@id/price_input"
-        android:layout_marginTop="1dp"
-        android:id="@+id/desc_text"
-        android:layout_marginLeft="30dp" />
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/desc_input"
-        android:layout_width="340dp"
-        android:layout_height="142dp"
-        android:layout_alignParentBottom="true"
+        android:layout_width="327dp"
+        android:layout_height="95dp"
+        android:layout_below="@+id/desc_text"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="89dp"
+        android:layout_marginLeft="30dp"
         android:background="@drawable/message_box"
         android:gravity="top"
         android:hint=" Enter your item description here"
@@ -144,6 +184,27 @@
         android:text="Category"
         android:textSize="18sp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/PayPal_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/category_text"
+        android:layout_toEndOf="@+id/item_image"
+        android:text="PayPal Email"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/PayPal_input"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/PayPal_text"
+        android:layout_marginStart="9dp"
+        android:layout_toEndOf="@+id/item_name_text"
+        android:hint="Enter your PayPal account"
+        android:inputType="text"
+        android:lines="1" />
 
     <Spinner
         android:id="@+id/post_spinner"

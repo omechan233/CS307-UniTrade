@@ -206,6 +206,14 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <fragment
+        android:id="@+id/place_autocomplete_fragment"
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/change_icon"
+        android:layout_toEndOf="@+id/email_text" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="228dp"

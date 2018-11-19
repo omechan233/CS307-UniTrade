@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +33,11 @@ import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Comment;
 import com.example.tongan.unitrade.objects.Profile;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -90,6 +96,8 @@ public class ProfileActivity extends AppCompatActivity {
         final LinearLayout comment_view =   findViewById(R.id.comment_area);
         final TextView change_icon =        findViewById(R.id.change_icon);
         final ImageView user_pic =          findViewById(R.id.user_image);
+        final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
         //values from shared preferences
         final String user_email = sharedPreferences.getString("email", "");
@@ -115,6 +123,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         address_edit.setFocusable(false);
         address_edit.setTextIsSelectable(false);
+
+        autocompleteFragment.getView().setVisibility(View.INVISIBLE);
+
+
+
 
         email_edit.setFocusable(false);
         email_edit.setTextIsSelectable(false);
@@ -270,6 +283,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        final String changed_addrerss = "";
         //***** Edit Profile Functionality
         edit.setOnClickListener(new View.OnClickListener()
         {
@@ -278,19 +292,42 @@ public class ProfileActivity extends AppCompatActivity {
                 TextView temp = (TextView) findViewById(R.id.edit_profile);
                 if (temp.getText().toString().equals("Edit")) {
                     username_edit.setFocusable(true);
-                    address_edit.setFocusable(true);
+                    //address_edit.setFocusable(true);
                     email_edit.setFocusable(true);
                     phone_edit.setFocusable(true);
                     username_edit.setTextIsSelectable(true);
-                    address_edit.setTextIsSelectable(true);
+                    //address_edit.setTextIsSelectable(true);
+                    address_edit.setVisibility(View.INVISIBLE);
                     email_edit.setTextIsSelectable(false);
                     phone_edit.setTextIsSelectable(true);
+
+                    autocompleteFragment.getView().setVisibility(View.VISIBLE);
+                    autocompleteFragment.getView().setFocusable(true);
+                    autocompleteFragment.setText(address_edit.getText());
+                    autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                        @Override
+                        public void onPlaceSelected(Place place) {
+                            // TODO: Get info about the selected place.
+                            Log.i(TAG, "Place: " + place.getName());
+                            address_edit.setText(place.getName());
+                        }
+
+                        @Override
+                        public void onError(Status status) {
+                            // TODO: Handle the error.
+                            Log.i(TAG, "An error occurred: " + status);
+                        }
+                    });
+
                     String text = "Confirm";
                     temp.setText(text);
                 } else {
                     f.update_profile(email_edit.getText().toString(), phone_edit.getText().toString(), 1, "", "", address_edit.getText().toString());
 
                     username_edit.setFocusable(false);
+                    address_edit.setVisibility(View.VISIBLE);
+                    autocompleteFragment.getView().setVisibility(View.INVISIBLE);
+                    autocompleteFragment.getView().setFocusable(false);
                     address_edit.setFocusable(false);
                     email_edit.setFocusable(false);
                     phone_edit.setFocusable(false);

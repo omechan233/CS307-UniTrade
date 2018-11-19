@@ -1,12 +1,19 @@
 package com.example.tongan.unitrade;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +26,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -28,8 +39,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
+import java.util.Locale;
 
 
 public class NewPostActivity extends AppCompatActivity {
@@ -56,6 +70,50 @@ public class NewPostActivity extends AppCompatActivity {
         Button cancel = (Button) findViewById(R.id.cancel_btn);
         Button submit = (Button) findViewById(R.id.post_submit_btn);
         TextView upload_image = findViewById(R.id.upload_image);
+
+        //get autocomplete
+        final EditText address_edit = (EditText) findViewById(R.id.address_input);
+        final EditText address_lat = findViewById(R.id.address_lat);
+        final EditText address_lon = findViewById(R.id.address_lon);
+        final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.getView().setFocusable(true);
+        Location location = getLastBestLocation();
+        String current_address = get_address(location.getLatitude(), location.getLongitude());
+
+        autocompleteFragment.setText(current_address);
+
+        address_edit.setText(current_address);
+        address_lat.setText(Double.toString(location.getLatitude()));
+        address_lon.setText(Double.toString(location.getLongitude()));
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                double lat = place.getLatLng().latitude;
+                double lon = place.getLatLng().longitude;
+                String selected_address = get_address(lat,lon);
+                Log.i(TAG, "Place: " + place.getName());
+                autocompleteFragment.setText(selected_address);
+                address_edit.setText(selected_address);
+                address_lat.setText(Double.toString(lat));
+                address_lon.setText(Double.toString(lon));
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+                address_edit.setText("");
+                address_lat.setText("0");
+                address_lon.setText("0");
+            }
+        });
+
+
+
         post_spinner = (Spinner) findViewById(R.id.post_spinner);
         ///////////
 
@@ -94,8 +152,8 @@ public class NewPostActivity extends AppCompatActivity {
                 Timestamp postTime = Timestamp.now();
                 String itemName = itemName_edit.getText().toString();
                 String description = description_edit.getText().toString();
+                String address = address_edit.getText().toString();
                 //String username = "";
-                String address ="[not implemented yet]";
                // String category = category_edit.getText().toString();
                 Double price;
 
@@ -117,8 +175,8 @@ public class NewPostActivity extends AppCompatActivity {
                 if (!itemName.equals("") && !description.equals("") && !price_edit.getText().toString().equals("")) {
 
                     price = Double.parseDouble(price_edit.getText().toString());
-                    double lon = 0;
-                    double lat = 0;
+                    double lon = Double.parseDouble(address_lon.getText().toString());
+                    double lat = Double.parseDouble(address_lat.getText().toString());;
 
                     int ret = f.create_post(itemName,email,price,category,address,description,status, postTime, notified, lat, lon);
                     final String itemID = email + postTime.toString();
@@ -240,4 +298,60 @@ public class NewPostActivity extends AppCompatActivity {
             }
         }
     }
+
+    private Location getLastBestLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return null;
+        }
+        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        long GPSLocationTime = 0;
+        if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
+
+        long NetLocationTime = 0;
+
+        if (null != locationNet) {
+            NetLocationTime = locationNet.getTime();
+        }
+
+        if ( 0 < GPSLocationTime - NetLocationTime ) {
+            return locationGPS;
+        }
+        else {
+            return locationNet;
+        }
+    }
+    private String get_address(double latitude, double longitude){
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        String result = "";
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+            String country = addresses.get(0).getCountryName();
+            String postalCode = addresses.get(0).getPostalCode();
+            String knownName = addresses.get(0).getFeatureName();
+//
+//            result = address + ", " + city + ", " + state + ", " + country + ", " + postalCode + ", " + knownName;
+            result = address;
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 }

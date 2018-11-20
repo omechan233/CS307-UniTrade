@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.tongan.unitrade.objects.Comment;
 import com.example.tongan.unitrade.objects.Item;
 import com.example.tongan.unitrade.objects.Order;
+import com.example.tongan.unitrade.objects.Report;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -840,6 +841,14 @@ public class Functions {
                         Log.w(TAG, "item notifacation wrong", e);
                     }
                 });
+    }
+
+
+    /**
+     *  Method for sending a report to Firebase for admin to see
+     */
+    public void addReport(Report rep){
+        db.collection("reports").document(rep.getUserID() + rep.getReportedTime().toString()).set(rep);
     }
 }
 

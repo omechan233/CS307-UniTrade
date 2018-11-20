@@ -1,7 +1,9 @@
 package com.example.tongan.unitrade;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.tongan.unitrade.objects.Report;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingActivity extends AppCompatActivity {
@@ -86,10 +90,24 @@ public class SettingActivity extends AppCompatActivity {
                         .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 report = editText.getText().toString();
-                                //todo : store the report to database
+                                SharedPreferences shared = getSharedPreferences("app", Context.MODE_PRIVATE);
+                                String email = shared.getString("email", null);
+                                Timestamp reportTime = Timestamp.now();
 
-                                //Test the trackingNumber variable get correct input
-                                //Toast.makeText(getBaseContext(), report, Toast.LENGTH_LONG).show();
+                                if(email == null || report == null) {
+                                    System.out.println("ERROR getting info");
+                                    Toast.makeText(SettingActivity.this, "Error Sending Report, Please try again!", Toast.LENGTH_SHORT).show();
+                                    dialog.cancel();
+                                }
+                                else if(report.isEmpty()){
+                                    Toast.makeText(SettingActivity.this, "Please provide input before sending a report", Toast.LENGTH_SHORT).show();
+                                    dialog.cancel();
+                                }
+                                else { //send report
+                                    Functions f = new Functions();
+                                    f.addReport(new Report(email, reportTime, report));
+                                    Toast.makeText(SettingActivity.this, "Report Sent! We will address your concerns ASAP, thank you!", Toast.LENGTH_LONG).show();
+                                }
                             }
                         })
                         .setNegativeButton("Cancel",

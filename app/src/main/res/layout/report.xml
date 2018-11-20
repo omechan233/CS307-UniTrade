@@ -15,12 +15,12 @@
 
     <EditText
         android:id="@+id/report_box"
-        android:lines="5"
-        android:text="123"
-        android:inputType="textMultiLine"
-        android:layout_gravity="top"
+        android:padding="@dimen/h_1px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/message_box" />
+        android:layout_gravity="top"
+        android:background="@drawable/message_box"
+        android:hint="Type Here..."
+        android:inputType="textMultiLine" />
 
 </LinearLayout>

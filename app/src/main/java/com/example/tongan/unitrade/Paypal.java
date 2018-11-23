@@ -37,6 +37,7 @@ public class Paypal extends AppCompatActivity {
 
     private static final String TAG = "Paypal page";
     public static final int PAYPAL_REQUEST_CODE = 7171;
+    private SharedPreferences sharedPreferences;
 
     private static PayPalConfiguration config = new PayPalConfiguration()
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
@@ -77,7 +78,12 @@ public class Paypal extends AppCompatActivity {
     }
 
     private void processPayment() {
+        //Todo: get item price from DB.
+        //amount = sharedPreferences.getString("")
+        //edtAmount.setText(amount);
+        //edtAmount.setTextIsSelectable(false);
         amount = edtAmount.getText().toString();
+
         PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(amount)), "USD",
                 "Trading in UniTrade", PayPalPayment.PAYMENT_INTENT_SALE);
         Intent intent = new Intent(this, PaymentActivity.class);

@@ -76,7 +76,8 @@ public class Purchase extends AppCompatActivity {
                              * PayPal test page
                              ***************************************/
                             if (radioButton.getText().equals("Online Payment")){
-                                    startActivity(new Intent(Purchase.this, Paypal.class));
+                                //direct to shipment page
+                                    startActivity(new Intent(Purchase.this, Shipment.class));
                             }
                             else {
                                 finish();

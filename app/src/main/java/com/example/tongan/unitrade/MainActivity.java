@@ -345,7 +345,7 @@ public class MainActivity extends AppCompatActivity{
                         Log.e(TAG, "my item list found");
 
                     } else {
-                        Log.e(TAG, "my item list not found");
+                        Log.e(TAG, "my order list not found");
                     }
                 }
             });

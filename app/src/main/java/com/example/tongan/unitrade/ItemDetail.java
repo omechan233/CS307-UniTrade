@@ -82,8 +82,31 @@ public class ItemDetail extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 trackingNumber = editText.getText().toString();
                                 //todo : store the tracking number into database
-//                                db.collection("items").document(email)
-//                                        .update("trackingnumber", trackingNumber);
+                                System.out.println("tracking:::::::::::::" + trackingNumber);
+                                db.collection("items").document(item_id)
+                                        .update("trackingnumber", trackingNumber);
+                                db.collection("items").document(item_id)
+                                       .update("is_shipped", true);
+                                Query query =  db.collection("orders").whereEqualTo("item_ID",item_id);
+                                db.collection("orders")
+                                        .whereEqualTo("item_ID", item_id)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                                        final DocumentReference order_doc = db.collection("orders").document(document.getId());
+                                                        order_doc.update("is_shipped",true);
+                                                    }
+                                                } else {
+                                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                                }
+                                            }
+                                        });
+
+
                                 //Test the trackingNumber variable get correct input
                                 Toast.makeText(getBaseContext(), "Your tracking number is " + trackingNumber, Toast.LENGTH_LONG).show();
                             }

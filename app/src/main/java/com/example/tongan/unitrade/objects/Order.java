@@ -19,6 +19,9 @@ import com.google.firebase.Timestamp;
  * soldnotify: if the confirm message is send
  * 0: no
  * 1:yes
+ * is_shipped
+ * 0:no
+ * 1:yes
  */
 
 public class Order {
@@ -35,6 +38,7 @@ public class Order {
     private boolean commented;
     private int request;
     private boolean is_paid;
+    private boolean is_shipped;
 
     /**
      * Constructor; Creates an order based on a purchased Item
@@ -43,7 +47,7 @@ public class Order {
     public Order(){}
     public Order(String item_ID, Timestamp order_time, String seller_email, String item_title,
                  Double item_price, boolean is_sold, boolean face_to_face, int methodpending,
-                 String order_ID, boolean commented, int request, int soldnotify, boolean is_paid){
+                 String order_ID, boolean commented, int request, int soldnotify, boolean is_paid,boolean is_shipped){
         this.seller_email=seller_email;
         this.is_sold=is_sold;
         this.item_ID=item_ID;
@@ -57,6 +61,7 @@ public class Order {
         this.request = request;
         this.soldnotify = soldnotify;
         this.is_paid = is_paid;
+        this.is_shipped = is_shipped;
     }
 
     public String getOrder_ID() {
@@ -100,6 +105,10 @@ public class Order {
     public boolean isIs_paid() {
         return is_paid;
     }
+
+    public boolean isIs_shipped() { return is_shipped;}
+
+    public void  setIs_sold(boolean is_shipped){this.is_shipped = is_shipped;}
 
     public void setMethodpending(int methodpending) { this.methodpending = methodpending; }
 

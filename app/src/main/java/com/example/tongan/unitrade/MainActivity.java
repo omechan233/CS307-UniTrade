@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,9 @@ import android.view.View;
 
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Item;
@@ -42,7 +46,11 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -222,6 +230,7 @@ public class MainActivity extends AppCompatActivity{
                                                                     current_order = documentSnapshot.toObject(Order.class);
                                                                     final String notifi = shared.getString("notification", "");
                                                                     if (current_order.isIs_paid() & notifi.equals("1")) {
+                                                                        System.out.println("paid or not" + current_order.isIs_paid());
                                                                         /**
                                                                          * notification bar
                                                                          */
@@ -265,6 +274,67 @@ public class MainActivity extends AppCompatActivity{
                 }
             });
             //PAID NOTIFICATION END HERE
+
+            /***
+             * ship notification
+             */
+            final DocumentReference profileref = db.collection("profiles").document(email);
+            profileref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        List<String> my_orders = (List<String>) document.getData().get("my_orders");
+                        if (my_orders == null || my_orders.isEmpty()) {
+                            System.out.println("Nothing on the my order list!");
+                        } else {
+                            for (int i = 0; i < my_orders.size(); i++) {
+                                final DocumentReference order_doc = db.collection("orders").document(my_orders.get(i));
+                                final int finalI = i;
+                                order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        {
+                                            Order current_order = new Order();
+                                            current_order = documentSnapshot.toObject(Order.class);
+                                            final String notifi = shared.getString("notification", "");
+                                            System.out.println("current order" + current_order.getOrder_ID());
+                                            System.out.println("ship !!!!!!!!!!!!!!!!1" + current_order.isIs_shipped());
+                                            if (current_order.isIs_shipped() & notifi.equals("1")) {
+                                                System.out.println("ship or not" + current_order.isIs_shipped());
+                                                /**
+                                                 * notification bar
+                                                 */
+                                                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                Intent intent = new Intent(MainActivity.this, Order.class);
+                                                PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+                                                Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
+                                                        .setContentTitle("UniTrade:")
+                                                        .setContentText("your order is shipped")
+                                                        .setWhen(System.currentTimeMillis())
+                                                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                        .setAutoCancel(true)
+                                                        .setContentIntent(ma)
+                                                        .build();
+
+                                                manager.notify(1, notification);
+//
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+
+
+                        }
+                        //result[0] = (String[])document.getData().get("my_items");
+                        Log.e(TAG, "my item list found");
+
+                    } else {
+                        Log.e(TAG, "my item list not found");
+                    }
+                }
+            });
 
             Runnable r = new Runnable() {
                 @Override

@@ -49,6 +49,7 @@ public class ItemDetail extends AppCompatActivity {
     private static final String TAG = "Item detail page";
     SharedPreferences shared;
     FirebaseStorage storage;
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     @Override
@@ -81,9 +82,10 @@ public class ItemDetail extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 trackingNumber = editText.getText().toString();
                                 //todo : store the tracking number into database
-
+//                                db.collection("items").document(email)
+//                                        .update("trackingnumber", trackingNumber);
                                 //Test the trackingNumber variable get correct input
-                                //Toast.makeText(getBaseContext(), "Your tracking number is " + trackingNumber, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getBaseContext(), "Your tracking number is " + trackingNumber, Toast.LENGTH_LONG).show();
                             }
                         })
                         .setNegativeButton("Cancel",
@@ -129,7 +131,6 @@ public class ItemDetail extends AppCompatActivity {
 
         final TextView editBtn = (TextView) findViewById(R.id.detail_edit);
 
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference item_doc = db.collection("items").document(itemid);
         item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override

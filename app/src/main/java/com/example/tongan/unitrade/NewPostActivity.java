@@ -80,13 +80,15 @@ public class NewPostActivity extends AppCompatActivity {
 
         autocompleteFragment.getView().setFocusable(true);
         Location location = getLastBestLocation();
-        String current_address = get_address(location.getLatitude(), location.getLongitude());
+        String current_address = "";
+        if (location!=null) {
+            current_address = get_address(location.getLatitude(), location.getLongitude());
+            address_lat.setText(Double.toString(location.getLatitude()));
+            address_lon.setText(Double.toString(location.getLongitude()));
+        }
 
         autocompleteFragment.setText(current_address);
-
         address_edit.setText(current_address);
-        address_lat.setText(Double.toString(location.getLatitude()));
-        address_lon.setText(Double.toString(location.getLongitude()));
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -146,7 +148,7 @@ public class NewPostActivity extends AppCompatActivity {
                 EditText itemName_edit = (EditText) findViewById(R.id.item_name_input);
                 EditText price_edit = (EditText) findViewById(R.id.price_input);
                 EditText description_edit = (EditText) findViewById(R.id.desc_input);
-               // EditText category_edit = (EditText) findViewById(R.id.category_input);
+                // EditText category_edit = (EditText) findViewById(R.id.category_input);
 
                 //get input in edittext
                 Timestamp postTime = Timestamp.now();
@@ -154,7 +156,7 @@ public class NewPostActivity extends AppCompatActivity {
                 String description = description_edit.getText().toString();
                 String address = address_edit.getText().toString();
                 //String username = "";
-               // String category = category_edit.getText().toString();
+                // String category = category_edit.getText().toString();
                 Double price;
 
                 // 0 for currently unavailable
@@ -348,7 +350,7 @@ public class NewPostActivity extends AppCompatActivity {
 //
 //            result = address + ", " + city + ", " + state + ", " + country + ", " + postalCode + ", " + knownName;
             result = address;
-        }catch (IOException e) {
+        }catch (Exception e) {
             e.printStackTrace();
         }
         return result;

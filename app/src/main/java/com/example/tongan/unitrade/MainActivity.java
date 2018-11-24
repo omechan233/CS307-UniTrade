@@ -291,35 +291,49 @@ public class MainActivity extends AppCompatActivity{
                             for (int i = 0; i < my_orders.size(); i++) {
                                 final DocumentReference order_doc = db.collection("orders").document(my_orders.get(i));
                                 final int finalI = i;
-                                order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                     @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        {
-                                            Order current_order = new Order();
-                                            current_order = documentSnapshot.toObject(Order.class);
-                                            final String notifi = shared.getString("notification", "");
-                                            System.out.println("current order" + current_order.getOrder_ID());
-                                            System.out.println("ship !!!!!!!!!!!!!!!!1" + current_order.isIs_shipped());
-                                            if (current_order.isIs_shipped() & notifi.equals("1")) {
-                                                System.out.println("ship or not" + current_order.isIs_shipped());
-                                                /**
-                                                 * notification bar
-                                                 */
-                                                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                                Intent intent = new Intent(MainActivity.this, Order.class);
-                                                PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
-                                                Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
-                                                        .setContentTitle("UniTrade:")
-                                                        .setContentText("your order is shipped")
-                                                        .setWhen(System.currentTimeMillis())
-                                                        .setSmallIcon(R.mipmap.ic_launcher_round)
-                                                        .setAutoCancel(true)
-                                                        .setContentIntent(ma)
-                                                        .build();
+                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                                        @Nullable FirebaseFirestoreException e) {
+                                        if (e != null) {
+                                            Log.w(TAG, "Listen failed.", e);
+                                            return;
+                                        }
 
-                                                manager.notify(1, notification);
+                                        if (snapshot != null && snapshot.exists()) {
+                                            Log.d(TAG, "Current data: " + snapshot.getData());
+                                            order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    Order current_order = new Order();
+                                                    current_order = documentSnapshot.toObject(Order.class);
+                                                    final String notifi = shared.getString("notification", "");
+                                                    Log.d(TAG, "ship listener data: " + current_order.isIs_shipped() + current_order.getOrder_ID());
+
+                                                    if (current_order.isIs_shipped() & notifi.equals("1")) {
+                                                        System.out.println("ship not" + current_order.isIs_paid());
+                                                        /**
+                                                         * notification bar
+                                                         */
+                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                        Intent intent = new Intent(MainActivity.this, Order.class);
+                                                        PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+                                                        Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
+                                                                .setContentTitle("UniTrade:")
+                                                                .setContentText("your order is shipped")
+                                                                .setWhen(System.currentTimeMillis())
+                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                .setAutoCancel(true)
+                                                                .setContentIntent(ma)
+                                                                .build();
+
+                                                        manager.notify(1, notification);
 //
-                                            }
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            Log.d(TAG, "Current data: null");
                                         }
                                     }
                                 });

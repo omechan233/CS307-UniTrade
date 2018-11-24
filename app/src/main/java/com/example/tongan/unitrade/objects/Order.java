@@ -19,9 +19,6 @@ import com.google.firebase.Timestamp;
  * soldnotify: if the confirm message is send
  * 0: no
  * 1:yes
- * is_shipped
- * 0:no
- * 1:yes
  */
 
 public class Order {

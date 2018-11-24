@@ -165,75 +165,66 @@ public class MainActivity extends AppCompatActivity{
         super.onStart();
         //check if user is already logged in, if so then forward to HomePage
         if(isUserLoggedIn() && isEmailVerified()){
-            Runnable r = new Runnable() {
+
+            /***
+             * paid notification start
+             */
+            final String email = shared.getString("email", "");
+            final String notification = shared.getString("notification", "");
+
+            if(email == null || email.isEmpty())
+                return;
+
+            DocumentReference userDocRef = db.collection("users").document(email);
+            System.out.println("______________________________________email in main" + email);
+
+            /***
+             * method notification test same way as sold
+             */
+            //get users sold notification setting
+            userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
-                public void run() {
-                    // if you are redirecting from a fragment then use getActivity() as the context.
-                    startActivity(new Intent(MainActivity.this, HomePageActivity.class));
-                }
-            };
-            Handler h = new Handler();
-            // The Runnable will be executed after the given delay time
-            h.postDelayed(r, 500); // will be delayed for 0.5 seconds
-        }
-
-        //TODO THIS SHOULD NOT BE HERE, move this to a different activity OR have it run AFTER the user has logged in on this page
-        final String email = shared.getString("email", "");
-        final String notification = shared.getString("notification", "");
-
-        if(email == null || email.isEmpty())
-            return;
-
-        DocumentReference userDocRef = db.collection("users").document(email);
-        System.out.println("______________________________________email in main" + email);
-
-        /***
-         * method notification test same way as sold
-         */
-        //get users sold notification setting
-        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    if (doc.exists()) {
-                        //update text boxes with user info from database
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot doc = task.getResult();
+                        if (doc.exists()) {
+                            //update text boxes with user info from database
 //                        String notification = doc.get("notification").toString();
 //                        System.out.println("notification!!!" + notification);
-                        if (notification.equals("0")) {
-                        } else {
-                             System.out.println("notification!!!" + notification);
+                            if (notification.equals("0")) {
+                            } else {
+                                System.out.println("notification!!!" + notification);
 
-                            //get order list from profile
-                            // final DocumentReference profiles = db.collection("profiles").document(email);
-                            Query query = db.collection("orders").whereEqualTo("seller_email", email);
-                            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            //get item from order list
-                                            final DocumentReference order_doc = db.collection("orders").document(document.getId());
-                                            order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                                                    @Nullable FirebaseFirestoreException e) {
-                                                    if (e != null) {
-                                                        Log.w(TAG, "Listen failed.", e);
-                                                        return;
-                                                    }
+                                //get order list from profile
+                                // final DocumentReference profiles = db.collection("profiles").document(email);
+                                Query query = db.collection("orders").whereEqualTo("seller_email", email);
+                                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                //get item from order list
+                                                final DocumentReference order_doc = db.collection("orders").document(document.getId());
+                                                order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                                                        @Nullable FirebaseFirestoreException e) {
+                                                        if (e != null) {
+                                                            Log.w(TAG, "Listen failed.", e);
+                                                            return;
+                                                        }
 
-                                                    if (snapshot != null && snapshot.exists()) {
-                                                        order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                            @Override
-                                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                                Order current_order = new Order();
-                                                                current_order = documentSnapshot.toObject(Order.class);
-                                                                final String notifi = shared.getString("notification", "");
-                                                                if (current_order.isIs_paid() & notifi.equals("1")) {
-                                                                    /**
-                                                                     * notification bar
-                                                                     */
+                                                        if (snapshot != null && snapshot.exists()) {
+                                                            order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                    Order current_order = new Order();
+                                                                    current_order = documentSnapshot.toObject(Order.class);
+                                                                    final String notifi = shared.getString("notification", "");
+                                                                    if (current_order.isIs_paid() & notifi.equals("1")) {
+                                                                        /**
+                                                                         * notification bar
+                                                                         */
                                                                         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                                                         Intent intent = new Intent(MainActivity.this, Order.class);
                                                                         PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
@@ -248,32 +239,44 @@ public class MainActivity extends AppCompatActivity{
 
                                                                         manager.notify(1, notification);
 //
+                                                                    }
                                                                 }
-                                                            }
-                                                        });
-                                                    } else {
-                                                        Log.d(TAG, "Current data: null");
+                                                            });
+                                                        } else {
+                                                            Log.d(TAG, "Current data: null");
+                                                        }
                                                     }
-                                                }
-                                            });
-                                        }
-                                        Log.e(TAG, "my item list found");
+                                                });
+                                            }
+                                            Log.e(TAG, "my item list found");
 
-                                    } else {
-                                        Log.e(TAG, "my item list not found");
+                                        } else {
+                                            Log.e(TAG, "my item list not found");
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
+                        } else {
+                            Log.d(TAG, "No such document...");
                         }
                     } else {
-                        Log.d(TAG, "No such document...");
+                        Log.d(TAG, "get failed with ", task.getException());
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
                 }
-            }
-        });
-        ///////////////////^^^^^^ MOVE THIS CODE SOMEWHERE ELSE ^^^^^///////////////
+            });
+            //PAID NOTIFICATION END HERE
+
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    // if you are redirecting from a fragment then use getActivity() as the context.
+                    startActivity(new Intent(MainActivity.this, HomePageActivity.class));
+                }
+            };
+            Handler h = new Handler();
+            // The Runnable will be executed after the given delay time
+            h.postDelayed(r, 500); // will be delayed for 0.5 seconds
+        }
     }
 
     private boolean isEmailVerified(){

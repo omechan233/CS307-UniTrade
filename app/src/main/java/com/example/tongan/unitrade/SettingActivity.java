@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Report;
@@ -18,7 +19,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingActivity extends AppCompatActivity {
-    private String report;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,17 +84,19 @@ public class SettingActivity extends AppCompatActivity {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SettingActivity.this);
                 alertDialogBuilder.setView(promptView);
 
-                final EditText editText = (EditText) promptView.findViewById(R.id.report_box);
+                final EditText report_text = (EditText) promptView.findViewById(R.id.report_box);
+                final Spinner report_spinner = (Spinner) promptView.findViewById(R.id.report_spinner);
                 // setup a dialog window
                 alertDialogBuilder.setCancelable(false)
                         .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                report = editText.getText().toString();
+                                String report = report_text.getText().toString();
                                 SharedPreferences shared = getSharedPreferences("app", Context.MODE_PRIVATE);
                                 String email = shared.getString("email", null);
                                 Timestamp reportTime = Timestamp.now();
+                                String category = report_spinner.getSelectedItem().toString();
 
-                                if(email == null || report == null) {
+                                if(email == null) {
                                     System.out.println("ERROR getting info");
                                     Toast.makeText(SettingActivity.this, "Error Sending Report, Please try again!", Toast.LENGTH_SHORT).show();
                                     dialog.cancel();
@@ -105,7 +107,7 @@ public class SettingActivity extends AppCompatActivity {
                                 }
                                 else { //send report
                                     Functions f = new Functions();
-                                    f.addReport(new Report(email, reportTime, report));
+                                    f.addReport(new Report(email, reportTime, report, category));
                                     Toast.makeText(SettingActivity.this, "Report Sent! We will address your concerns ASAP, thank you!", Toast.LENGTH_LONG).show();
                                 }
                             }

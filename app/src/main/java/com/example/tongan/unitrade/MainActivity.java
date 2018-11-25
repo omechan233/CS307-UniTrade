@@ -342,7 +342,7 @@ public class MainActivity extends AppCompatActivity{
 
                         }
                         //result[0] = (String[])document.getData().get("my_items");
-                        Log.e(TAG, "my item list found");
+                        Log.e(TAG, "my order list found");
 
                     } else {
                         Log.e(TAG, "my order list not found");

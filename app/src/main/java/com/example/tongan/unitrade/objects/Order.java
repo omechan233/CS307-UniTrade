@@ -95,9 +95,9 @@ public class Order {
 
     public int getMethodpending(){ return this.methodpending; }
 
-    public int getRequest(){return  this.request; }
+    public int getRequest(){return  request; }
 
-    public int getSoldnotify(){return  this.soldnotify;}
+    public int getSoldnotify(){return  soldnotify;}
 
     public boolean isIs_paid() {
         return is_paid;
@@ -105,7 +105,7 @@ public class Order {
 
     public boolean isIs_shipped() { return is_shipped;}
 
-    public void  setIs_sold(boolean is_shipped){this.is_shipped = is_shipped;}
+    public void  setIs_shipped(boolean is_shipped){this.is_shipped = is_shipped;}
 
     public void setMethodpending(int methodpending) { this.methodpending = methodpending; }
 

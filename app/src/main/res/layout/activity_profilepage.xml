@@ -144,13 +144,13 @@
         android:src="@mipmap/home_page_icon" />
 
     <Button
+        android:id="@+id/view_items"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_toRightOf="@id/profile_back_icon"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="100dp"
-        android:text="VIEW USER ITEMS"
-        android:id="@+id/view_items"
-        android:layout_alignParentBottom="true"/>
+        android:layout_toRightOf="@id/profile_back_icon"
+        android:text="View Items" />
 
     <TextView
         android:layout_width="match_parent"

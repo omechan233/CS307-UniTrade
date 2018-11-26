@@ -365,7 +365,7 @@ public class MainActivity extends AppCompatActivity{
 
     private boolean isEmailVerified(){
         mAuth = FirebaseAuth.getInstance(); //reload Instance
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser == null) {
             System.out.println("MAIN: Could not find current user! Assume they already verified after registering...");
             return true;
@@ -379,6 +379,17 @@ public class MainActivity extends AppCompatActivity{
             Toast.makeText(MainActivity.this, check_email,
                     Toast.LENGTH_SHORT).show();
 
+            currentUser.sendEmailVerification()
+                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "Verification Email sent again");
+                            } else {
+                                Log.e(TAG, "sendEmailVerification", task.getException());
+                            }
+                        }
+                    });
             //have these appear
 //            sendEmailLinkBtn.setVisibility(View.VISIBLE);
 //            sendEmailLinkTxt.setVisibility(View.VISIBLE);

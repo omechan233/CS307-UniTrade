@@ -204,7 +204,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                                         PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
                                                                         Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "ItemSold")
                                                                                 .setContentTitle("UniTrade:")
-                                                                                .setContentText("some one buy your " + current_item.getTitle())
+                                                                                .setContentText("someone bought your item: " + current_item.getTitle())
                                                                                 .setWhen(System.currentTimeMillis())
                                                                                 .setSmallIcon(R.mipmap.ic_launcher_round)
                                                                                 .setAutoCancel(true)
@@ -222,7 +222,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                 .addOnFailureListener(new OnFailureListener() {
                                                                                     @Override
                                                                                     public void onFailure(@NonNull Exception e) {
-                                                                                        Log.w(TAG, "item notifacation wrong", e);
+                                                                                        Log.w(TAG, "item notification was wrong", e);
                                                                                     }
                                                                                 });
                                                                     }
@@ -307,7 +307,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                                         PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
                                                                         Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
                                                                                 .setContentTitle("UniTrade:")
-                                                                                .setContentText("Buyer send a request!")
+                                                                                .setContentText("Buyer sent a request to change the trading method!")
                                                                                 .setWhen(System.currentTimeMillis())
                                                                                 .setSmallIcon(R.mipmap.ic_launcher_round)
                                                                                 .setAutoCancel(true)
@@ -327,7 +327,7 @@ public class HomePageActivity extends AppCompatActivity {
 //                                                                  //Todo: front-end functionality starts here, combine them with back-end.
                                                                     AlertDialog.Builder builder = new AlertDialog.Builder(HomePageActivity.this);
                                                                     builder.setTitle("Notice:");
-                                                                    builder.setMessage("Your trading method is changed!");
+                                                                    builder.setMessage("Your trading method has been changed!");
                                                                     builder.setCancelable(true);
 
                                                                     // user choose "Accepted" button:
@@ -367,7 +367,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                                 .update("request", 1);
 
                                                                                     }
-                                                                                    Toast.makeText(HomePageActivity.this, "You accepted!",
+                                                                                    Toast.makeText(HomePageActivity.this, "You accepted the request!",
                                                                                             Toast.LENGTH_SHORT).show();
 
                                                                                 }
@@ -469,15 +469,14 @@ public class HomePageActivity extends AppCompatActivity {
                                                             orders_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                                                 @Override
                                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                                    Order current_order = new Order();
-                                                                    current_order = documentSnapshot.toObject(Order.class);
+                                                                    Order current_order = documentSnapshot.toObject(Order.class);
                                                                     if (current_order.getMethodpending() == 3) {
                                                                         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                                                         Intent intent = new Intent(HomePageActivity.this, Order.class);
                                                                         PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this,0,intent,0);
                                                                         Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
                                                                                 .setContentTitle("UniTrade:")
-                                                                                .setContentText("Your method change request is declined by the seller!")
+                                                                                .setContentText("Your trading method change request was declined by the seller!")
                                                                                 .setWhen(System.currentTimeMillis())
                                                                                 .setSmallIcon(R.mipmap.ic_launcher_round)
                                                                                 .setAutoCancel(true)
@@ -498,7 +497,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                                         PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
                                                                         Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
                                                                                 .setContentTitle("UniTrade:")
-                                                                                .setContentText("Your item's trading method is changed!")
+                                                                                .setContentText("Your item's trading method has been changed!")
                                                                                 .setWhen(System.currentTimeMillis())
                                                                                 .setSmallIcon(R.mipmap.ic_launcher_round)
                                                                                 .setAutoCancel(true)
@@ -593,8 +592,6 @@ public class HomePageActivity extends AppCompatActivity {
 
         //SORT BY PRICE, NAME, POSTDATE, RATING VARS -----------
         //String criterion = "title"; //default sorting criterion for items
-        String sort_option = search_sort_spinner.getSelectedItem().toString();
-        String cate_option = cat_spinner.getSelectedItem().toString();
         final String keyword = search_word.getText().toString();
 
         //null check for keyword
@@ -887,12 +884,11 @@ public class HomePageActivity extends AppCompatActivity {
                                         // Done creating ItemView ==================
 
                                         //Set up OnClick for each Item to get ItemDetailPage ==================
-                                        final Item current_item = itemObj;
                                         item.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) { //this is configured the same as OrderList
                                                 SharedPreferences.Editor edit = shared.edit();
-                                                edit.putString("itemid", current_item.getid());
+                                                edit.putString("itemid", itemObj.getid());
                                                 edit.apply();
 
                                                 startActivity(new Intent(HomePageActivity.this, ItemDetail.class));

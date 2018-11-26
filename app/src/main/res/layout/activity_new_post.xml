@@ -56,7 +56,7 @@
         android:layout_height="40dp"
         android:layout_below="@+id/upload_image"
         android:layout_toEndOf="@+id/item_name_text"
-        android:hint="Enter your item name here"
+        android:hint="Name"
         android:inputType="text"
         android:lines="1" />
 
@@ -78,7 +78,7 @@
         android:layout_below="@+id/item_name_input"
         android:layout_marginStart="-15dp"
         android:layout_toEndOf="@+id/item_image"
-        android:hint="Enter the item price here"
+        android:hint="Price"
         android:inputType="numberDecimal"
         android:lines="1" />
 
@@ -150,7 +150,7 @@
         android:layout_marginLeft="30dp"
         android:background="@drawable/message_box"
         android:gravity="top"
-        android:hint=" Enter your item description here"
+        android:hint="Enter a description of your item here..."
         android:inputType="textMultiLine" />
 
     <Button

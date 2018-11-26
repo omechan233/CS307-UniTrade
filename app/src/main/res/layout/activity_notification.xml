@@ -15,7 +15,7 @@
         android:layout_above="@+id/notifi_itemSold_switch"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="-155dp"
-        android:text="Notification"
+        android:text="Notifications"
         android:textSize="30sp" />
 
     <Switch
@@ -25,7 +25,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="155dp"
-        android:text="Get notified when your item is sold"
+        android:text="Item Sold Notification"
         android:textSize="20sp" />
 
     <Button
@@ -45,23 +45,23 @@
         android:id="@+id/notifi_changeMethod_switch"
         android:layout_width="288dp"
         android:layout_height="131dp"
-        android:layout_alignStart="@+id/notifi_switch"
         android:layout_below="@+id/notifi_itemSold_switch"
-        android:text="Get notified when buyer changes trading method"
-        android:textSize="20sp"
-        android:layout_alignLeft="@+id/notifi_switch" />
+        android:layout_alignStart="@+id/notifi_switch"
+        android:layout_alignLeft="@+id/notifi_switch"
+        android:text="Trading Method Change Request Notification"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/notify_gotoSendpage"
-        android:layout_width="wrap_content"
+        android:layout_width="214dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/notifi_back"
         android:layout_alignLeft="@+id/notifi_back"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="-10dp"
-        android:layout_marginLeft="-10dp"
+        android:layout_marginStart="-31dp"
+        android:layout_marginLeft="-31dp"
         android:layout_marginBottom="143dp"
-        android:text="GotoSendPage"
+        android:text="Send Page"
         android:textSize="18sp"
         android:textStyle="bold" />
 </RelativeLayout>

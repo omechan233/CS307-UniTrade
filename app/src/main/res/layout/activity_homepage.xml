@@ -17,7 +17,7 @@ PLEASSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!-->
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#FF9900"
-        android:text=" Home Page"
+        android:text=" Home"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -30,13 +30,13 @@ PLEASSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!-->
         android:layout_below="@id/homepage_title">
 
         <EditText
+            android:id="@+id/search_input"
             android:layout_width="1dp"
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"
-            android:id="@+id/search_input"
-            android:hint="Type to search..."
             android:layout_marginTop="5dp"
-            android:layout_weight="4"/>
+            android:layout_weight="4"
+            android:hint="Type a keyword to search..." />
 
         <Button
             android:layout_width="1dp"
@@ -122,7 +122,7 @@ PLEASSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!-->
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Nearby Item" />
+            android:text="Nearby Items" />
 
     </LinearLayout>
 

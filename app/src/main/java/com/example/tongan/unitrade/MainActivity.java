@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity{
         Button resetPasswd = (Button) findViewById(R.id.login_resetPasswd_btn);
 //        sendEmailLinkBtn = (Button) findViewById(R.id.login_sendEmailLink_btn);
 //        sendEmailLinkTxt = (TextView) findViewById(R.id.login_emailLink_txt);
-
         //hide these until we know user has not been verified
 //        sendEmailLinkTxt.setVisibility(View.GONE);
 //        sendEmailLinkBtn.setVisibility(View.GONE);
@@ -230,14 +229,14 @@ public class MainActivity extends AppCompatActivity{
                                                                     current_order = documentSnapshot.toObject(Order.class);
                                                                     final String notifi = shared.getString("notification", "");
                                                                     if (current_order.isIs_paid() & notifi.equals("1")) {
-                                                                        System.out.println("paid or not" + current_order.isIs_paid());
+                                                                        System.out.println("paid or not" + current_order.isIs_paid() + current_order.getOrder_ID());
                                                                         /**
                                                                          * notification bar
                                                                          */
                                                                         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                                                         Intent intent = new Intent(MainActivity.this, Order.class);
                                                                         PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
-                                                                        Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
+                                                                        Notification notification = new NotificationCompat.Builder(MainActivity.this, "methodChange")
                                                                                 .setContentTitle("UniTrade:")
                                                                                 .setContentText("new payment received")
                                                                                 .setWhen(System.currentTimeMillis())
@@ -247,7 +246,7 @@ public class MainActivity extends AppCompatActivity{
                                                                                 .build();
 
                                                                         manager.notify(1, notification);
-//
+
                                                                     }
                                                                 }
                                                             });
@@ -318,7 +317,7 @@ public class MainActivity extends AppCompatActivity{
                                                         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                                         Intent intent = new Intent(MainActivity.this, Order.class);
                                                         PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
-                                                        Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
+                                                        Notification notification = new NotificationCompat.Builder(MainActivity.this,"ItemSold")
                                                                 .setContentTitle("UniTrade:")
                                                                 .setContentText("your order is shipped")
                                                                 .setWhen(System.currentTimeMillis())
@@ -327,7 +326,7 @@ public class MainActivity extends AppCompatActivity{
                                                                 .setContentIntent(ma)
                                                                 .build();
 
-                                                        manager.notify(1, notification);
+                                                        manager.notify(0, notification);
 //
                                                     }
                                                 }

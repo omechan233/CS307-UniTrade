@@ -71,6 +71,11 @@ public class SendNotification extends AppCompatActivity {
             channelName = "Get Notified when trading method changed";
             importance = NotificationManager.IMPORTANCE_DEFAULT;
             createNotificationChannel(channelId, channelName, importance);
+
+            channelId = "shipped";
+            channelName = "Get Notified when item is shipped";
+            importance = NotificationManager.IMPORTANCE_DEFAULT;
+            createNotificationChannel(channelId, channelName, importance);
         }
 
         itemSold_btn = (Button) findViewById(R.id.itemSold_notice);

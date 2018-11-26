@@ -39,6 +39,10 @@ public class Paypal extends AppCompatActivity {
     public static final int PAYPAL_REQUEST_CODE = 7171;
     private SharedPreferences sharedPreferences;
 
+    //static Config configg = new Config();
+   // static String abc = configg.getClientID();
+
+
     private static PayPalConfiguration config = new PayPalConfiguration()
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
             .clientId(Config.PAYPAL_CLIENT_ID);
@@ -56,6 +60,8 @@ public class Paypal extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.paypal);
         sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
@@ -68,7 +74,9 @@ public class Paypal extends AppCompatActivity {
 
         btnPayNow = (Button) findViewById(R.id.btnPayNow);
         edtAmount = (EditText) findViewById(R.id.edtAmount);
-
+        amount = sharedPreferences.getString("item_price","");
+        edtAmount.setText(amount);
+        edtAmount.setTextIsSelectable(false);
         btnPayNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,9 +88,7 @@ public class Paypal extends AppCompatActivity {
 
     private void processPayment() {
         //Todo: get item price from DB.
-        amount = sharedPreferences.getString("item_price","");
-        edtAmount.setText(amount);
-        //edtAmount.setTextIsSelectable(false);
+
         //amount = edtAmount.getText().toString();
 
         PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(amount)), "USD",

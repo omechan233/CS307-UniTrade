@@ -58,6 +58,7 @@ public class Paypal extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.paypal);
+        sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
 
         //Start PayPal Service
         Intent intent = new Intent(this, PayPalService.class);
@@ -79,10 +80,10 @@ public class Paypal extends AppCompatActivity {
 
     private void processPayment() {
         //Todo: get item price from DB.
-        //amount = sharedPreferences.getString("")
-        //edtAmount.setText(amount);
+        amount = sharedPreferences.getString("item_price","");
+        edtAmount.setText(amount);
         //edtAmount.setTextIsSelectable(false);
-        amount = edtAmount.getText().toString();
+        //amount = edtAmount.getText().toString();
 
         PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(amount)), "USD",
                 "Trading in UniTrade", PayPalPayment.PAYMENT_INTENT_SALE);

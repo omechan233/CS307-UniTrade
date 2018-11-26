@@ -384,6 +384,10 @@ public class ItemDetail extends AppCompatActivity {
             public void onClick(View v) {
                 //AT: Buy success should not show up until its finished
                 //Toast.makeText(getBaseContext(), "Buy Success!", Toast.LENGTH_LONG).show();
+                String price = price_edit.getText().toString();
+                SharedPreferences.Editor edit = shared.edit();
+                edit.putString("item_price", price);
+                edit.apply();
                 Intent intent = new Intent(ItemDetail.this, Purchase.class);
                 startActivity(intent);
             }

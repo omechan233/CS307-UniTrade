@@ -11,6 +11,7 @@ public class Report {
     private String userID;
     private Timestamp reportedTime;
     private String description;
+    private String category;
 
     /**
      * Constructor
@@ -19,10 +20,11 @@ public class Report {
      * @param reportedTime Firebase Timestamp of when the report was made
      * @param description entry given in the report
      */
-    public Report(String userID, Timestamp reportedTime, String description){
+    public Report(String userID, Timestamp reportedTime, String description, String category){
         this.userID = userID;
         this.reportedTime = reportedTime;
         this.description = description;
+        this.category = category;
     }
 
     //getters
@@ -35,6 +37,7 @@ public class Report {
     public String getDescription(){
         return this.description;
     }
+    public String getCategory(){return this.category; }
 
     //setters
     public void setUserID(String userID){
@@ -46,6 +49,7 @@ public class Report {
     public void setDescription(String description){
         this.description = description;
     }
+    public void setCategory(String category){this.category = category; }
 
     @Override
     @NonNull

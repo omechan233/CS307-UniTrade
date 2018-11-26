@@ -152,7 +152,7 @@ public class Functions {
      *************************************/
     public int create_post(String title, String email, double price,
                            String category, String address, String description, int status, Timestamp postTime,
-                           int notified, double lat, double lon) {
+                           int notified, double lat, double lon, String paypal) {
 
         //error number 2 for invalid input price
         if (price <= 0) {
@@ -189,7 +189,7 @@ public class Functions {
         /****
          * using the item java class, which is simpler!
          */
-        Item item = new Item(category, title, email, price, description, address, status, postTime, notified, lat, lon);
+        Item item = new Item(category, title, email, price, description, address, status, postTime, notified, lat, lon, paypal);
         db.collection("items").document(item.getid()).set(item);
 
         // Adding the item to my_items list

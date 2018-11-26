@@ -77,6 +77,7 @@ public class NewPostActivity extends AppCompatActivity {
         final EditText address_lon = findViewById(R.id.address_lon);
         final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        final EditText paypal_acc = findViewById(R.id.PayPal_input);
 
         autocompleteFragment.getView().setFocusable(true);
         Location location = getLastBestLocation();
@@ -93,7 +94,6 @@ public class NewPostActivity extends AppCompatActivity {
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
                 double lat = place.getLatLng().latitude;
                 double lon = place.getLatLng().longitude;
                 String selected_address = get_address(lat,lon);
@@ -155,6 +155,7 @@ public class NewPostActivity extends AppCompatActivity {
                 String itemName = itemName_edit.getText().toString();
                 String description = description_edit.getText().toString();
                 String address = address_edit.getText().toString();
+                String paypal = paypal_acc.getText().toString();
                 //String username = "";
                 // String category = category_edit.getText().toString();
                 Double price;
@@ -180,7 +181,7 @@ public class NewPostActivity extends AppCompatActivity {
                     double lon = Double.parseDouble(address_lon.getText().toString());
                     double lat = Double.parseDouble(address_lat.getText().toString());;
 
-                    int ret = f.create_post(itemName,email,price,category,address,description,status, postTime, notified, lat, lon);
+                    int ret = f.create_post(itemName,email,price,category,address,description,status, postTime, notified, lat, lon, paypal);
                     final String itemID = email + postTime.toString();
 
                     if(itemImage != null) {
@@ -219,9 +220,8 @@ public class NewPostActivity extends AppCompatActivity {
                 }
 
                 //get seller's PayPal account and save it to DB.
-                final EditText payPalInput = findViewById(R.id.PayPal_input);
-                String PayPalEmail = payPalInput.getText().toString();
-                //Todo: save PayPalEmail to DB
+//                final EditText payPalInput = findViewById(R.id.PayPal_input);
+//                String PayPalEmail = payPalInput.getText().toString();
 
             }
         });

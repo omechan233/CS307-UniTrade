@@ -23,6 +23,7 @@ public class Item {
     private int notified;
     private double latitude;
     private double longitude;
+    private String paypal;
 
 
     /******** AT:
@@ -50,7 +51,7 @@ public class Item {
      */
     public Item(String category, String title, String seller_name, double price, String description,
                 String location, int status, Timestamp postTime, int notified,
-                double latitude, double longitude){
+                double latitude, double longitude, String paypal){
         this.id=seller_name+postTime.toString();
         this.category=category;
         this.title=title;
@@ -64,6 +65,7 @@ public class Item {
         this.notified = notified;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.paypal = paypal;
     }
 
     /** Getter Methods **/
@@ -99,6 +101,10 @@ public class Item {
         return longitude;
     }
 
+    public String getPaypal() {
+        return paypal;
+    }
+
     /** Setter Methods **/
     public void setPrice(double price){
         this.price = price;
@@ -125,6 +131,10 @@ public class Item {
     }
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public void setPaypal(String paypal) {
+        this.paypal = paypal;
     }
 
     @Override

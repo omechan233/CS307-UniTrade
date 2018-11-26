@@ -9,14 +9,14 @@ PLEASSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!-->
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
+    android:background="@drawable/home_background"
     tools:context=".HomePageActivity">
 
     <TextView
         android:id="@+id/homepage_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#FF9900"
+        android:background="#21b49d"
         android:text=" Home"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -32,18 +32,23 @@ PLEASSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!-->
         <EditText
             android:id="@+id/search_input"
             android:layout_width="1dp"
+            android:background="@null"
+            android:inputType="text"
+            android:maxLines="1"
+            android:hint="Type to search..."
             android:layout_height="50dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="4"
-            android:hint="Type a keyword to search..." />
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="1dp"
+            android:layout_weight="4" />
 
         <Button
             android:layout_width="1dp"
             android:layout_height="40dp"
+            android:layout_marginRight="10dp"
             android:text="Search"
+            android:layout_marginTop="-5dp"
             android:layout_weight="1"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:id="@+id/hmpage_search_button"/>
 
     </LinearLayout>
@@ -96,33 +101,32 @@ PLEASSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!-->
     <LinearLayout
         android:id="@+id/homepage_buttons"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="75dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
-        android:weightSum="3"
+        android:weightSum="5"
         android:layout_alignParentLeft="true">
-
-        <Button
-            android:id="@+id/home_post_btn"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Post" />
-
-        <Button
-            android:id="@+id/home_settings_btn"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Settings &amp; profile" />
 
         <Button
             android:id="@+id/nearby_item_btn"
             android:layout_width="1dp"
+            android:background="@null"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Nearby Items" />
+            android:layout_weight="2" />
+
+        <Button
+            android:id="@+id/home_post_btn"
+            android:layout_width="1dp"
+            android:background="@null"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/home_settings_btn"
+            android:layout_width="1dp"
+            android:background="@null"
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
 
     </LinearLayout>
 

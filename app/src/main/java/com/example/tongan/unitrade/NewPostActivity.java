@@ -218,6 +218,11 @@ public class NewPostActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "Input cannot be empty!", Toast.LENGTH_LONG).show();
                 }
 
+                //get seller's PayPal account and save it to DB.
+                final EditText payPalInput = findViewById(R.id.PayPal_input);
+                String PayPalEmail = payPalInput.getText().toString();
+                //Todo: save PayPalEmail to DB
+
             }
         });
 
@@ -227,6 +232,10 @@ public class NewPostActivity extends AppCompatActivity {
                 getImage();
             }
         });
+
+
+
+
 
     }
 

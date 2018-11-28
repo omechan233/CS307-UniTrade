@@ -39,13 +39,13 @@ public class Paypal extends AppCompatActivity {
     public static final int PAYPAL_REQUEST_CODE = 7171;
     private SharedPreferences sharedPreferences;
 
-    //static Config configg = new Config();
-   // static String abc = configg.getClientID();
+    static Config configg = new Config();
+    static String abc = configg.getClientID();
 
 
     private static PayPalConfiguration config = new PayPalConfiguration()
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
-            .clientId(Config.PAYPAL_CLIENT_ID);
+            .clientId(abc);
 
     Button btnPayNow;
     EditText edtAmount;

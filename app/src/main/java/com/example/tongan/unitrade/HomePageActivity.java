@@ -826,10 +826,10 @@ public class HomePageActivity extends AppCompatActivity {
                                         //Display Item's image, if it has one ===================
                                         //get item's image from storage
                                         StorageReference storageRef = storage.getReference();
-                                        String picPath = ItemDoc.getString("item_image");
+                                        String picPath = itemObj.getItem_image();
 
                                         StorageReference picRef = null;
-                                        if(picPath != null)
+                                        if(picPath != null && !picPath.isEmpty())
                                           picRef = storageRef.child(picPath);
 
                                         if(picRef != null){

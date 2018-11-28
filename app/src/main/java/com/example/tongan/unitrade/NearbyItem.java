@@ -30,6 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
@@ -42,6 +43,7 @@ import java.util.List;
 public class NearbyItem extends AppCompatActivity {
     private SharedPreferences shared;
     private static final String TAG = "Nearby item list";
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +77,7 @@ public class NearbyItem extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                ArrayList<Item> items_list = new ArrayList<>();
+                                final ArrayList<Item> items_list = new ArrayList<>();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Log.d(TAG, document.getId() + " => " + document.getData());
                                     Item item = document.toObject(Item.class);
@@ -100,37 +102,79 @@ public class NearbyItem extends AppCompatActivity {
                                 Collections.sort(items_list, comp);
 
                                 for (int i = 0; i < items_list.size(); i++) {
-                                    LinearLayout item = new LinearLayout(getBaseContext());
-                                    ImageView imageView = new ImageView(getBaseContext());
+                                    final Item current_item = items_list.get(i);
+
+                                    final LinearLayout item = new LinearLayout(getBaseContext());
+                                    final ImageView imageView = new ImageView(getBaseContext());
                                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(180, 180);
                                     params.setMargins(20, 20, 0, 20);
                                     imageView.setLayoutParams(params);
                                     item.addView(imageView);
                                     //todo: set image
 
+                                    StorageReference storageRef = storage.getReference();
+                                    String picPath = current_item.getItem_image();
 
-                                    imageView.setImageResource(R.mipmap.poi_test_src);
-                                    params = new LinearLayout.LayoutParams(300, 180);
-                                    params.setMargins(20, 20, 0, 20);
-                                    TextView tv = new TextView(getBaseContext());
-                                    //todo : get item info from backend
-                                    final Item current_item = items_list.get(i);
-                                    String text = "\n" + current_item.getTitle() + "\n" + current_item.getPrice() + "\n" + current_item.getSeller_name();
-                                    tv.setText(text);
-                                    item.addView(tv);
-                                    item.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            //todo: redirect to related item page
-                                            SharedPreferences.Editor edit = shared.edit();
-                                            edit.putString("itemid", current_item.getid());
-                                            edit.apply();
-                                            Intent intent = new Intent(NearbyItem.this, ItemDetail.class);
-                                            startActivity(intent);
+                                    StorageReference picRef = null;
+                                    if(picPath != null && !picPath.isEmpty())
+                                        picRef = storageRef.child(picPath);
 
+                                    if(picRef != null){
+                                        try{
+                                            //TODO: add logic to allow for different file types
+                                            final File localFile = File.createTempFile("Images", "jpg");
+                                            if(localFile != null) {
+                                                picRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                        //create and set params of image in parent layout
+                                                        ImageView imageView = new ImageView(getBaseContext());
+                                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(180, 180);
+                                                        params.setMargins(20, 20, 0, 20);
+                                                        imageView.setLayoutParams(params);
+                                                        item.addView(imageView);
+                                                        imageView.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
+
+                                                        //create textview in parent layout
+                                                        TextView tv = new TextView(getBaseContext());
+                                                        String text = "\n" + current_item.getTitle() + "\n" + current_item.getPrice() + "\n" + current_item.getSeller_name();
+                                                        tv.setText(text);
+                                                        item.addView(tv);
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        System.out.println("Something went wrong with getting the profile image! Message: " + e.getLocalizedMessage());
+                                                    }
+                                                });
+                                            }else
+                                                Log.e(TAG, "Improper File Type!");
+                                        }catch(IOException e) {
+                                            Log.e(TAG, "IOError attempting to get image from Storage, message: " + e.getLocalizedMessage());
                                         }
-                                    });
-                                    items.addView(item);
+                                    }
+                                    else { //add item view with default image
+                                        imageView.setImageResource(R.mipmap.poi_test_src);
+                                        params = new LinearLayout.LayoutParams(300, 180);
+                                        params.setMargins(20, 20, 0, 20);
+                                        TextView tv = new TextView(getBaseContext());
+                                        //todo : get item info from backend
+                                        String text = "\n" + current_item.getTitle() + "\n" + current_item.getPrice() + "\n" + current_item.getSeller_name();
+                                        tv.setText(text);
+                                        item.addView(tv);
+                                        item.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                //todo: redirect to related item page
+                                                SharedPreferences.Editor edit = shared.edit();
+                                                edit.putString("itemid", current_item.getid());
+                                                edit.apply();
+                                                Intent intent = new Intent(NearbyItem.this, ItemDetail.class);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                        items.addView(item);
+                                    }
                                 }
                             } else {
                                 Log.d(TAG, "Error getting documents: ", task.getException());

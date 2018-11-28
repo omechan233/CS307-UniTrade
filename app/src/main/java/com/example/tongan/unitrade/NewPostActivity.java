@@ -151,40 +151,40 @@ public class NewPostActivity extends AppCompatActivity {
                 // EditText category_edit = (EditText) findViewById(R.id.category_input);
 
                 //get input in edittext
-                Timestamp postTime = Timestamp.now();
-                String itemName = itemName_edit.getText().toString();
-                String description = description_edit.getText().toString();
-                String address = address_edit.getText().toString();
-                String paypal = paypal_acc.getText().toString();
+                final Timestamp postTime = Timestamp.now();
+                final String itemName = itemName_edit.getText().toString();
+                final String description = description_edit.getText().toString();
+                final String address = address_edit.getText().toString();
+                final String paypal = paypal_acc.getText().toString();
                 //String username = "";
                 // String category = category_edit.getText().toString();
-                Double price;
+                final Double price;
 
                 // 0 for currently unavailable
                 // 1 for available
                 // 2 for someone bought it
-                int status = 1;
+                final int status = 1;
 
                 //0 for not notified
                 //1 for notified
-                int notified = 0;
+                final int notified = 0;
 
                 //get username by email
-                String email = sharedPreferences.getString("email","");
+                final String email = sharedPreferences.getString("email","");
 
-                Functions f = new Functions();
+                final Functions f = new Functions();
 
                 //check if the user input is empty
                 if (!itemName.equals("") && !description.equals("") && !price_edit.getText().toString().equals("")) {
 
                     price = Double.parseDouble(price_edit.getText().toString());
-                    double lon = Double.parseDouble(address_lon.getText().toString());
-                    double lat = Double.parseDouble(address_lat.getText().toString());;
+                    final double lon = Double.parseDouble(address_lon.getText().toString());
+                    final double lat = Double.parseDouble(address_lat.getText().toString());;
 
-                    int ret = f.create_post(itemName,email,price,category,address,description,status, postTime, notified, lat, lon, paypal);
+                    //int ret = f.create_post(itemName,email,price,category,address,description,status, postTime, notified, lat, lon, paypal, "");
                     final String itemID = email + postTime.toString();
 
-                    if(itemImage != null) {
+                    if(itemImage != null) { //create post with image ref
                         //now store image in Firebase Storage so we can always associate it with this item
                         //create storage reference first to link references together
                         StorageReference storageRef = storage.getReference();
@@ -200,7 +200,14 @@ public class NewPostActivity extends AppCompatActivity {
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 Toast.makeText(NewPostActivity.this, "Image added to Firebase Storage", Toast.LENGTH_LONG).show();
                                 //add reference to user's profile in the database
-                                addImageToPost(itemID, imageRef);
+                                int ret = f.create_post(itemName,email,price,category,address,description,status, postTime, notified, lat, lon, paypal, imageRef.getPath());
+
+                                //back to homepage
+                                Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(NewPostActivity.this, HomePageActivity.class);
+                                startActivity(intent);
+
+                               // addImageToPost(itemID, imageRef);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -210,10 +217,15 @@ public class NewPostActivity extends AppCompatActivity {
                             }
                         });
                     }
-                    //back to homepage
-                    Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(NewPostActivity.this, HomePageActivity.class);
-                    startActivity(intent);
+                    else { //create post without image
+                        int ret = f.create_post(itemName, email, price, category, address, description, status, postTime, notified, lat, lon, paypal, "");
+                        //back to homepage
+                        Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(NewPostActivity.this, HomePageActivity.class);
+                        startActivity(intent);
+                    }
+
+
 
                 } else {
                     Toast.makeText(getBaseContext(), "Input cannot be empty!", Toast.LENGTH_LONG).show();
@@ -232,11 +244,6 @@ public class NewPostActivity extends AppCompatActivity {
                 getImage();
             }
         });
-
-
-
-
-
     }
 
     /**
@@ -262,7 +269,6 @@ public class NewPostActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-
 
         if (resultCode == RESULT_OK) {
             try {

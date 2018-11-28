@@ -16,7 +16,7 @@ public class Item {
     private String seller_name;
     private int status;
     private String location;
-    private String imagePath; //based on Firebase Storage
+    private String item_image; //based on Firebase Storage
     //private int SellerID;
     private String description;
     private Timestamp postTime;
@@ -51,7 +51,7 @@ public class Item {
      */
     public Item(String category, String title, String seller_name, double price, String description,
                 String location, int status, Timestamp postTime, int notified,
-                double latitude, double longitude, String paypal){
+                double latitude, double longitude, String paypal, String item_image){
         this.id=seller_name+postTime.toString();
         this.category=category;
         this.title=title;
@@ -59,13 +59,14 @@ public class Item {
         this.status=status;
         this.price = price;
         this.location=location;
-        //this.SellerID = SellerID;
+        //this.SellerID = SellerID
         this.description = description;
         this.postTime = postTime;
         this.notified = notified;
         this.latitude = latitude;
         this.longitude = longitude;
         this.paypal = paypal;
+        this.item_image = item_image;
     }
 
     /** Getter Methods **/
@@ -93,7 +94,7 @@ public class Item {
     }
     public Timestamp getPostTime() { return this.postTime; }
     public int getNotified(){ return this.notified; }
-    public String getImagePath(){ return this.imagePath; }
+    public String getItem_image(){ return this.item_image; }
     public double getLatitude() {
         return latitude;
     }
@@ -125,7 +126,7 @@ public class Item {
         this.location=location;
     }
     public void setNotified(int notified){this.notified = notified;}
-    public void setImagePath(String path){ this.imagePath = path; }
+    public void setItem_image(String path){ this.item_image = path; }
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }

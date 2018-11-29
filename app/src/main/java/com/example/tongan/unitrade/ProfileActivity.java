@@ -345,17 +345,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        wishlistbtn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, Wishlist.class);
-                //intent.putExtra("name", name.getText().toString());
-                startActivity(intent);
-            }
-        });
-
-
         //Upload Profile Image Functionality ---------------
         change_icon.setOnClickListener(new View.OnClickListener() {
             @Override

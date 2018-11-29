@@ -21,7 +21,6 @@
         android:id="@+id/notifi_switch"
         android:layout_width="281dp"
         android:layout_height="100dp"
-        style="@style/SwitchCompatStyle"
         android:layout_above="@+id/notifi_itemSold_switch"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="-155dp"

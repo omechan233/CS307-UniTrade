@@ -78,7 +78,7 @@ public class ProfileActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
 
         //init local variables for different components on page
-        final ImageButton homebtn =         findViewById(R.id.profile_back_icon);
+        final Button homebtn =         findViewById(R.id.profile_back_icon);
         final Button view_items =           findViewById(R.id.view_items);
         final EditText username_edit =      findViewById(R.id.input_username);
         final EditText phone_edit =         findViewById(R.id.input_phone);

@@ -97,7 +97,7 @@ public class Shipment extends AppCompatActivity{
 
                 //input check
                 if (TextUtils.isEmpty(name)
-                        || TextUtils.isEmpty(add1)
+                        || TextUtils.isEmpty(add2)
                         || TextUtils.isEmpty(state)
                         || TextUtils.isEmpty(zipCode)
                         || TextUtils.isEmpty(phoneNumber)){

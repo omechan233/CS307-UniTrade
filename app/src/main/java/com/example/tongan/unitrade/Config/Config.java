@@ -30,8 +30,7 @@ public class Config extends AppCompatActivity{
     public String getClientID() {
         String sellerEmail = user_email;
 
-        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-        System.out.println("Buyer's PayPal email is " + sellerEmail);
+
         if (sellerEmail.equals("guo361@purdue.edu")) {
             PAYPAL_CLIENT_ID = "AZy6mX1mTKO8Qaxc4CP0FeEk53lfxGriUCJmwTsRscof9vPkoe55epXwiRZ9_D14Op5QnMe08Y1Riol7";
         } else if (sellerEmail.equals("smerrit@purdue.edu")) {

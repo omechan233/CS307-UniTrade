@@ -169,7 +169,7 @@ public class Paypal extends AppCompatActivity {
                                             for (QueryDocumentSnapshot document : task.getResult()) {
                                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                                 final DocumentReference order_doc = db.collection("orders").document(document.getId());
-                                                order_doc.update("is_shipped",true);
+                                                order_doc.update("is_paid",true);
                                             }
                                         } else {
                                             Log.d(TAG, "Error getting documents: ", task.getException());

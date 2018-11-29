@@ -16,7 +16,7 @@ public class Item {
     private String seller_name;
     private int status;
     private String location;
-    private String imagePath; //based on Firebase Storage
+    private String item_image; //based on Firebase Storage
     //private int SellerID;
     private String description;
     private Timestamp postTime;
@@ -54,7 +54,7 @@ public class Item {
      */
     public Item(String category, String title, String seller_name, double price, String description,
                 String location, int status, Timestamp postTime, int notified,
-                double latitude, double longitude, String paypal, String imagePath, String shipping_address,
+                double latitude, double longitude, String paypal, String item_image, String shipping_address,
                 String shipping_name, String shipping_phone){
         this.id=seller_name+postTime.toString();
         this.category=category;
@@ -70,7 +70,7 @@ public class Item {
         this.latitude = latitude;
         this.longitude = longitude;
         this.paypal = paypal;
-        this.imagePath = imagePath;
+        this.item_image = item_image;
         this.shipping_address = shipping_address;
         this.shipping_name = shipping_name;
         this.shipping_phone = shipping_phone;
@@ -101,7 +101,7 @@ public class Item {
     }
     public Timestamp getPostTime() { return this.postTime; }
     public int getNotified(){ return this.notified; }
-    public String getImagePath(){ return this.imagePath; }
+    public String getItem_image(){ return this.item_image; }
     public double getLatitude() {
         return latitude;
     }
@@ -145,7 +145,7 @@ public class Item {
         this.location=location;
     }
     public void setNotified(int notified){this.notified = notified;}
-    public void setItem_image(String imagePath){ this.imagePath = imagePath; }
+    public void setItem_image(String imagePath){ this.item_image = imagePath; }
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }

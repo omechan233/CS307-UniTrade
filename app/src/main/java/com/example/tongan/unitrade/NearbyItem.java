@@ -113,7 +113,7 @@ public class NearbyItem extends AppCompatActivity {
                                     //todo: set image
 
                                     StorageReference storageRef = storage.getReference();
-                                    String picPath = current_item.getImagePath();
+                                    String picPath = current_item.getItem_image();
 
                                     StorageReference picRef = null;
                                     if(picPath != null && !picPath.isEmpty())

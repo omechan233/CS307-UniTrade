@@ -75,7 +75,7 @@ public class Wishlist extends AppCompatActivity {
 
                                     //get item's image from storage
                                     StorageReference storageRef = storage.getReference();
-                                    String picPath = current_item.getImagePath();
+                                    String picPath = current_item.getItem_image();
 
                                     StorageReference picRef = null;
                                     if(picPath != null && !picPath.isEmpty())

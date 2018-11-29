@@ -57,6 +57,9 @@ public class Paypal extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
         String temp_email = sharedPreferences.getString("seller_email", "");
 
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+        System.out.println("Buyer's PayPal email is " + temp_email);
+
         String abc = new Config(temp_email).getClientID();
         config = new PayPalConfiguration()
                 .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)

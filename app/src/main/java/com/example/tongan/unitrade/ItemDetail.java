@@ -63,10 +63,52 @@ public class ItemDetail extends AppCompatActivity {
         final String item_id = itemid;
         storage = FirebaseStorage.getInstance();
 
+
         final Button tracking_number = (Button)findViewById(R.id.tracking_number);
-        //todo : set this button to invisible if user is not seller
-        //tracking_number.setVisibility(View.INVISIBLE);
-        //tracking_number.setClickable(false);
+
+        tracking_number.setVisibility(View.INVISIBLE);
+        tracking_number.setClickable(false);
+        //todo set the shipping information text INVISIBLE
+
+        DocumentReference temp_item = db.collection("items").document(item_id);
+        temp_item.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                if(doc.exists()){
+                    Item item = doc.toObject(Item.class);
+                    //todo check the status of online paying
+                    boolean is_paid = true;
+                    if(item.getSeller_name().equals(email) && is_paid){
+                        tracking_number.setVisibility(View.VISIBLE);
+                        tracking_number.setClickable(true);
+                        //todo set the shipping information text VISIBLE
+                    }
+                }
+            }
+        });
+        // AT: I tried to write something to get the shipping address but failed... because i really dont know how to show that text...
+        // Bur the code is write here! so feel free to copy things for the back end and display it
+//        shipping_address.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                LayoutInflater layoutInflater = LayoutInflater.from(ItemDetail.this);
+//                View promptView = layoutInflater.inflate(R.layout.information_dialog, null);
+//                final EditText ship_address = (EditText)promptView.findViewById(R.id.shipping_add_text);
+//                DocumentReference temp_item2 = db.collection("items").document(item_id);
+//                temp_item2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        DocumentSnapshot doc = task.getResult();
+//                        if(doc.exists()){
+//                            Item item = doc.toObject(Item.class);
+//                            ship_address.setText(("Name: " + item.getShipping_name() + "\nAddress" + item.getShipping_address() + "\nPhone: " + item.getShipping_phone()));
+//                        }
+//                    }
+//                });
+//            }
+//        });
+
         tracking_number.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +123,6 @@ public class ItemDetail extends AppCompatActivity {
                         .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 trackingNumber = editText.getText().toString();
-                                //todo : store the tracking number into database
                                 System.out.println("tracking:::::::::::::" + trackingNumber);
                                 db.collection("items").document(item_id)
                                         .update("trackingnumber", trackingNumber);
@@ -138,6 +179,7 @@ public class ItemDetail extends AppCompatActivity {
         final EditText price_edit = (EditText) findViewById(R.id.detail_price);
         final EditText time_edit = (EditText) findViewById(R.id.detail_posttime);
         final ImageView item_pic = findViewById(R.id.detail_image);
+        final TextView seller_name = (TextView) findViewById(R.id.detail_seller);
 
         time_edit.setTextIsSelectable(false);
         time_edit.setFocusable(false);
@@ -191,7 +233,7 @@ public class ItemDetail extends AppCompatActivity {
                 desc_edit.setText(description);
                 time_edit.setText(postText);
                 name_edit.setText(item_name);
-                TextView seller_name = (TextView) findViewById(R.id.detail_seller);
+
                 seller = "Seller : " + seller;
                 seller_name.setText(seller);
                 //ps: frontend here is pretty simple........ just set an onclicklistener.......)*/
@@ -385,9 +427,15 @@ public class ItemDetail extends AppCompatActivity {
                 //AT: Buy success should not show up until its finished
                 //Toast.makeText(getBaseContext(), "Buy Success!", Toast.LENGTH_LONG).show();
                 String price = price_edit.getText().toString();
+                String seller_email = seller_name.getText().toString();
                 SharedPreferences.Editor edit = shared.edit();
                 edit.putString("item_price", price);
+                edit.putString("seller_email",seller_email);
                 edit.apply();
+
+
+
+
                 Intent intent = new Intent(ItemDetail.this, Purchase.class);
                 startActivity(intent);
             }

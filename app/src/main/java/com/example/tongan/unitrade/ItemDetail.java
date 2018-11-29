@@ -178,7 +178,7 @@ public class ItemDetail extends AppCompatActivity {
         final EditText desc_edit = (EditText) findViewById(R.id.description_content);
         final EditText name_edit = (EditText) findViewById(R.id.detail_item_name);
         final EditText price_edit = (EditText) findViewById(R.id.detail_price);
-        final EditText time_edit = (EditText) findViewById(R.id.detail_posttime);
+        final TextView time_edit = (TextView) findViewById(R.id.detail_posttime);
         final ImageView item_pic = findViewById(R.id.detail_image);
         final TextView seller_name = (TextView) findViewById(R.id.detail_seller);
         final TextView trackingnumber = (TextView) findViewById(R.id.detail_tracking);

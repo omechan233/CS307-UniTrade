@@ -189,7 +189,7 @@ public class Functions {
         /****
          * using the item java class, which is simpler!
          */
-        Item item = new Item(category, title, email, price, description, address, status, postTime, notified, lat, lon, paypal, item_image);
+        Item item = new Item(category, title, email, price, description, address, status, postTime, notified, lat, lon, paypal, item_image, "","","");
         db.collection("items").document(item.getid()).set(item);
 
         // Adding the item to my_items list
@@ -197,6 +197,15 @@ public class Functions {
         user_doc.update("my_items", FieldValue.arrayUnion(item.getid()));
 
         return 1;
+    }
+
+
+
+    public void shipping_info(String item_id, String shipping_add, String shipping_name, String shipping_phone){
+        final DocumentReference item_ref = db.collection("items").document(item_id);
+        item_ref.update("shipping_address", shipping_add);
+        item_ref.update("shipping_name", shipping_name);
+        item_ref.update("shipping_phone", shipping_phone);
     }
 
 

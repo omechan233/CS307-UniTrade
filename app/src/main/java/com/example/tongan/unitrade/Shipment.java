@@ -3,6 +3,7 @@ package com.example.tongan.unitrade;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -29,11 +30,14 @@ import java.util.Locale;
 
 public class Shipment extends AppCompatActivity{
     private static final String TAG = "Shipment";
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shipment);
-
+        sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
+        final String itemid = sharedPreferences.getString("itemid", "");
         Button next = (Button) findViewById(R.id.next_btn);
 
         final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
@@ -69,8 +73,6 @@ public class Shipment extends AppCompatActivity{
         });
 
 
-        //Todo: save the information in DB.
-
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,10 +91,13 @@ public class Shipment extends AppCompatActivity{
                 final String zipCode = zipCode_editText.getText().toString();
                 final String phoneNumber = phoneNumber_editText.getText().toString();
 
+                Functions f = new Functions();
+                f.shipping_info(itemid, name, add1 + " " +add2, phoneNumber);
+
+
                 //input check
                 if (TextUtils.isEmpty(name)
-                        //|| TextUtils.isEmpty(add1)
-                        || TextUtils.isEmpty(add2)
+                        || TextUtils.isEmpty(add1)
                         || TextUtils.isEmpty(state)
                         || TextUtils.isEmpty(zipCode)
                         || TextUtils.isEmpty(phoneNumber)){
@@ -104,18 +109,11 @@ public class Shipment extends AppCompatActivity{
                     startActivity(new Intent(Shipment.this, Paypal.class));
                 }
 
-
-
-
-
-
-
             }
         });
     }
     private Location getLastBestLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,

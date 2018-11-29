@@ -180,6 +180,7 @@ public class ItemDetail extends AppCompatActivity {
         final EditText time_edit = (EditText) findViewById(R.id.detail_posttime);
         final ImageView item_pic = findViewById(R.id.detail_image);
         final TextView seller_name = (TextView) findViewById(R.id.detail_seller);
+        final TextView trackingnumber = (TextView) findViewById(R.id.detail_tracking);
 
         time_edit.setTextIsSelectable(false);
         time_edit.setFocusable(false);
@@ -229,6 +230,7 @@ public class ItemDetail extends AppCompatActivity {
                 }
 
                 String cate = item.getCategory();
+                String track = item.getTrackingnumber();
                 category.setText(cate);
                 desc_edit.setText(description);
                 time_edit.setText(postText);
@@ -250,6 +252,8 @@ public class ItemDetail extends AppCompatActivity {
                 String temp = price + "";
                 price_edit.setText(temp);
 
+                //set tracking number
+                trackingnumber.setText(track);
 
                 //Set Item image to one uploaded with the post, if it exists
                 StorageReference storageRef = storage.getReference();

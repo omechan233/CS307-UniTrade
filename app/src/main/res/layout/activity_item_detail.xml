@@ -173,17 +173,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
+            android:layout_alignStart="@+id/item_category_detail"
             android:text="Enter Tracking Number" />
 
         <TextView
             android:id="@+id/detail_tracking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/detail_seller"
-            android:layout_toEndOf="@+id/tracking_number"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/item_category_detail"
+            android:layout_marginEnd="33dp"
             android:text="Tracking nubmer:"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
     </RelativeLayout>
 

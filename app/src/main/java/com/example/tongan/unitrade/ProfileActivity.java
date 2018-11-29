@@ -79,7 +79,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         //init local variables for different components on page
         final ImageButton homebtn =         findViewById(R.id.profile_back_icon);
-        final Button wishlistbtn =          findViewById(R.id.profile_wishlist_btn);
         final Button view_items =           findViewById(R.id.view_items);
         final EditText username_edit =      findViewById(R.id.input_username);
         final EditText phone_edit =         findViewById(R.id.input_phone);
@@ -100,11 +99,9 @@ public class ProfileActivity extends AppCompatActivity {
         //only display certain features if person viewing the profile is the owner of that profile
         if (user_email.equals(profile_email)) {
             edit.setVisibility(View.VISIBLE);
-            wishlistbtn.setVisibility(View.VISIBLE);
             change_icon.setVisibility(View.VISIBLE);
         }else {
             edit.setVisibility(View.INVISIBLE);
-            wishlistbtn.setVisibility(View.INVISIBLE);
             change_icon.setVisibility(View.INVISIBLE);
         }
 

@@ -34,19 +34,11 @@ import org.json.JSONException;
 import java.math.BigDecimal;
 
 public class Paypal extends AppCompatActivity {
-
     private static final String TAG = "Paypal page";
     public static final int PAYPAL_REQUEST_CODE = 7171;
     private SharedPreferences sharedPreferences;
 
-    //static Config configg = new Config();
-   // static String abc = configg.getClientID();
-
-
-    private static PayPalConfiguration config = new PayPalConfiguration()
-            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
-            .clientId(Config.PAYPAL_CLIENT_ID);
-
+    private static PayPalConfiguration config;
     Button btnPayNow;
     EditText edtAmount;
     String amount = "";
@@ -60,11 +52,17 @@ public class Paypal extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.paypal);
         sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
+        String temp_email = sharedPreferences.getString("email", "");
+
+        String abc = new Config(temp_email).getClientID();
+        config = new PayPalConfiguration()
+                .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+                .clientId(abc);
+
+
 
         //Start PayPal Service
         Intent intent = new Intent(this, PayPalService.class);

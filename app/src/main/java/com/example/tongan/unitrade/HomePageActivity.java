@@ -484,7 +484,34 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                 .build();
 
                                                                         manager.notify(1, notification);
-                                                                                        db.collection("orders").document(orders_doc.getId())
+                                                                        /********************************
+                                                                         * pop_up dialog to ask user to goto shipment page
+                                                                         ********************************/
+                                                                        //Todo: backend check if current change situation is from f2f to online.
+                                                                        //Todo: if so, use following code to pop up dialog to direct buyer to shipping page.
+                                                                        //Todo: if not, don't popup anything.
+                                                                        //Pop-up dialog code starts.
+                                                                        AlertDialog.Builder builder = new AlertDialog.Builder(HomePageActivity.this);
+                                                                        builder.setTitle("Notice:");
+                                                                        builder.setMessage("Your trading method is changed!");
+                                                                        builder.setCancelable(true);
+
+                                                                        // user clicks button:
+                                                                        builder.setPositiveButton(
+                                                                                "Go Enter your shipping info",
+                                                                                new DialogInterface.OnClickListener() {
+                                                                                    @Override
+                                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                                        /*Toast.makeText(SendNotification.this, "You accepted!",
+                                                                                                Toast.LENGTH_SHORT).show();*/
+                                                                                        Intent intent = new Intent(HomePageActivity.this, Shipment.class);
+                                                                                        startActivity(intent);
+
+                                                                                    }
+                                                                                });
+                                                                        //Pop-up dialog code ends.
+
+                                                                        db.collection("orders").document(orders_doc.getId())
                                                                                                 .update("methodpending", 0);
 
 

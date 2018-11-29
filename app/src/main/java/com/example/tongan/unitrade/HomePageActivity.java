@@ -484,6 +484,30 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                 .build();
 
                                                                         manager.notify(1, notification);
+
+                                                                        db.collection("orders").document(orders_doc.getId())
+                                                                                                .update("methodpending", 0);
+
+
+                                                                        //front-end function ends here.
+                                                                    } else if (current_order.getMethodpending() == 4) {
+                                                                        System.out.println("trade change!!!!!!!");
+                                                                        //Todo: front-end functionality starts here, combine them with back-end.
+                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
+                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
+                                                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
+                                                                                .setContentTitle("UniTrade:")
+                                                                                .setContentText("Your item's trading method has been changed!")
+                                                                                .setWhen(System.currentTimeMillis())
+                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                                .setAutoCancel(true)
+                                                                                .setContentIntent(ma)
+                                                                                .build();
+
+                                                                        manager.notify(1, notification);
+                                                                        //front-end functionality ends here.
+
                                                                         /********************************
                                                                          * pop_up dialog to ask user to goto shipment page
                                                                          ********************************/
@@ -510,29 +534,6 @@ public class HomePageActivity extends AppCompatActivity {
                                                                                     }
                                                                                 });
                                                                         //Pop-up dialog code ends.
-
-                                                                        db.collection("orders").document(orders_doc.getId())
-                                                                                                .update("methodpending", 0);
-
-
-                                                                        //front-end function ends here.
-                                                                    } else if (current_order.getMethodpending() == 4) {
-                                                                        System.out.println("trade change!!!!!!!");
-                                                                        //Todo: front-end functionality starts here, combine them with back-end.
-                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
-                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
-                                                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "methodChange")
-                                                                                .setContentTitle("UniTrade:")
-                                                                                .setContentText("Your item's trading method has been changed!")
-                                                                                .setWhen(System.currentTimeMillis())
-                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
-                                                                                .setAutoCancel(true)
-                                                                                .setContentIntent(ma)
-                                                                                .build();
-
-                                                                        manager.notify(1, notification);
-                                                                        //front-end functionality ends here.
                                                                         db.collection("orders").document(orders_doc.getId())
                                                                                 .update("methodpending", 0);
                                                                     }

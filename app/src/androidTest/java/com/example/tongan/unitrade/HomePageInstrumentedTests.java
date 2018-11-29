@@ -61,8 +61,8 @@ public class HomePageInstrumentedTests {
         //close keyboard
         Espresso.closeSoftKeyboard();
 
-        monitor = getInstrumentation().
-                        addMonitor(HomePageActivity.class.getName(), null, false);
+        monitor = getInstrumentation()
+                        .addMonitor(HomePageActivity.class.getName(), null, false);
 
     }
 

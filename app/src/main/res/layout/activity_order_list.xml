@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
+    android:background="@drawable/background_common2"
     tools:context=".ItemDetail">
 
     <TextView
         android:id="@+id/list_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#FF9900"
+        android:background="#21b49d"
         android:text="Posted Items and Orders"
         android:textSize="20sp"
         android:textStyle="bold" />

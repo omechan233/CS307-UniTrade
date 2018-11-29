@@ -5,18 +5,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
+    android:background="@drawable/background_common2"
     tools:context="com.example.tongan.unitrade.NotificationPage">
+
+    <TextView
+        android:id="@+id/noti_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#21b49d"
+        android:text=" Notification Setting"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <Switch
         android:id="@+id/notifi_switch"
         android:layout_width="281dp"
         android:layout_height="100dp"
+        style="@style/SwitchCompatStyle"
         android:layout_above="@+id/notifi_itemSold_switch"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="-155dp"
-        android:text="Notifications"
-        android:textSize="30sp" />
+        android:text="Enable Notifications"
+        android:textSize="20sp" />
 
     <Switch
         android:id="@+id/notifi_itemSold_switch"
@@ -30,16 +40,13 @@
 
     <Button
         android:id="@+id/notifi_back"
-        android:layout_width="147dp"
-        android:layout_height="70dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="127dp"
-        android:layout_marginLeft="127dp"
-        android:layout_marginBottom="36dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
         android:text="Back"
-        android:textSize="20sp" />
+        android:textSize="15sp" />
 
     <Switch
         android:id="@+id/notifi_changeMethod_switch"
@@ -54,14 +61,11 @@
     <Button
         android:id="@+id/notify_gotoSendpage"
         android:layout_width="214dp"
+        android:visibility="invisible"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/notifi_back"
-        android:layout_alignLeft="@+id/notifi_back"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="-31dp"
-        android:layout_marginLeft="-31dp"
-        android:layout_marginBottom="143dp"
         android:text="Send Page"
         android:textSize="18sp"
         android:textStyle="bold" />
+
 </RelativeLayout>

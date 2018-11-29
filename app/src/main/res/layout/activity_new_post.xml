@@ -5,213 +5,233 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
+    android:background="@drawable/background_common"
     tools:context="com.example.tongan.unitrade.NewPostActivity">
-
-
-    <TextView
-        android:id="@+id/title_new_post"
-        android:text="New Post"
-        android:textSize="20sp"
-        android:background="#FF9900"
-        android:layout_width="match_parent"
-        android:layout_height="40dp" />
 
     <ImageView
         android:id="@+id/item_image"
-        android:layout_width="132dp"
-        android:layout_height="123dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/title_new_post"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
         android:contentDescription="ItemImage"
-        android:src="@mipmap/poi_test_src"
-        android:layout_alignParentLeft="true" />
+        android:layout_marginTop="30dp"
+        android:src="@mipmap/poi_test_src" />
 
     <TextView
         android:id="@+id/upload_image"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/item_image"
         android:text="Upload Image"
         android:textColor="#365fd1"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:layout_alignParentLeft="true" />
+        android:layout_centerHorizontal="true" />
 
-
-    <TextView
-        android:id="@+id/item_name_text"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_alignStart="@+id/price_text"
-        android:layout_below="@+id/upload_image"
-        android:text="Item Name"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/item_name_input"
-        android:layout_width="227dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/upload_image"
-        android:layout_toEndOf="@+id/item_name_text"
-        android:hint="Name"
-        android:inputType="text"
-        android:lines="1" />
-
-    <TextView
-        android:id="@+id/price_text"
-        android:layout_width="89dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/item_name_input"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="6dp"
-        android:text="Price"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/price_input"
-        android:layout_width="227dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/item_name_input"
-        android:layout_marginStart="-15dp"
-        android:layout_toEndOf="@+id/item_image"
-        android:hint="Price"
-        android:inputType="numberDecimal"
-        android:lines="1" />
-
-    <TextView
-        android:id="@+id/address_text"
-        android:layout_width="89dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/price_text"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="6dp"
-        android:text="Address"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-
-    <EditText
-        android:id="@+id/address_input"
-        android:layout_width="312dp"
-        android:layout_height="40dp"
-        android:layout_alignStart="@+id/price_text"
-        android:layout_centerVertical="true"
-        android:visibility="invisible"
-        android:lines="1" />
-
-    <EditText
-        android:id="@+id/address_lat"
-        android:layout_width="312dp"
-        android:layout_height="40dp"
-        android:layout_alignStart="@+id/price_text"
-        android:layout_centerVertical="true"
-        android:visibility="invisible"
-        android:lines="1" />
-
-    <EditText
-        android:id="@+id/address_lon"
-        android:layout_width="312dp"
-        android:layout_height="40dp"
-        android:layout_alignStart="@+id/price_text"
-        android:layout_centerVertical="true"
-        android:visibility="invisible"
-        android:lines="1" />
-
-    <fragment
-        android:id="@+id/place_autocomplete_fragment"
-        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-        android:layout_width="315dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/address_text"
-        android:layout_alignStart="@+id/address_text"
-        android:layout_centerVertical="true" />
-
-
-    <TextView
-        android:id="@+id/desc_text"
-        android:layout_width="101dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_below="@+id/place_autocomplete_fragment"
-        android:text="Description"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/desc_input"
-        android:layout_width="327dp"
-        android:layout_height="95dp"
-        android:layout_below="@+id/desc_text"
+    <ScrollView
+        android:layout_width="320dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/info_area_new_post"
+        android:background="@drawable/background_view"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="30dp"
-        android:background="@drawable/message_box"
-        android:gravity="top"
-        android:hint="Enter a description of your item here..."
-        android:inputType="textMultiLine" />
+        android:layout_below="@id/upload_image">
 
-    <Button
-        android:id="@+id/post_submit_btn"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/item_name_text"
-        android:layout_marginBottom="32dp"
-        android:text="SUBMIT"
-        android:layout_alignLeft="@+id/item_name_text" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/cancel_btn"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/post_submit_btn"
-        android:layout_marginEnd="35dp"
-        android:text="CANCEL"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="35dp" />
+            <TextView
+                android:id="@+id/item_name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="Item Name"
+                android:layout_marginTop="18dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/category_text"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="68dp"
-        android:layout_toEndOf="@+id/item_image"
-        android:text="Category"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+            <EditText
+                android:id="@+id/item_name_input"
+                android:layout_width="220dp"
+                android:layout_height="40dp"
+                android:textSize="15sp"
+                android:layout_toEndOf="@+id/item_name_text"
+                android:hint="Name"
+                android:layout_marginTop="5dp"
+                android:inputType="text"
+                android:lines="1" />
 
-    <TextView
-        android:id="@+id/PayPal_text"
-        android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/price_text"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/item_name_input"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="12dp"
+                android:text="      Price     "
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/price_input"
+                android:layout_width="220dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="2dp"
+                android:layout_below="@+id/item_name_input"
+                android:layout_toEndOf="@id/price_text"
+                android:hint="Price"
+                android:textSize="15sp"
+                android:inputType="numberDecimal"
+                android:lines="1"
+                android:maxLines="1"/>
+
+            <TextView
+                android:id="@+id/category_text"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/price_text"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="10dp"
+                android:text="  Category"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/post_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_toEndOf="@id/category_text"
+                android:layout_below="@id/price_text"
+                android:layout_marginTop="1dp"
+                android:layout_marginLeft="30dp"
+                android:entries="@array/post" />
+
+            <TextView
+                android:id="@+id/desc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@+id/category_text"
+                android:text="Description"
+                android:layout_marginTop="2dp"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/desc_input"
+                android:layout_width="290dp"
+                android:layout_height="75dp"
+                android:lines="4"
+                android:maxLines="4"
+                android:layout_below="@+id/desc_text"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/message_box"
+                android:gravity="top"
+                android:textSize="14sp"
+                android:hint="Enter a description of your item here..."
+                android:inputType="textMultiLine" />
+
+            <TextView
+                android:id="@+id/PayPal_text"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/desc_input"
+                android:text="PayPal Email"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/PayPal_input"
+                android:layout_width="210dp"
+                android:layout_marginTop="2dp"
+                android:layout_height="40dp"
+                android:layout_toEndOf="@id/PayPal_text"
+                android:layout_below="@id/desc_input"
+                android:hint="Enter your PayPal account"
+                android:textSize="15sp"
+                android:inputType="text"
+                android:maxLines="1"
+                android:lines="1" />
+
+            <TextView
+                android:id="@+id/address_text"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/PayPal_text"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="    Address     "
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/address_input"
+                android:layout_width="210dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/PayPal_input"
+                android:layout_toEndOf="@id/address_text"
+                android:visibility="invisible"
+                android:textSize="15sp"
+                android:lines="1" />
+
+            <EditText
+                android:id="@+id/address_lat"
+                android:layout_width="210dp"
+                android:layout_height="40dp"
+                android:layout_toEndOf="@id/address_text"
+                android:layout_below="@id/PayPal_input"
+                android:visibility="invisible"
+                android:textSize="15sp"
+                android:lines="1" />
+
+            <EditText
+                android:id="@+id/address_lon"
+                android:layout_width="210dp"
+                android:layout_height="40dp"
+                android:layout_toEndOf="@id/address_text"
+                android:layout_below="@id/PayPal_input"
+                android:visibility="invisible"
+                android:textSize="15sp"
+                android:lines="1" />
+
+            <fragment
+                android:id="@+id/place_autocomplete_fragment"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                android:layout_height="wrap_content"
+                android:layout_width="210dp"
+                android:layout_toEndOf="@id/address_text"
+                android:layout_below="@id/PayPal_input" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="330dp"
+        android:weightSum="2"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/category_text"
-        android:layout_toEndOf="@+id/item_image"
-        android:text="PayPal Email"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_below="@id/info_area_new_post"
+        android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/PayPal_input"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_below="@+id/PayPal_text"
-        android:layout_marginStart="9dp"
-        android:layout_toEndOf="@+id/item_name_text"
-        android:hint="Enter your PayPal account"
-        android:inputType="text"
-        android:lines="1" />
+        <Button
+            android:id="@+id/post_submit_btn"
+            android:layout_width="1dp"
+            android:layout_height="50dp"
+            android:text="SUBMIT"
+            android:layout_weight="1" />
 
-    <Spinner
-        android:id="@+id/post_spinner"
-        android:layout_width="116dp"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/item_name_input"
-        android:layout_alignTop="@+id/category_text"
-        android:entries="@array/post" />
+        <Button
+            android:id="@+id/cancel_btn"
+            android:layout_width="1dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:text="CANCEL" />
+
+    </LinearLayout>
 
 </RelativeLayout>

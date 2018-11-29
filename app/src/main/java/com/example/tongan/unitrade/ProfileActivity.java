@@ -14,10 +14,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -32,8 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.objects.Comment;
-import com.example.tongan.unitrade.objects.Profile;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
@@ -43,7 +39,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -54,7 +49,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -85,7 +79,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         //init local variables for different components on page
         final ImageButton homebtn =         findViewById(R.id.profile_back_icon);
-        final Button wishlistbtn =          findViewById(R.id.profile_wishlist_btn);
         final Button view_items =           findViewById(R.id.view_items);
         final EditText username_edit =      findViewById(R.id.input_username);
         final EditText phone_edit =         findViewById(R.id.input_phone);
@@ -106,11 +99,9 @@ public class ProfileActivity extends AppCompatActivity {
         //only display certain features if person viewing the profile is the owner of that profile
         if (user_email.equals(profile_email)) {
             edit.setVisibility(View.VISIBLE);
-            wishlistbtn.setVisibility(View.VISIBLE);
             change_icon.setVisibility(View.VISIBLE);
         }else {
             edit.setVisibility(View.INVISIBLE);
-            wishlistbtn.setVisibility(View.INVISIBLE);
             change_icon.setVisibility(View.INVISIBLE);
         }
 

@@ -169,6 +169,7 @@ public class NewPostActivity extends AppCompatActivity {
                 //1 for notified
                 final int notified = 0;
 
+                final String tracking_number = "";
                 //get username by email
                 final String email = sharedPreferences.getString("email","");
 
@@ -200,7 +201,7 @@ public class NewPostActivity extends AppCompatActivity {
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 Toast.makeText(NewPostActivity.this, "Image added to Firebase Storage", Toast.LENGTH_LONG).show();
                                 //add reference to user's profile in the database
-                                int ret = f.create_post(itemName,email,price,category,address,description,status, postTime, notified, lat, lon, paypal, imageRef.getPath());
+                                int ret = f.create_post(itemName,email,price,category,address,description,status, postTime, notified, lat, lon, paypal, imageRef.getPath(),tracking_number);
 
                                 //back to homepage
                                 Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();
@@ -218,7 +219,7 @@ public class NewPostActivity extends AppCompatActivity {
                         });
                     }
                     else { //create post without image
-                        int ret = f.create_post(itemName, email, price, category, address, description, status, postTime, notified, lat, lon, paypal, "");
+                        int ret = f.create_post(itemName, email, price, category, address, description, status, postTime, notified, lat, lon, paypal, "",tracking_number);
                         //back to homepage
                         Toast.makeText(getBaseContext(), "Success!", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(NewPostActivity.this, HomePageActivity.class);

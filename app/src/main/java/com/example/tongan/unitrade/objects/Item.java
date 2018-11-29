@@ -24,9 +24,7 @@ public class Item {
     private double latitude;
     private double longitude;
     private String paypal;
-    private String shipping_address;
-    private String shipping_phone;
-    private String shipping_name;
+    private String trackingnumber;
 
 
     /******** AT:
@@ -54,8 +52,7 @@ public class Item {
      */
     public Item(String category, String title, String seller_name, double price, String description,
                 String location, int status, Timestamp postTime, int notified,
-                double latitude, double longitude, String paypal, String item_image, String shipping_address,
-                String shipping_name, String shipping_phone){
+                double latitude, double longitude, String paypal, String item_image, String trackingnumber){
         this.id=seller_name+postTime.toString();
         this.category=category;
         this.title=title;
@@ -71,9 +68,7 @@ public class Item {
         this.longitude = longitude;
         this.paypal = paypal;
         this.item_image = item_image;
-        this.shipping_address = shipping_address;
-        this.shipping_name = shipping_name;
-        this.shipping_phone = shipping_phone;
+        this.trackingnumber = trackingnumber;
     }
 
     /** Getter Methods **/
@@ -109,20 +104,12 @@ public class Item {
         return longitude;
     }
 
-    public String getShipping_address() {
-        return shipping_address;
-    }
-
-    public String getShipping_name() {
-        return shipping_name;
-    }
-
-    public String getShipping_phone() {
-        return shipping_phone;
-    }
-
     public String getPaypal() {
         return paypal;
+    }
+
+    public String getTrackingnumber(){
+        return trackingnumber;
     }
 
     /** Setter Methods **/
@@ -145,7 +132,7 @@ public class Item {
         this.location=location;
     }
     public void setNotified(int notified){this.notified = notified;}
-    public void setItem_image(String imagePath){ this.item_image = imagePath; }
+    public void setItem_image(String path){ this.item_image = path; }
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }

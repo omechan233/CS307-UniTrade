@@ -109,6 +109,18 @@
         android:textStyle="bold"
         android:text="Status:"/>
 
+    <TextView
+        android:id="@+id/tracking_order_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/item_name_order_detail"
+        android:layout_below="@+id/write_comment"
+        android:layout_marginTop="-111dp"
+        android:text="Tracking number:"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
     <!--reserved area, do not change here
     add any buttons here-->
     <LinearLayout

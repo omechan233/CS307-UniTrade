@@ -36,7 +36,7 @@ public class Order {
     private int request;
     private boolean is_paid;
     private boolean is_shipped;
-    private String trackingnubmer;
+    private String trackingnumber;
 
     /**
      * Constructor; Creates an order based on a purchased Item
@@ -60,7 +60,7 @@ public class Order {
         this.soldnotify = soldnotify;
         this.is_paid = is_paid;
         this.is_shipped = is_shipped;
-        this.trackingnubmer = trackingnumber;
+        this.trackingnumber = trackingnumber;
     }
 
     public String getOrder_ID() {
@@ -115,7 +115,7 @@ public class Order {
         this.face_to_face = face_to_face;
     }
 
-    public String getTrackingnubmer() {
-        return trackingnubmer;
+    public String getTrackingnumber() {
+        return trackingnumber;
     }
 }

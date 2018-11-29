@@ -87,7 +87,7 @@ public class OrderDetail extends AppCompatActivity {
 
                     String itemName_String = "Item Name : " + current_order.getItem_title();
                     String price_String = "Price : " + current_order.getItem_price();/*+ get price from backend*/;
-                    String trackingnumber = "Tracking number" + current_order.getTrackingnubmer();
+                    String trackingnumber = "Tracking number" + current_order.getTrackingnumber();
 
                     Timestamp time_stamp = current_order.getOrder_time();
 

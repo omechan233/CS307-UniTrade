@@ -15,10 +15,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.tongan.unitrade.Config.Config;
+import com.example.tongan.unitrade.objects.Item;
 import com.example.tongan.unitrade.objects.Order;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -37,6 +41,7 @@ public class Paypal extends AppCompatActivity {
     private static final String TAG = "Paypal page";
     public static final int PAYPAL_REQUEST_CODE = 7171;
     private SharedPreferences sharedPreferences;
+    private final Functions f = new Functions();
 
     private static PayPalConfiguration config;
     Button btnPayNow;
@@ -122,29 +127,34 @@ public class Paypal extends AppCompatActivity {
                                 .putExtra("PaymentDetails", paymentDetails)
                                 .putExtra("PaymentAmount", amount)
                         );
-
-                        /***
-                         * change item paid status
+                        /**
+                         * create order
                          */
-                        final Query query = db.collection("orders").whereEqualTo("item_ID", itemid);
-                        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        DocumentReference item_doc = db.collection("items").document(itemid);
+                        item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document: task.getResult()) {
-                                        if (document.exists()) {
-                                            Order order= document.toObject(Order.class);
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                                            DocumentReference profiles_doc = db.collection("orders").document(order.getOrder_ID());
-                                            profiles_doc.update("is_paid", true);
-                                            return;
-                                        } else {
-                                            // display empty list
-                                            Log.d(TAG, "No such document");
-                                        }
-                                    }
-                                } else {
-                                    Log.d(TAG, "get failed with ", task.getException());
+                                Item item = documentSnapshot.toObject(Item.class);
+                                if (item.getStatus() == 2) {
+                                    Toast.makeText(Paypal.this, "Item was already sold" , Toast.LENGTH_LONG).show();
+                                }
+                                else if(item.getSeller_name().equals(email)){
+                                    Toast.makeText(Paypal.this, "You cannot buy your own item" , Toast.LENGTH_LONG).show();
+                                }
+                                else if (item.getStatus() == 0) {
+                                    Toast.makeText(Paypal.this, "Item is not available. ", Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                        Timestamp orderTime = Timestamp.now();
+                                        f.create_order(email, item.getSeller_name(), itemid, orderTime, item.getPrice(), item.getTitle(), false, 0,true);
+                                        f.changeItemStatusToBought(itemid);
+                                        Toast.makeText(Paypal.this, "Submit Success! You choose online payment ", Toast.LENGTH_LONG).show();
+                                    /**************************************
+                                     * PayPal test page
+                                     ***************************************/
+
+
                                 }
                             }
                         });

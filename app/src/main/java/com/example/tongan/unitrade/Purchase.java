@@ -68,10 +68,12 @@ public class Purchase extends AppCompatActivity {
                             Toast.makeText(Purchase.this, "Item is not available. " + radioButton.getText(), Toast.LENGTH_LONG).show();
                         }
                         else {
-                            Timestamp orderTime = Timestamp.now();
-                            f.create_order(useremail,item.getSeller_name(), itemid, orderTime, item.getPrice(), item.getTitle(), finalFace_to_face,0);
-                            f.changeItemStatusToBought(itemid);
-                            Toast.makeText(Purchase.this, "Submit Success! You choose " + radioButton.getText(), Toast.LENGTH_LONG).show();
+                            if(finalFace_to_face) {
+                                Timestamp orderTime = Timestamp.now();
+                                f.create_order(useremail, item.getSeller_name(), itemid, orderTime, item.getPrice(), item.getTitle(), finalFace_to_face, 0,false);
+                                f.changeItemStatusToBought(itemid);
+                                Toast.makeText(Purchase.this, "Submit Success! You choose " + radioButton.getText(), Toast.LENGTH_LONG).show();
+                            }
                             /**************************************
                              * PayPal test page
                              ***************************************/

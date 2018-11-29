@@ -63,6 +63,7 @@ public class OrderDetail extends AppCompatActivity {
         final TextView method = (TextView)findViewById(R.id.trade_order_detail);
         final TextView seller = (TextView)findViewById(R.id.seller_order_detail);
         final TextView status = (TextView)findViewById(R.id.status_order_detail);
+        final TextView tracking = (TextView) findViewById(R.id.tracking_order_detail);
 
         //get info from backend here
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -118,6 +119,7 @@ public class OrderDetail extends AppCompatActivity {
                     method.setText(method_String);
                     seller.setText(seller_String);
                     status.setText(status_String);
+                    tracking.setText(trackingnumber);
                   
 
                 } else {

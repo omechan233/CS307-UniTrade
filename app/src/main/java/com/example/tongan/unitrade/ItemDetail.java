@@ -140,6 +140,7 @@ public class ItemDetail extends AppCompatActivity {
                                                         Log.d(TAG, document.getId() + " => " + document.getData());
                                                         final DocumentReference order_doc = db.collection("orders").document(document.getId());
                                                         order_doc.update("is_shipped",true);
+                                                        order_doc.update("trackingnumber",tracking_number);
                                                     }
                                                 } else {
                                                     Log.d(TAG, "Error getting documents: ", task.getException());

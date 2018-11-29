@@ -55,7 +55,7 @@ public class Paypal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.paypal);
         sharedPreferences = getSharedPreferences("app", Context.MODE_PRIVATE);
-        String temp_email = sharedPreferences.getString("email", "");
+        String temp_email = sharedPreferences.getString("seller_email", "");
 
         String abc = new Config(temp_email).getClientID();
         config = new PayPalConfiguration()

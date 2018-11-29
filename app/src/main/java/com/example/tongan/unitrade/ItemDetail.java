@@ -179,6 +179,7 @@ public class ItemDetail extends AppCompatActivity {
         final EditText price_edit = (EditText) findViewById(R.id.detail_price);
         final EditText time_edit = (EditText) findViewById(R.id.detail_posttime);
         final ImageView item_pic = findViewById(R.id.detail_image);
+        final TextView seller_name = (TextView) findViewById(R.id.detail_seller);
 
         time_edit.setTextIsSelectable(false);
         time_edit.setFocusable(false);
@@ -232,7 +233,7 @@ public class ItemDetail extends AppCompatActivity {
                 desc_edit.setText(description);
                 time_edit.setText(postText);
                 name_edit.setText(item_name);
-                TextView seller_name = (TextView) findViewById(R.id.detail_seller);
+
                 seller = "Seller : " + seller;
                 seller_name.setText(seller);
                 //ps: frontend here is pretty simple........ just set an onclicklistener.......)*/
@@ -426,9 +427,15 @@ public class ItemDetail extends AppCompatActivity {
                 //AT: Buy success should not show up until its finished
                 //Toast.makeText(getBaseContext(), "Buy Success!", Toast.LENGTH_LONG).show();
                 String price = price_edit.getText().toString();
+                String seller_email = seller_name.getText().toString();
                 SharedPreferences.Editor edit = shared.edit();
                 edit.putString("item_price", price);
+                edit.putString("seller_email",seller_email);
                 edit.apply();
+
+
+
+
                 Intent intent = new Intent(ItemDetail.this, Purchase.class);
                 startActivity(intent);
             }

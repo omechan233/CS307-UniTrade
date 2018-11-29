@@ -147,9 +147,9 @@ public class Paypal extends AppCompatActivity {
                                 }
                                 else {
                                         Timestamp orderTime = Timestamp.now();
-                                        f.create_order(email, item.getSeller_name(), itemid, orderTime, item.getPrice(), item.getTitle(), false, 0,true);
+                                        f.create_order(email, item.getSeller_name(), itemid, orderTime, item.getPrice(), item.getTitle(), false, 0,false);
                                         f.changeItemStatusToBought(itemid);
-                                        Toast.makeText(Paypal.this, "Submit Success! You choose online payment ", Toast.LENGTH_LONG).show();
+
                                     /**************************************
                                      * PayPal test page
                                      ***************************************/

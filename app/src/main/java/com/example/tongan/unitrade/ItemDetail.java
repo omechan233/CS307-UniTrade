@@ -254,7 +254,7 @@ public class ItemDetail extends AppCompatActivity {
                 //Set Item image to one uploaded with the post, if it exists
                 StorageReference storageRef = storage.getReference();
                 String picPath = documentSnapshot.getString("item_image");
-                if(picPath != null) {
+                if(picPath != null && !picPath.equals("")) {
                     StorageReference picRef = storageRef.child(picPath);
 
                     try {

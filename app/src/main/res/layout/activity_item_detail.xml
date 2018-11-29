@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
+    android:background="@drawable/background_common2"
     tools:context=".ItemDetail">
 
     <RelativeLayout
@@ -20,91 +20,6 @@
             android:text=" Item Details"
             android:textSize="20sp"
             android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_below="@id/detail_title"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:src="@mipmap/poi_test_src"
-            android:id="@+id/detail_image"
-            android:contentDescription="ItemImage"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/detail_title"
-            android:text="Back"
-            android:id="@+id/detail_previous_page"
-            android:textSize="15sp"
-            android:textStyle="bold"/>
-
-        <EditText
-            android:inputType="text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/detail_image"
-            android:layout_centerHorizontal="true"
-            android:text="ITEM NAME"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:id="@+id/detail_item_name"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:id="@+id/item_category_detail"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/detail_item_name"
-            android:textSize="18sp"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:text="category"
-            />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/item_category_detail"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/detail_price"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:text="price"
-            android:inputType="numberDecimal"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/detail_price"
-            android:id="@+id/description_text"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:text="DESCRIPTION"
-            android:layout_marginLeft="20dp" />
-
-        <EditText
-            android:id="@+id/description_content"
-            android:layout_width="333dp"
-            android:layout_height="45dp"
-            android:layout_below="@id/description_text"
-            android:layout_marginLeft="20dp"
-            android:background="@null"
-            android:inputType="textMultiLine"
-            android:maxLines="5"
-            android:text="1\n2\n3\n4\n5\n6\n7\n8\n9"
-            android:textSize="18sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/description_content"
-            android:text="Seller :"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:layout_marginLeft="20dp"
-            android:id="@+id/detail_seller"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -129,35 +44,163 @@
             android:textStyle="bold"
             android:layout_marginLeft="10dp"
             android:textColor="#ed233e"/>
+    
+    <ImageView
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_below="@id/detail_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:src="@mipmap/poi_test_src"
+        android:id="@+id/detail_image" 
+        android:contentDescription="ItemImage"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/detail_previous_page"
-            android:text="+wishList"
-            android:id="@+id/detail_wishlist"/>
+        <ScrollView
+            android:id="@+id/detail_area"
+            android:layout_below="@id/detail_image"
+            android:layout_width="300dp"
+            android:background="@drawable/background_view"
+            android:layout_height="300dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/detail_posttime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/description_text"
-            android:layout_alignStart="@+id/description_text"
-            android:layout_below="@+id/detail_seller"
-            android:text="Posted Time:"
-            android:textSize="15sp" />
+                <EditText
+                    android:inputType="text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="ITEM NAME"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:id="@+id/detail_item_name"/>
 
-        <Button
-            android:id="@+id/Item_Details_Buy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/detail_image"
-            android:text="Buy"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_alignParentRight="true" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/item_category_detail"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/detail_item_name"
+                    android:textSize="10sp"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:layout_centerHorizontal="true"
+                    android:text="category" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/item_category_detail"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/detail_price"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:text="price"
+                    android:inputType="numberDecimal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/detail_price"
+                    android:id="@+id/description_text"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:text="Description"
+                    android:layout_marginLeft="10dp" />
+
+                <EditText
+                    android:id="@+id/description_content"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/description_text"
+                    android:background="@null"
+                    android:inputType="textMultiLine"
+                    android:maxLines="5"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="1\n2\n3\n4"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/description_content"
+                    android:text="Seller :"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/detail_seller"/>
+
+                <TextView
+                    android:id="@+id/detail_posttime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@+id/detail_seller"
+                    android:text="Posted Time:"
+                    android:textStyle="bold"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/detail_tracking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@+id/detail_posttime"
+                    android:text="Tracking nubmer: N/A"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/tracking_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/detail_tracking"
+                    android:textSize="8sp"
+                    android:text="Enter Tracking Number" />
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:weightSum="3"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/buttons_detail"
+            android:layout_below="@id/detail_area"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Back"
+                android:id="@+id/detail_previous_page"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/Item_Details_Buy"
+                android:layout_width="1dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Buy"
+                android:textSize="18sp"
+                android:layout_alignParentRight="true" />
+
+            <Button
+                android:layout_width="1dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="+wishList"
+                android:id="@+id/detail_wishlist"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/confirm_btn"
@@ -167,32 +210,6 @@
             android:layout_alignParentEnd="true"
             android:text="Confirm"
             android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/tracking_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/description_text"
-            android:text="Enter Tracking Number"
-            android:textSize="10sp" />
-
-        <EditText
-            android:id="@+id/detail_tracking"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/detail_posttime"
-            android:layout_below="@id/detail_posttime"
-            android:text="Tracking number:"
-            android:textSize="16sp" />
-
-
-
-
-
-
-
-
 
     </RelativeLayout>
 

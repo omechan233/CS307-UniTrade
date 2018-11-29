@@ -36,6 +36,7 @@ public class Order {
     private int request;
     private boolean is_paid;
     private boolean is_shipped;
+    private String trackingnubmer;
 
     /**
      * Constructor; Creates an order based on a purchased Item
@@ -44,7 +45,7 @@ public class Order {
     public Order(){}
     public Order(String item_ID, Timestamp order_time, String seller_email, String item_title,
                  Double item_price, boolean is_sold, boolean face_to_face, int methodpending,
-                 String order_ID, boolean commented, int request, int soldnotify, boolean is_paid,boolean is_shipped){
+                 String order_ID, boolean commented, int request, int soldnotify, boolean is_paid,boolean is_shipped, String trackingnumber){
         this.seller_email=seller_email;
         this.is_sold=is_sold;
         this.item_ID=item_ID;
@@ -59,6 +60,7 @@ public class Order {
         this.soldnotify = soldnotify;
         this.is_paid = is_paid;
         this.is_shipped = is_shipped;
+        this.trackingnubmer = trackingnumber;
     }
 
     public String getOrder_ID() {
@@ -111,5 +113,9 @@ public class Order {
 
     public void setFace_to_face(boolean face_to_face) {
         this.face_to_face = face_to_face;
+    }
+
+    public String getTrackingnubmer() {
+        return trackingnubmer;
     }
 }

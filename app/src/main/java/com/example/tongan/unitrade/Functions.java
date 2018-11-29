@@ -152,7 +152,7 @@ public class Functions {
      *************************************/
     public int create_post(String title, String email, double price,
                            String category, String address, String description, int status, Timestamp postTime,
-                           int notified, double lat, double lon, String paypal, String item_image) {
+                           int notified, double lat, double lon, String paypal, String item_image, String trackingnumber) {
 
         //error number 2 for invalid input price
         if (price <= 0) {
@@ -189,7 +189,7 @@ public class Functions {
         /****
          * using the item java class, which is simpler!
          */
-        Item item = new Item(category, title, email, price, description, address, status, postTime, notified, lat, lon, paypal, item_image, "","","");
+        Item item = new Item(category, title, email, price, description, address, status, postTime, notified, lat, lon, paypal, item_image,trackingnumber);
         db.collection("items").document(item.getid()).set(item);
 
         // Adding the item to my_items list
@@ -207,7 +207,6 @@ public class Functions {
         item_ref.update("shipping_name", shipping_name);
         item_ref.update("shipping_phone", shipping_phone);
     }
-
 
     /**************************************
      * Find buyer by input the order
@@ -444,7 +443,7 @@ public class Functions {
                              boolean face_to_face, int methodpending){
         final String order_ID = buyer_email+order_time.toString();
         final Order order = new Order(item_ID, order_time, seller_email,item_title, item_price,
-                false, face_to_face, methodpending,order_ID, false, 0,0,false,false);
+                false, face_to_face, methodpending,order_ID, false, 0,0,false,false,"");
 
         final String final_item_ID = item_ID;
         final String final_seller_email = seller_email;

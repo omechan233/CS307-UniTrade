@@ -5,75 +5,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
+    android:background="@drawable/background_common2"
     tools:context=".CommentPage">
 
+    <TextView
+        android:id="@+id/comment_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#21b49d"
+        android:text="New Comment"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/TextView1"
-        android:layout_width="148dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="44dp"
+        android:layout_below="@id/comment_title"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="80dp"
         android:text="Please rate:"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="65dp"
-        android:layout_marginTop="95dp" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/TextView1"
-        android:layout_marginTop="185dp"
-        android:text="Please leave your comments:"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:layout_below="@id/TextView1"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"/>
 
     <EditText
         android:id="@+id/comment_input"
-        android:layout_width="340dp"
-        android:layout_height="212dp"
-        android:layout_alignParentBottom="true"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:maxLines="5"
+        android:lines="5"
+        android:layout_below="@id/ratingBar"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="217dp"
         android:background="@drawable/message_box"
         android:gravity="top"
+        android:layout_marginTop="10dp"
         android:hint=" Enter your comments here"
         android:inputType="textMultiLine" />
 
-    <Button
-        android:id="@+id/post_submit_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="109dp"
-        android:layout_marginEnd="67dp"
-        android:text="Submit"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:weightSum="2"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_below="@id/comment_input"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/commemt_cancle_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/post_submit_btn"
-        android:layout_marginStart="49dp"
-        android:text="Cancle"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        <Button
+            android:id="@+id/post_submit_btn"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/commemt_cancle_btn"
+            android:layout_width="1dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>

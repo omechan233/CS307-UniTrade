@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
+    android:background="@drawable/background_common2"
     tools:context=".Wishlist">
 
     <TextView
@@ -13,13 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:textSize="20sp"
-        android:background="#FF9900"
+        android:background="#21b49d"
         android:textStyle="bold"
         android:text="@string/wishlist1" />
 
 
     <Button
         android:id="@+id/wishlist_back_btn"
+        android:layout_centerHorizontal="true"
         android:layout_width="180dp"
         android:layout_height="46dp"
         android:layout_alignParentBottom="true"

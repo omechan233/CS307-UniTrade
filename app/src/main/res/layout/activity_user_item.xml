@@ -5,15 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
+    android:background="@drawable/background_common2"
     tools:context=".UserItem">
 
     <TextView
         android:id="@+id/userItem_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#FF9900"
-        android:text="Items posted by #username"
+        android:background="#21b49d"
+        android:text=" Items posted by #username"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -34,10 +34,11 @@
     </ScrollView>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
         android:id="@+id/user_item_back"
         android:layout_alignParentBottom="true"
-        android:text="RETURN"/>
+        android:text="Back"/>
 
 </RelativeLayout>

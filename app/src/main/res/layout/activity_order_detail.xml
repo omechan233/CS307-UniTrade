@@ -5,21 +5,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
+    android:background="@drawable/background_common2"
     tools:context=".OrderDetail">
 
     <TextView
         android:id="@+id/order_detail_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#FF9900"
+        android:background="#21b49d"
         android:text=" Order Details"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:layout_below="@id/order_detail_title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
@@ -27,120 +27,127 @@
         android:id="@+id/order_detail_image"
         android:contentDescription="ItemImage"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/order_detail_title"
-        android:text="Back"
+    <ScrollView
+        android:layout_width="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="300dp"
         android:layout_marginTop="10dp"
-        android:id="@+id/order_detail_previous_page"
-        android:textSize="15sp"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_below="@id/order_detail_image"
-        android:layout_marginLeft="10dp"
-        android:textColor="#000000"
-        android:id="@+id/item_name_order_detail"
-        android:layout_marginTop="10dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Order Item:"/>
+        android:id="@+id/detail_area_order"
+        android:background="@drawable/background_view">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/item_name_order_detail"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/price_order_detail"
-        android:layout_marginTop="10dp"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Price:"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/price_order_detail"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/time_order_detail"
-        android:layout_marginTop="10dp"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:text="Order Time:"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/item_name_order_detail"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Order Item:"/>
 
-    <TextView
-        android:id="@+id/trade_order_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/time_order_detail"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="Trade Method:"
-        android:textColor="#365fd1"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:layout_below="@id/item_name_order_detail"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/price_order_detail"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Price:"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/trade_order_detail"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/seller_order_detail"
-        android:layout_marginTop="10dp"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:text="Seller Name:"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/price_order_detail"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/time_order_detail"
+                android:layout_marginTop="9dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Order Time:"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/seller_order_detail"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/status_order_detail"
-        android:layout_marginTop="10dp"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:text="Status:"/>
+            <TextView
+                android:id="@+id/trade_order_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/time_order_detail"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="9dp"
+                android:text="Trade Method:"
+                android:textColor="#365fd1"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tracking_order_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/write_comment"
-        android:layout_marginTop="-111dp"
-        android:text="Tracking number:"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/trade_order_detail"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/seller_order_detail"
+                android:layout_marginTop="9dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Seller Name:"/>
 
-    <!--reserved area, do not change here
-    add any buttons here-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/seller_order_detail"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/status_order_detail"
+                android:layout_marginTop="9dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Status:"/>
+
+            <TextView
+                android:id="@+id/tracking_order_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/status_order_detail"
+                android:text="Tracking number:"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="9dp"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
+        android:layout_height="40dp"
         android:weightSum="2"
-        android:layout_alignParentBottom="true"
-        android:layout_height="50dp">
+        android:id="@+id/button_area_order"
+        android:orientation="horizontal"
+        android:layout_below="@id/detail_area_order"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Back"
+            android:id="@+id/order_detail_previous_page"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/write_comment"
+            android:layout_weight="1"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:text="Write Comments"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/write_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="111dp"
-        android:text="Write Comments"
-        android:textSize="18sp"
-        android:textStyle="bold" />
 
 </RelativeLayout>

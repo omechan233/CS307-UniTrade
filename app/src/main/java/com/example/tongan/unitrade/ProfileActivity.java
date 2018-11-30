@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -232,9 +233,9 @@ public class ProfileActivity extends AppCompatActivity {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     Comment current_com = documentSnapshot.toObject(Comment.class);
                                     LinearLayout comment = new LinearLayout(getBaseContext());
-                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400);
                                     comment.setLayoutParams(params);
-                                    params = new LinearLayout.LayoutParams(800, 400);
+                                    params = new LinearLayout.LayoutParams(600, 400);
                                     TextView tv = new TextView(getBaseContext());
                                     tv.setLayoutParams(params);
 
@@ -247,10 +248,10 @@ public class ProfileActivity extends AppCompatActivity {
 
 
                                     //todo : Set the text here to actual comment
-                                    String text = "Sender: " + current_com.getSender_name() + "\nComment: " +
+                                    String text = "<font color='#21b49d'>Sender: " + current_com.getSender_name() + "</font>" + "\nComment: " +
                                             current_com.getContent() + "\n" +
                                             posted_time + "\n";
-                                    tv.setText(text);
+                                    tv.setText(Html.fromHtml(text));
                                     tv.setTextColor(Color.parseColor("#000000"));
                                     comment.addView(tv);
                                     RatingBar rating = new RatingBar(getBaseContext(), null, android.R.attr.ratingBarStyleSmall);

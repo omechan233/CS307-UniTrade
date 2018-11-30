@@ -63,10 +63,14 @@ public class ItemDetail extends AppCompatActivity {
 
 
         final Button tracking_number = (Button)findViewById(R.id.tracking_number);
+        final TextView ship_info = findViewById(R.id.ship_info_detail);
+        final TextView ship_title = findViewById(R.id.ship_info);
 
         tracking_number.setVisibility(View.INVISIBLE);
         tracking_number.setClickable(false);
-        //todo set the shipping information text INVISIBLE
+
+        ship_info.setVisibility(View.INVISIBLE);
+        ship_title.setVisibility(View.INVISIBLE);
 
         DocumentReference temp_item = db.collection("items").document(item_id);
         temp_item.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -75,13 +79,26 @@ public class ItemDetail extends AppCompatActivity {
                 DocumentSnapshot doc = task.getResult();
                 if(doc.exists()){
                     Item item = doc.toObject(Item.class);
-                    //todo check the status of online paying
-                    boolean is_paid = true;
+                    boolean is_paid = item.getShipping_name()!=null;
                     if(item.getSeller_name().equals(email) && is_paid){
                         tracking_number.setVisibility(View.VISIBLE);
                         tracking_number.setClickable(true);
-                        //todo set the shipping information text VISIBLE
+                        ship_info.setVisibility(View.VISIBLE);
+                        ship_title.setVisibility(View.VISIBLE);
                     }
+                }
+            }
+        });
+
+
+        DocumentReference temp_item2 = db.collection("items").document(item_id);
+        temp_item2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                if(doc.exists()){
+                    Item item = doc.toObject(Item.class);
+                    ship_info.setText(("Name: " + item.getShipping_name() + "\nAddress" + item.getShipping_address() + "\nPhone: " + item.getShipping_phone()));
                 }
             }
         });
@@ -125,7 +142,7 @@ public class ItemDetail extends AppCompatActivity {
                                 db.collection("items").document(item_id)
                                         .update("trackingnumber", trackingNumber);
                                 db.collection("items").document(item_id)
-                                       .update("is_shipped", true);
+                                        .update("is_shipped", true);
                                 Query query =  db.collection("orders").whereEqualTo("item_ID",item_id);
                                 db.collection("orders")
                                         .whereEqualTo("item_ID", item_id)

@@ -231,6 +231,12 @@ public class ItemDetail extends AppCompatActivity {
                 final String item_id = itemid;
                 Timestamp time = item.getPostTime();
 
+                String paypal = item.getPaypal();
+                SharedPreferences.Editor edit = shared.edit();
+                edit.putString("seller_email",paypal);
+                edit.apply();
+
+
                 //format post date
                 SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
                 format.setTimeZone(TimeZone.getTimeZone("EDT"));
@@ -447,10 +453,8 @@ public class ItemDetail extends AppCompatActivity {
                 //AT: Buy success should not show up until its finished
                 //Toast.makeText(getBaseContext(), "Buy Success!", Toast.LENGTH_LONG).show();
                 String price = price_edit.getText().toString();
-                String seller_email = seller_name.getText().toString();
                 SharedPreferences.Editor edit = shared.edit();
                 edit.putString("item_price", price);
-                edit.putString("seller_email",seller_email);
                 edit.apply();
 
 

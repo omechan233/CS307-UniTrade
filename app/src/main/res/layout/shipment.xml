@@ -115,7 +115,7 @@
         android:layout_alignStart="@+id/name_txt"
         android:layout_below="@+id/zip_txt"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:hint="Enter your zip code here" />
 
     <TextView
@@ -135,7 +135,7 @@
         android:layout_alignStart="@+id/name_txt"
         android:layout_below="@+id/phone_txt"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="phone"
         android:hint="Enter your phone number here" />
 
     <Button

@@ -106,11 +106,12 @@ public class NearbyItem extends AppCompatActivity {
                                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(180, 180);
                                     params.setMargins(20, 20, 0, 20);
                                     imageView.setLayoutParams(params);
-                                    item.addView(imageView);
+
                                     //todo: set image
 
                                     StorageReference storageRef = storage.getReference();
                                     String picPath = current_item.getItem_image();
+                                    System.out.println(picPath);
 
                                     StorageReference picRef = null;
                                     if(picPath != null && !picPath.isEmpty())
@@ -118,9 +119,11 @@ public class NearbyItem extends AppCompatActivity {
 
                                     if(picRef != null){
                                         try{
+                                            System.out.println("GETTING IMAGE!!!!");
                                             //TODO: add logic to allow for different file types
                                             final File localFile = File.createTempFile("Images", "jpg");
                                             if(localFile != null) {
+                                                System.out.println("NOT NULL!");
                                                 picRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                                     @Override
                                                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -137,6 +140,17 @@ public class NearbyItem extends AppCompatActivity {
                                                         String text = "\n" + current_item.getTitle() + "\n" + current_item.getPrice() + "\n" + current_item.getSeller_name();
                                                         tv.setText(text);
                                                         item.addView(tv);
+                                                        item.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                SharedPreferences.Editor edit = shared.edit();
+                                                                edit.putString("itemid", current_item.getid());
+                                                                edit.apply();
+                                                                Intent intent = new Intent(NearbyItem.this, ItemDetail.class);
+                                                                startActivity(intent);
+                                                            }
+                                                        });
+                                                        items.addView(item);
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
@@ -151,6 +165,7 @@ public class NearbyItem extends AppCompatActivity {
                                         }
                                     }
                                     else { //add item view with default image
+                                        item.addView(imageView);
                                         imageView.setImageResource(R.mipmap.poi_test_src);
                                         params = new LinearLayout.LayoutParams(300, 180);
                                         params.setMargins(20, 20, 0, 20);

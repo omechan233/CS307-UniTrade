@@ -151,107 +151,107 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
-//        /***
-//         * item sold notification to seller
-//         */
-//        //get users sold notification setting
+        /***
+         * item sold notification to seller
+         */
+        //get users sold notification setting
         DocumentReference userDocRef = db.collection("users").document(email);
-//        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot doc = task.getResult();
-//                    if (doc.exists()) {
-//                        //update text boxes with user info from database
-//                        String sold_notify = doc.get("Itemsold_notification").toString();
-//                        if (sold_notify.equals("0")) {
-//                        } else {
-//                            //get order list from profile
-//                            final DocumentReference profiles = db.collection("profiles").document(email);
-//
-//                            profiles.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                                    DocumentSnapshot document = task.getResult();
-//                                    if (document.exists()) {
-//                                        List<String> my_items = new ArrayList<String>();
-//                                        my_items = (List<String>) document.getData().get("my_items");
-//                                        if (my_items == null || my_items.isEmpty()) {
-//                                            System.out.println("Nothing on the list!");
-//                                        } else {
-//                                            for (int i = 0; i < my_items.size(); i++) {
-//                                                //get item from order list
-//                                                final DocumentReference item_doc = db.collection("items").document(my_items.get(i));
-//                                                final int finalI = i;
-//                                                item_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//                                                    @Override
-//                                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
-//                                                                        @Nullable FirebaseFirestoreException e) {
-//                                                        if (e != null) {
-//                                                            Log.w(TAG, "Listen failed.", e);
-//                                                            return;
-//                                                        }
-//
-//                                                        if (snapshot != null && snapshot.exists()) {
-//                                                            item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                                                                @Override
-//                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                                                                    Item current_item = new Item();
-//                                                                    current_item = documentSnapshot.toObject(Item.class);
-//                                                                    if (current_item.getStatus() == 2 && current_item.getNotified() != 1) {
-//                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//                                                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
-//                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
-//                                                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "ItemSold")
-//                                                                                .setContentTitle("UniTrade:")
-//                                                                                .setContentText("someone bought your item: " + current_item.getTitle())
-//                                                                                .setWhen(System.currentTimeMillis())
-//                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
-//                                                                                .setAutoCancel(true)
-//                                                                                .setContentIntent(ma)
-//                                                                                .build();
-//
-//                                                                        manager.notify(2, notification);
-//                                                                        item_doc.update("notified", 1)
-//                                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                                                    @Override
-//                                                                                    public void onSuccess(Void aVoid) {
-//                                                                                        Log.d(TAG, "Someone bought your item");
-//                                                                                    }
-//                                                                                })
-//                                                                                .addOnFailureListener(new OnFailureListener() {
-//                                                                                    @Override
-//                                                                                    public void onFailure(@NonNull Exception e) {
-//                                                                                        Log.w(TAG, "item notification was wrong", e);
-//                                                                                    }
-//                                                                                });
-//                                                                    }
-//                                                                }
-//                                                            });
-//                                                        } else {
-//                                                            Log.d(TAG, "Current data: null");
-//                                                        }
-//                                                    }
-//                                                });
-//                                            }
-//                                        }
-//                                        //result[0] = (String[])document.getData().get("my_items");
-//                                        Log.e(TAG, "my item list found");
-//
-//                                    } else {
-//                                        Log.e(TAG, "my item list not found");
-//                                    }
-//                                }
-//                            });
-//                        }
-//                    } else {
-//                        Log.d(TAG, "No such document...");
-//                    }
-//                } else {
-//                    Log.d(TAG, "get failed with ", task.getException());
-//                }
-//            }
-//        });
+        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        //update text boxes with user info from database
+                        String sold_notify = doc.get("Itemsold_notification").toString();
+                        if (sold_notify.equals("0")) {
+                        } else {
+                            //get order list from profile
+                            final DocumentReference profiles = db.collection("profiles").document(email);
+
+                            profiles.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        List<String> my_items = new ArrayList<String>();
+                                        my_items = (List<String>) document.getData().get("my_items");
+                                        if (my_items == null || my_items.isEmpty()) {
+                                            System.out.println("Nothing on the list!");
+                                        } else {
+                                            for (int i = 0; i < my_items.size(); i++) {
+                                                //get item from order list
+                                                final DocumentReference item_doc = db.collection("items").document(my_items.get(i));
+                                                final int finalI = i;
+                                                item_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                                                        @Nullable FirebaseFirestoreException e) {
+                                                        if (e != null) {
+                                                            Log.w(TAG, "Listen failed.", e);
+                                                            return;
+                                                        }
+
+                                                        if (snapshot != null && snapshot.exists()) {
+                                                            item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                    Item current_item = new Item();
+                                                                    current_item = documentSnapshot.toObject(Item.class);
+                                                                    if (current_item.getStatus() == 2 && current_item.getNotified() != 1) {
+                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                                        Intent intent = new Intent(HomePageActivity.this, Order.class);
+                                                                        PendingIntent ma = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
+                                                                        Notification notification = new NotificationCompat.Builder(HomePageActivity.this, "ItemSold")
+                                                                                .setContentTitle("UniTrade:")
+                                                                                .setContentText("someone bought your item: " + current_item.getTitle())
+                                                                                .setWhen(System.currentTimeMillis())
+                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                                .setAutoCancel(true)
+                                                                                .setContentIntent(ma)
+                                                                                .build();
+
+                                                                        manager.notify(2, notification);
+                                                                        item_doc.update("notified", 1)
+                                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                    @Override
+                                                                                    public void onSuccess(Void aVoid) {
+                                                                                        Log.d(TAG, "Someone bought your item");
+                                                                                    }
+                                                                                })
+                                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                                    @Override
+                                                                                    public void onFailure(@NonNull Exception e) {
+                                                                                        Log.w(TAG, "item notification was wrong", e);
+                                                                                    }
+                                                                                });
+                                                                    }
+                                                                }
+                                                            });
+                                                        } else {
+                                                            Log.d(TAG, "Current data: null");
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                        //result[0] = (String[])document.getData().get("my_items");
+                                        Log.e(TAG, "my item list found");
+
+                                    } else {
+                                        Log.e(TAG, "my item list not found");
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        Log.d(TAG, "No such document...");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
 
 
 /***
@@ -486,7 +486,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                                         manager.notify(1, notification);
 
                                                                         db.collection("orders").document(orders_doc.getId())
-                                                                                                .update("methodpending", 0);
+                                                                                .update("methodpending", 0);
 
 
                                                                         //front-end function ends here.
@@ -858,7 +858,7 @@ public class HomePageActivity extends AppCompatActivity {
 
                                         StorageReference picRef = null;
                                         if(picPath != null && !picPath.isEmpty())
-                                          picRef = storageRef.child(picPath);
+                                            picRef = storageRef.child(picPath);
 
                                         if(picRef != null){
                                             try{

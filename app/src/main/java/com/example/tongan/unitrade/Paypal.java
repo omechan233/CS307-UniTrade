@@ -158,7 +158,9 @@ public class Paypal extends AppCompatActivity {
                             }
                         });
 
-                        Query query =  db.collection("orders").whereEqualTo("item_ID",itemid);
+                        System.out.println("888888888888888888888888888888888888888888888888888888888888888");
+
+//                        Query query =  db.collection("orders").whereEqualTo("item_ID",itemid);
                         db.collection("orders")
                                 .whereEqualTo("item_ID", itemid)
                                 .get()
@@ -168,14 +170,16 @@ public class Paypal extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             for (QueryDocumentSnapshot document : task.getResult()) {
                                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                                final DocumentReference order_doc = db.collection("orders").document(document.getId());
-                                                order_doc.update("is_paid",true);
+                                                System.out.println("sssssssssssssssssssss");
+                                                //final DocumentReference order_doc = db.collection("orders").document(document.getId());
+                                                //order_doc.update("is_paid",true);
                                             }
                                         } else {
                                             Log.d(TAG, "Error getting documents: ", task.getException());
                                         }
                                     }
                                 });
+
                     } catch (JSONException e){
                         e.printStackTrace();
                     }

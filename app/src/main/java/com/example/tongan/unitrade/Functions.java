@@ -452,6 +452,10 @@ public class Functions {
         // add order in orders
         db.collection("orders").document(order_ID).set(order);
 
+        if(!face_to_face){
+            db.collection("orders").document(order_ID).update("is_paid", true);
+
+        }
         // add the order in profile
         DocumentReference user_doc = db.collection("profiles").document(buyer_email);
         user_doc.update("my_orders", FieldValue.arrayUnion(order_ID));

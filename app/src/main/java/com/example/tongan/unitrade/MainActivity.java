@@ -315,11 +315,12 @@ public class MainActivity extends AppCompatActivity {
                                 System.out.println("order of user : " + doc.getId());
                                 Order current_order = new Order();
                                 current_order = doc.toObject(Order.class);
-                                if(current_order.isIs_paid() && !current_order.isPaid_notified()) {
+                                final String notifi = shared.getString("notification", "");
+                                if(current_order.isIs_paid() && !current_order.isPaid_notified() && notifi.equals("1")) {
                                     /**
                                      * notification bar
                                      */
-                                    System.out.println("notified????????????  " + current_order.isPaid_notified() + "title" + current_order.getItem_title());
+                                    //System.out.println("notified????????????  " + current_order.isPaid_notified() + "title" + current_order.getItem_title());
                                     NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                     Intent intent = new Intent(MainActivity.this, Order.class);
                                     PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
@@ -348,78 +349,157 @@ public class MainActivity extends AppCompatActivity {
             /***
              * ship notification
              */
-            final DocumentReference profileref = db.collection("profiles").document(email);
-            profileref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            final DocumentReference docRef = db.collection("profiles").document(email);
+            docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        List<String> my_orders = (List<String>) document.getData().get("my_orders");
-                        if (my_orders == null || my_orders.isEmpty()) {
-                            System.out.println("Nothing on the my order list!");
-                        } else {
-                            for (int i = 0; i < my_orders.size(); i++) {
-                                final DocumentReference order_doc = db.collection("orders").document(my_orders.get(i));
-                                final int finalI = i;
-                                order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                                        @Nullable FirebaseFirestoreException e) {
-                                        if (e != null) {
-                                            Log.w(TAG, "Listen failed.", e);
-                                            return;
-                                        }
+                public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
 
-                                        if (snapshot != null && snapshot.exists()) {
-                                            Log.d(TAG, "Current data: " + snapshot.getData());
-                                            order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    Order current_order = new Order();
-                                                    current_order = documentSnapshot.toObject(Order.class);
-                                                    final String notifi = shared.getString("notification", "");
-                                                    Log.d(TAG, "ship listener data: " + current_order.isIs_shipped() + current_order.getOrder_ID());
-                                                    final String ordername = current_order.getItem_title();
+                    if (snapshot != null && snapshot.exists()) {
+                        Log.d(TAG, "Current data: " + snapshot.getData());
+                        DocumentSnapshot document = snapshot;
+                        if (document.exists()) {
+                            List<String> my_orders = (List<String>) document.getData().get("my_orders");
+                            if (my_orders == null || my_orders.isEmpty()) {
+                                System.out.println("Nothing on the my order list!");
+                            } else {
+                                for (int i = 0; i < my_orders.size(); i++) {
+                                    final DocumentReference order_doc = db.collection("orders").document(my_orders.get(i));
+                                    final int finalI = i;
+                                    order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                                            @Nullable FirebaseFirestoreException e) {
+                                            if (e != null) {
+                                                Log.w(TAG, "Listen failed.", e);
+                                                return;
+                                            }
 
-                                                    if (current_order.isIs_shipped() & notifi.equals("1")) {
-                                                        System.out.println("ship not" + current_order.isIs_paid());
-                                                        /**
-                                                         * notification bar
-                                                         */
-                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                                        Intent intent = new Intent(MainActivity.this, Order.class);
-                                                        PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
-                                                        Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
-                                                                .setContentTitle("UniTrade:")
-                                                                .setContentText("your " + ordername + " is shipped")
-                                                                .setWhen(System.currentTimeMillis())
-                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
-                                                                .setAutoCancel(true)
-                                                                .setContentIntent(ma)
-                                                                .build();
+                                            if (snapshot != null && snapshot.exists()) {
+                                                Log.d(TAG, "Current order shiptest : " + snapshot.getData());
+                                                order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                        Order current_order = new Order();
+                                                        current_order = documentSnapshot.toObject(Order.class);
+                                                        final String notifi = shared.getString("notification", "");
+                                                        Log.d(TAG, "ship listener data: " + current_order.isIs_shipped() + current_order.getOrder_ID());
+                                                        final String ordername = current_order.getItem_title();
 
-                                                        manager.notify(0, notification);
+                                                        if (current_order.isIs_shipped() && notifi.equals("1") ) {
+                                                            System.out.println("ship not" + current_order.isIs_paid());
+                                                            /**
+                                                             * notification bar
+                                                             */
+                                                            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                            Intent intent = new Intent(MainActivity.this, Order.class);
+                                                            PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+                                                            Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
+                                                                    .setContentTitle("UniTrade:")
+                                                                    .setContentText("your " + ordername + " is shipped")
+                                                                    .setWhen(System.currentTimeMillis())
+                                                                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                    .setAutoCancel(true)
+                                                                    .setContentIntent(ma)
+                                                                    .build();
+
+                                                            manager.notify(0, notification);
 //
+                                                        }
                                                     }
-                                                }
-                                            });
-                                        } else {
-                                            Log.d(TAG, "Current data: null");
+                                                });
+                                            } else {
+                                                Log.d(TAG, "Current data: null");
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
+
+
                             }
+                            //result[0] = (String[])document.getData().get("my_items");
+                            Log.e(TAG, "my order list found");
 
-
+                        } else {
+                            Log.e(TAG, "my order list not found");
                         }
-                        //result[0] = (String[])document.getData().get("my_items");
-                        Log.e(TAG, "my order list found");
-
                     } else {
-                        Log.e(TAG, "my order list not found");
+                        Log.d(TAG, "Current data: null");
                     }
                 }
             });
+
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        List<String> my_orders = (List<String>) document.getData().get("my_orders");
+//                        if (my_orders == null || my_orders.isEmpty()) {
+//                            System.out.println("Nothing on the my order list!");
+//                        } else {
+//                            for (int i = 0; i < my_orders.size(); i++) {
+//                                final DocumentReference order_doc = db.collection("orders").document(my_orders.get(i));
+//                                final int finalI = i;
+//                                order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                                    @Override
+//                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
+//                                                        @Nullable FirebaseFirestoreException e) {
+//                                        if (e != null) {
+//                                            Log.w(TAG, "Listen failed.", e);
+//                                            return;
+//                                        }
+//
+//                                        if (snapshot != null && snapshot.exists()) {
+//                                            Log.d(TAG, "Current data: " + snapshot.getData());
+//                                            order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                                                @Override
+//                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                                                    Order current_order = new Order();
+//                                                    current_order = documentSnapshot.toObject(Order.class);
+//                                                    final String notifi = shared.getString("notification", "");
+//                                                    Log.d(TAG, "ship listener data: " + current_order.isIs_shipped() + current_order.getOrder_ID());
+//                                                    final String ordername = current_order.getItem_title();
+//
+//                                                    if (current_order.isIs_shipped() & notifi.equals("1")) {
+//                                                        System.out.println("ship not" + current_order.isIs_paid());
+//                                                        /**
+//                                                         * notification bar
+//                                                         */
+//                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                                                        Intent intent = new Intent(MainActivity.this, Order.class);
+//                                                        PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+//                                                        Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
+//                                                                .setContentTitle("UniTrade:")
+//                                                                .setContentText("your " + ordername + " is shipped")
+//                                                                .setWhen(System.currentTimeMillis())
+//                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+//                                                                .setAutoCancel(true)
+//                                                                .setContentIntent(ma)
+//                                                                .build();
+//
+//                                                        manager.notify(0, notification);
+////
+//                                                    }
+//                                                }
+//                                            });
+//                                        } else {
+//                                            Log.d(TAG, "Current data: null");
+//                                        }
+//                                    }
+//                                });
+//                            }
+//
+//
+//                        }
+//                        //result[0] = (String[])document.getData().get("my_items");
+//                        Log.e(TAG, "my order list found");
+//
+//                    } else {
+//                        Log.e(TAG, "my order list not found");
+//                    }
+
 
             Runnable r = new Runnable() {
                 @Override

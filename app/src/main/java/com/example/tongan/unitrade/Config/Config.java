@@ -39,6 +39,10 @@ public class Config extends AppCompatActivity{
             PAYPAL_CLIENT_ID = "ARwXDk_qndNS9OXWhTuu0Z3YLDj9sT6okXA2AYho5LusQKTsS-lPjod6R-OBzWnUaiHIdO4_8IbfFSPo";
         } else if (sellerEmail.equals("dou3@purdue.edu")) {
             PAYPAL_CLIENT_ID = "AeIMil-Q85Jja2KMG6GV3LEkdJ6mLD72B4HBgWbVLTbDYn7RImA8LYhO2ZeND4YTw14RW744ET_6HG7S";
+        }
+        else if (sellerEmail.equals("xu830@purdue.edu")){
+            PAYPAL_CLIENT_ID="AexwWFjexMfyf20_Sw53ilPv6JZXhMaem7H50Hf0C-Ae-xW5gzRqh5tizz06NSMqBAAVLElVjnVfSf_o";
+
         } else {
             PAYPAL_CLIENT_ID = "AeOXQkQED9Ku8uRlGL3MQDG7nTC_SQvzEoQ17TLIl5Rys5fKUx3JoB0ta_dOM0ax_ZTGsUTXWqySexFC";
         }

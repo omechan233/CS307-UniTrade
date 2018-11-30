@@ -125,8 +125,8 @@ public class OrderList extends AppCompatActivity {
                                                                     params = new LinearLayout.LayoutParams(180, 180);
                                                                     params.setMargins(20, 20, 0, 20);
                                                                     TextView tv = new TextView(getBaseContext());
-                                                                    //todo : the String below is getting information from a hard coding ArrayList<Item>, change it to adapt the actual data retrieved from backend
                                                                     String text = "\n" + current_order.getItem_title() + "\n" + current_order.getItem_price();
+                                                                    tv.setTextColor(0xFF000000);
                                                                     tv.setText(text);
                                                                     item.addView(tv);
                                                                 }
@@ -154,6 +154,7 @@ public class OrderList extends AppCompatActivity {
                                                     //create textview in parent layout
                                                     TextView tv = new TextView(getBaseContext());
                                                     String text = "\n" + current_order.getItem_title() + "\n" + current_order.getItem_price() + "\n" + current_order.getSeller_email() + "\n" + current_order.getOrder_time() + "\n" + current_order.getFace_to_face();
+                                                    tv.setTextColor(0xFF000000);
                                                     tv.setText(text);
                                                     item.addView(tv);
                                                 }
@@ -255,6 +256,7 @@ public class OrderList extends AppCompatActivity {
                                                                 //todo : the String below is getting information from a hard coding ArrayList<Item>, change it to adapt the actual data retrieved from backend
                                                                 String text = "\n" + current_item.getTitle() + "\n" + current_item.getPrice() + "\n" + current_item.getSeller_name();
                                                                 tv.setText(text);
+                                                                tv.setTextColor(0xFF000000);
                                                                 item.addView(tv);
                                                             }
                                                         }).addOnFailureListener(new OnFailureListener() {
@@ -281,6 +283,7 @@ public class OrderList extends AppCompatActivity {
                                                 //create textview in parent layout
                                                 TextView tv = new TextView(getBaseContext());
                                                 String text = "\n" + current_item.getTitle() + "\n" + current_item.getPrice() + "\n" + current_item.getSeller_name();
+                                                tv.setTextColor(0xFF000000);
                                                 tv.setText(text);
                                                 item.addView(tv);
                                             }

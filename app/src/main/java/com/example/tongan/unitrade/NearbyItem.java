@@ -139,6 +139,7 @@ public class NearbyItem extends AppCompatActivity {
                                                         TextView tv = new TextView(getBaseContext());
                                                         String text = "\n" + current_item.getTitle() + "\n" + current_item.getPrice() + "\n" + current_item.getSeller_name();
                                                         tv.setText(text);
+                                                        tv.setTextColor(0xFF000000);
                                                         item.addView(tv);
                                                         item.setOnClickListener(new View.OnClickListener() {
                                                             @Override
@@ -173,6 +174,7 @@ public class NearbyItem extends AppCompatActivity {
                                         //todo : get item info from backend
                                         String text = "\n" + current_item.getTitle() + "\n" + current_item.getPrice() + "\n" + current_item.getSeller_name();
                                         tv.setText(text);
+                                        tv.setTextColor(0xFF000000);
                                         item.addView(tv);
                                         item.setOnClickListener(new View.OnClickListener() {
                                             @Override

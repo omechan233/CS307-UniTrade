@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -880,6 +881,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                             TextView tv = new TextView(getBaseContext());
                                                             String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
                                                             tv.setText(text);
+                                                            tv.setTextColor(0xFF000000);
                                                             item.addView(tv);
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {
@@ -907,6 +909,7 @@ public class HomePageActivity extends AppCompatActivity {
                                             TextView tv = new TextView(getBaseContext());
                                             String text = "\n" + itemObj.getTitle() + "\n" + itemObj.getPrice() + "\n" + itemObj.getSeller_name();
                                             tv.setText(text);
+                                            tv.setTextColor(0xFF000000);
                                             item.addView(tv);
                                         }
                                         // Done creating ItemView ==================

@@ -116,6 +116,7 @@ public class UserItem extends AppCompatActivity {
                                                         //todo : the String below is getting information from a hard coding ArrayList<Item>, change it to adapt the actual data retrieved from backend
                                                         String text = "\n" + current_item.getTitle() + "\n" + current_item.getPrice() + "\n" + current_item.getSeller_name();
                                                         tv.setText(text);
+                                                        tv.setTextColor(0xFF000000);
                                                         item.addView(tv);
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {

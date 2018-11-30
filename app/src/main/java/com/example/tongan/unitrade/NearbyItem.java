@@ -165,10 +165,11 @@ public class NearbyItem extends AppCompatActivity {
                                         }
                                     }
                                     else { //add item view with default image
-                                        item.addView(imageView);
                                         imageView.setImageResource(R.mipmap.poi_test_src);
                                         params = new LinearLayout.LayoutParams(300, 180);
                                         params.setMargins(20, 20, 0, 20);
+                                        item.addView(imageView);
+
                                         TextView tv = new TextView(getBaseContext());
                                         //todo : get item info from backend
                                         String text = "\n" + current_item.getTitle() + "\n" + current_item.getPrice() + "\n" + current_item.getSeller_name();

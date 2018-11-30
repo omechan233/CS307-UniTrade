@@ -34,11 +34,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -49,9 +51,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
-
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private SharedPreferences shared;
     private FirebaseAuth mAuth;
     private static final String TAG = "MainActivity";
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity{
 
     private Functions f1;
     public String Email = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,8 +75,7 @@ public class MainActivity extends AppCompatActivity{
 
         mAuth = FirebaseAuth.getInstance();
 
-        shared=getSharedPreferences("app", Context.MODE_PRIVATE);
-
+        shared = getSharedPreferences("app", Context.MODE_PRIVATE);
 
 
         Button loginBtn = (Button) findViewById(R.id.login_login_btn);
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity{
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isEmailVerified()) { //only authenticate if the email is verified
+                if (isEmailVerified()) { //only authenticate if the email is verified
                     authentication();
                 }
             }
@@ -122,7 +122,8 @@ public class MainActivity extends AppCompatActivity{
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful());{
+                                        if (task.isSuccessful()) ;
+                                        {
                                             Toast.makeText(MainActivity.this, "Email was sent to the given address",
                                                     Toast.LENGTH_SHORT).show();
                                         }
@@ -160,10 +161,10 @@ public class MainActivity extends AppCompatActivity{
 */
     }
 
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         //check if user is already logged in, if so then forward to HomePage
-        if(isUserLoggedIn() && isEmailVerified()){
+        if (isUserLoggedIn() && isEmailVerified()) {
 
             /***
              * paid notification start
@@ -171,279 +172,335 @@ public class MainActivity extends AppCompatActivity{
             final String email = shared.getString("email", "");
             final String notification = shared.getString("notification", "");
 
-            if(email == null || email.isEmpty())
+            if (email == null || email.isEmpty())
                 return;
 
             DocumentReference userDocRef = db.collection("users").document(email);
             System.out.println("______________________________________email in main" + email);
 
-            /***
-             * item sold notification to seller
-             */
-            //get users sold notification setting
-            userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot doc = task.getResult();
-                        if (doc.exists()) {
-                            //update text boxes with user info from database
-                            String sold_notify = doc.get("Itemsold_notification").toString();
-                            if (sold_notify.equals("0")) {
-                            } else {
-                                //get order list from profile
-                                final DocumentReference profiles = db.collection("profiles").document(email);
 
-                                profiles.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        DocumentSnapshot document = task.getResult();
-                                        if (document.exists()) {
-                                            List<String> my_items = new ArrayList<String>();
-                                            my_items = (List<String>) document.getData().get("my_items");
-                                            if (my_items == null || my_items.isEmpty()) {
-                                                System.out.println("Nothing on the list!");
-                                            } else {
-                                                for (int i = 0; i < my_items.size(); i++) {
-                                                    //get item from order list
-                                                    final DocumentReference item_doc = db.collection("items").document(my_items.get(i));
-                                                    final int finalI = i;
-                                                    item_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                                        @Override
-                                                        public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                                                            @Nullable FirebaseFirestoreException e) {
-                                                            if (e != null) {
-                                                                Log.w(TAG, "Listen failed.", e);
-                                                                return;
-                                                            }
-
-                                                            if (snapshot != null && snapshot.exists()) {
-                                                                item_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                                    @Override
-                                                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                                        Item current_item = new Item();
-                                                                        current_item = documentSnapshot.toObject(Item.class);
-                                                                        if (current_item.getStatus() == 2 && current_item.getNotified() != 1) {
-                                                                            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                                                            Intent intent = new Intent(MainActivity.this, Order.class);
-                                                                            PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
-                                                                            Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
-                                                                                    .setContentTitle("UniTrade:")
-                                                                                    .setContentText("someone bought your item: " + current_item.getTitle())
-                                                                                    .setWhen(System.currentTimeMillis())
-                                                                                    .setSmallIcon(R.mipmap.ic_launcher_round)
-                                                                                    .setAutoCancel(true)
-                                                                                    .setContentIntent(ma)
-                                                                                    .build();
-
-                                                                            manager.notify(2, notification);
-                                                                            item_doc.update("notified", 1)
-                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                        @Override
-                                                                                        public void onSuccess(Void aVoid) {
-                                                                                            Log.d(TAG, "Someone bought your item");
-                                                                                        }
-                                                                                    })
-                                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                                        @Override
-                                                                                        public void onFailure(@NonNull Exception e) {
-                                                                                            Log.w(TAG, "item notification was wrong", e);
-                                                                                        }
-                                                                                    });
-                                                                        }
-                                                                    }
-                                                                });
-                                                            } else {
-                                                                Log.d(TAG, "Current data: null");
-                                                            }
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                            //result[0] = (String[])document.getData().get("my_items");
-                                            Log.e(TAG, "my item list found");
-
-                                        } else {
-                                            Log.e(TAG, "my item list not found");
-                                        }
-                                    }
-                                });
-                            }
-                        } else {
-                            Log.d(TAG, "No such document...");
-                        }
-                    } else {
-                        Log.d(TAG, "get failed with ", task.getException());
-                    }
-                }
-            });
 
 
             /***
              * method notification test same way as sold
              */
-            //get users sold notification setting
-            userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot doc = task.getResult();
-                        if (doc.exists()) {
-                            //update text boxes with user info from database
-//                        String notification = doc.get("notification").toString();
-//                        System.out.println("notification!!!" + notification);
-                            if (notification.equals("0")) {
-                            } else {
-                                System.out.println("notification!!!" + notification);
+//            //get users sold notification setting
+//
+//            DocumentReference profDocRef = db.collection("profiles").document(email);
+//            profDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                @Override
+//                public void onEvent(@Nullable DocumentSnapshot snapshot,
+//                                    @Nullable FirebaseFirestoreException e) {
+//                    if (e != null) {
+//                        Log.w(TAG, "Listen failed.", e);
+//                        return;
+//                    }
+//
+//                    if (snapshot != null && snapshot.exists()) {
+//
+//                            DocumentReference userDocRef = db.collection("users").document(email);
+//
+//                            userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                    if (task.isSuccessful()) {
+//                                        DocumentSnapshot doc = task.getResult();
+//                                        if (doc.exists()) {
+//                                            //update text boxes with user info from database
+////                        String notification = doc.get("notification").toString();
+////                        System.out.println("notification!!!" + notification);
+//                                            if (notification.equals("0")) {
+//                                            } else {
+//                                                System.out.println("notification!!!" + notification);
+//
+//                                                //get order list from profile
+//                                                // final DocumentReference profiles = db.collection("profiles").document(email);
+//                                                //Query query = db.collection("orders").whereEqualTo("seller_email", email);
+//                                                db.collection("orders").whereEqualTo("seller_email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                                    @Override
+//                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                                        if (task.isSuccessful()) {
+//                                                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                                                //get item from order list
+//                                                                final DocumentReference order_doc = db.collection("orders").document(document.getId());
+//                                                                order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                                                                    @Override
+//                                                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
+//                                                                                        @Nullable FirebaseFirestoreException e) {
+//                                                                        if (e != null) {
+//                                                                            Log.w(TAG, "Listen failed.", e);
+//                                                                            return;
+//                                                                        }
+//
+//                                                                        if (snapshot != null && snapshot.exists()) {
+//                                                                            order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                                                                                @Override
+//                                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                                                                                    Order current_order = new Order();
+//                                                                                    current_order = documentSnapshot.toObject(Order.class);
+//                                                                                    final String notifi = shared.getString("notification", "");
+//                                                                                    final String order_title = current_order.getItem_title();
+//                                                                                    if (current_order.isIs_paid() & notifi.equals("1")) {
+//                                                                                        System.out.println("paid or not" + current_order.isIs_paid() + current_order.getOrder_ID());
+//                                                                                        /**
+//                                                                                         * notification bar
+//                                                                                         */
+//                                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                                                                                        Intent intent = new Intent(MainActivity.this, Order.class);
+//                                                                                        PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+//                                                                                        Notification notification = new NotificationCompat.Builder(MainActivity.this, "methodChange")
+//                                                                                                .setContentTitle("UniTrade:")
+//                                                                                                .setContentText("new payment received " + "item name:" + order_title)
+//                                                                                                .setWhen(System.currentTimeMillis())
+//                                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+//                                                                                                .setAutoCancel(true)
+//                                                                                                .setContentIntent(ma)
+//                                                                                                .build();
+//
+//                                                                                        manager.notify(1, notification);
+//
+//                                                                                    }
+//                                                                                }
+//                                                                            });
+//                                                                        } else {
+//                                                                            Log.d(TAG, "Current data: null");
+//                                                                        }
+//                                                                    }
+//                                                                });
+//                                                            }
+//                                                            Log.e(TAG, "my item list found");
+//
+//                                                        } else {
+//                                                            Log.e(TAG, "my item list not found");
+//                                                        }
+//                                                    }
+//                                                });
+//                                            }
+//                                        } else {
+//                                            Log.d(TAG, "No such document...");
+//                                        }
+//                                    } else {
+//                                        Log.d(TAG, "get failed with ", task.getException());
+//                                    }
+//                                }
+//                            });
+//                            //
+//
+//                        } else {
+//                            Log.d(TAG, "No such document...");
+//                        }
+//                    } else {
+//                        Log.d(TAG, "get failed with ", task.getException());
+//                    }
+//                }
+//            });
 
-                                //get order list from profile
-                                // final DocumentReference profiles = db.collection("profiles").document(email);
-                                Query query = db.collection("orders").whereEqualTo("seller_email", email);
-                                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                //get item from order list
-                                                final DocumentReference order_doc = db.collection("orders").document(document.getId());
-                                                order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                                                        @Nullable FirebaseFirestoreException e) {
-                                                        if (e != null) {
-                                                            Log.w(TAG, "Listen failed.", e);
-                                                            return;
-                                                        }
 
-                                                        if (snapshot != null && snapshot.exists()) {
-                                                            order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                                @Override
-                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                                    Order current_order = new Order();
-                                                                    current_order = documentSnapshot.toObject(Order.class);
-                                                                    final String notifi = shared.getString("notification", "");
-                                                                    final String order_title = current_order.getItem_title();
-                                                                    if (current_order.isIs_paid() & notifi.equals("1")) {
-                                                                        System.out.println("paid or not" + current_order.isIs_paid() + current_order.getOrder_ID());
-                                                                        /**
-                                                                         * notification bar
-                                                                         */
-                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                                                        Intent intent = new Intent(MainActivity.this, Order.class);
-                                                                        PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
-                                                                        Notification notification = new NotificationCompat.Builder(MainActivity.this, "methodChange")
-                                                                                .setContentTitle("UniTrade:")
-                                                                                .setContentText("new payment received " + "item name:" + order_title )
-                                                                                .setWhen(System.currentTimeMillis())
-                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
-                                                                                .setAutoCancel(true)
-                                                                                .setContentIntent(ma)
-                                                                                .build();
-
-                                                                        manager.notify(1, notification);
-
-                                                                    }
-                                                                }
-                                                            });
-                                                        } else {
-                                                            Log.d(TAG, "Current data: null");
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                            Log.e(TAG, "my item list found");
-
-                                        } else {
-                                            Log.e(TAG, "my item list not found");
-                                        }
-                                    }
-                                });
+/***
+ * paid notification
+ */
+            ListenerRegistration registration =  db.collection("orders")
+                    .whereEqualTo("seller_email", email)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.w(TAG, "Listen failed.", e);
+                                return;
                             }
-                        } else {
-                            Log.d(TAG, "No such document...");
+                            System.out.println(email);
+                            List<String> Order = new ArrayList<>();
+                            for (QueryDocumentSnapshot doc : value) {
+                                System.out.println("order of user : " + doc.getId());
+                                Order current_order = new Order();
+                                current_order = doc.toObject(Order.class);
+                                final String notifi = shared.getString("notification", "");
+                                if(current_order.isIs_paid() && !current_order.isPaid_notified() && notifi.equals("1")) {
+                                    /**
+                                     * notification bar
+                                     */
+                                    //System.out.println("notified????????????  " + current_order.isPaid_notified() + "title" + current_order.getItem_title());
+                                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                    Intent intent = new Intent(MainActivity.this, Order.class);
+                                    PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+                                    Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
+                                            .setContentTitle("UniTrade:")
+                                            .setContentText("receive payment on " + doc.getString("item_title"))
+                                            .setWhen(System.currentTimeMillis())
+                                            .setSmallIcon(R.mipmap.ic_launcher_round)
+                                            .setAutoCancel(true)
+                                            .setContentIntent(ma)
+                                            .build();
+
+                                    manager.notify(1, notification);
+                                    db.collection("orders").document(doc.getId()).update("paid_notified",true);
+
+                                }
+                            }
+
+
                         }
-                    } else {
-                        Log.d(TAG, "get failed with ", task.getException());
-                    }
-                }
-            });
+                    });
+
+
             //PAID NOTIFICATION END HERE
 
             /***
              * ship notification
              */
-            final DocumentReference profileref = db.collection("profiles").document(email);
-            profileref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            final DocumentReference docRef = db.collection("profiles").document(email);
+            docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        List<String> my_orders = (List<String>) document.getData().get("my_orders");
-                        if (my_orders == null || my_orders.isEmpty()) {
-                            System.out.println("Nothing on the my order list!");
-                        } else {
-                            for (int i = 0; i < my_orders.size(); i++) {
-                                final DocumentReference order_doc = db.collection("orders").document(my_orders.get(i));
-                                final int finalI = i;
-                                order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                                        @Nullable FirebaseFirestoreException e) {
-                                        if (e != null) {
-                                            Log.w(TAG, "Listen failed.", e);
-                                            return;
-                                        }
+                public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
 
-                                        if (snapshot != null && snapshot.exists()) {
-                                            Log.d(TAG, "Current data: " + snapshot.getData());
-                                            order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    Order current_order = new Order();
-                                                    current_order = documentSnapshot.toObject(Order.class);
-                                                    final String notifi = shared.getString("notification", "");
-                                                    Log.d(TAG, "ship listener data: " + current_order.isIs_shipped() + current_order.getOrder_ID());
-                                                    final String ordername = current_order.getItem_title();
+                    if (snapshot != null && snapshot.exists()) {
+                        Log.d(TAG, "Current data: " + snapshot.getData());
+                        DocumentSnapshot document = snapshot;
+                        if (document.exists()) {
+                            List<String> my_orders = (List<String>) document.getData().get("my_orders");
+                            if (my_orders == null || my_orders.isEmpty()) {
+                                System.out.println("Nothing on the my order list!");
+                            } else {
+                                for (int i = 0; i < my_orders.size(); i++) {
+                                    final DocumentReference order_doc = db.collection("orders").document(my_orders.get(i));
+                                    final int finalI = i;
+                                    order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                                            @Nullable FirebaseFirestoreException e) {
+                                            if (e != null) {
+                                                Log.w(TAG, "Listen failed.", e);
+                                                return;
+                                            }
 
-                                                    if (current_order.isIs_shipped() & notifi.equals("1")) {
-                                                        System.out.println("ship not" + current_order.isIs_paid());
-                                                        /**
-                                                         * notification bar
-                                                         */
-                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                                        Intent intent = new Intent(MainActivity.this, Order.class);
-                                                        PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
-                                                        Notification notification = new NotificationCompat.Builder(MainActivity.this,"ItemSold")
-                                                                .setContentTitle("UniTrade:")
-                                                                .setContentText("your " + ordername +" is shipped")
-                                                                .setWhen(System.currentTimeMillis())
-                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
-                                                                .setAutoCancel(true)
-                                                                .setContentIntent(ma)
-                                                                .build();
+                                            if (snapshot != null && snapshot.exists()) {
+                                                Log.d(TAG, "Current order shiptest : " + snapshot.getData());
+                                                order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                        Order current_order = new Order();
+                                                        current_order = documentSnapshot.toObject(Order.class);
+                                                        final String notifi = shared.getString("notification", "");
+                                                        Log.d(TAG, "ship listener data: " + current_order.isIs_shipped() + current_order.getOrder_ID());
+                                                        final String ordername = current_order.getItem_title();
 
-                                                        manager.notify(0, notification);
-//
+                                                        if (current_order.isIs_shipped() && notifi.equals("1") && !current_order.isShip_notified() ) {
+                                                            System.out.println("ship not" + current_order.isIs_paid());
+                                                            /**
+                                                             * notification bar
+                                                             */
+                                                            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                            Intent intent = new Intent(MainActivity.this, Order.class);
+                                                            PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+                                                            Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
+                                                                    .setContentTitle("UniTrade:")
+                                                                    .setContentText("your " + ordername + " is shipped")
+                                                                    .setWhen(System.currentTimeMillis())
+                                                                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                    .setAutoCancel(true)
+                                                                    .setContentIntent(ma)
+                                                                    .build();
+
+                                                            manager.notify(0, notification);
+                                                            db.collection("orders").document(order_doc.getId()).update("ship_notified",true);
+
+                                                        }
                                                     }
-                                                }
-                                            });
-                                        } else {
-                                            Log.d(TAG, "Current data: null");
+                                                });
+                                            } else {
+                                                Log.d(TAG, "Current data: null");
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
+
+
                             }
+                            //result[0] = (String[])document.getData().get("my_items");
+                            Log.e(TAG, "my order list found");
 
-
+                        } else {
+                            Log.e(TAG, "my order list not found");
                         }
-                        //result[0] = (String[])document.getData().get("my_items");
-                        Log.e(TAG, "my order list found");
-
                     } else {
-                        Log.e(TAG, "my order list not found");
+                        Log.d(TAG, "Current data: null");
                     }
                 }
             });
+
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        List<String> my_orders = (List<String>) document.getData().get("my_orders");
+//                        if (my_orders == null || my_orders.isEmpty()) {
+//                            System.out.println("Nothing on the my order list!");
+//                        } else {
+//                            for (int i = 0; i < my_orders.size(); i++) {
+//                                final DocumentReference order_doc = db.collection("orders").document(my_orders.get(i));
+//                                final int finalI = i;
+//                                order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                                    @Override
+//                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
+//                                                        @Nullable FirebaseFirestoreException e) {
+//                                        if (e != null) {
+//                                            Log.w(TAG, "Listen failed.", e);
+//                                            return;
+//                                        }
+//
+//                                        if (snapshot != null && snapshot.exists()) {
+//                                            Log.d(TAG, "Current data: " + snapshot.getData());
+//                                            order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                                                @Override
+//                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                                                    Order current_order = new Order();
+//                                                    current_order = documentSnapshot.toObject(Order.class);
+//                                                    final String notifi = shared.getString("notification", "");
+//                                                    Log.d(TAG, "ship listener data: " + current_order.isIs_shipped() + current_order.getOrder_ID());
+//                                                    final String ordername = current_order.getItem_title();
+//
+//                                                    if (current_order.isIs_shipped() & notifi.equals("1")) {
+//                                                        System.out.println("ship not" + current_order.isIs_paid());
+//                                                        /**
+//                                                         * notification bar
+//                                                         */
+//                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                                                        Intent intent = new Intent(MainActivity.this, Order.class);
+//                                                        PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+//                                                        Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
+//                                                                .setContentTitle("UniTrade:")
+//                                                                .setContentText("your " + ordername + " is shipped")
+//                                                                .setWhen(System.currentTimeMillis())
+//                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+//                                                                .setAutoCancel(true)
+//                                                                .setContentIntent(ma)
+//                                                                .build();
+//
+//                                                        manager.notify(0, notification);
+////
+//                                                    }
+//                                                }
+//                                            });
+//                                        } else {
+//                                            Log.d(TAG, "Current data: null");
+//                                        }
+//                                    }
+//                                });
+//                            }
+//
+//
+//                        }
+//                        //result[0] = (String[])document.getData().get("my_items");
+//                        Log.e(TAG, "my order list found");
+//
+//                    } else {
+//                        Log.e(TAG, "my order list not found");
+//                    }
+
 
             Runnable r = new Runnable() {
                 @Override
@@ -458,19 +515,18 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    private boolean isEmailVerified(){
+    private boolean isEmailVerified() {
         mAuth = FirebaseAuth.getInstance(); //reload Instance
         final FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null) {
+        if (currentUser == null) {
             System.out.println("MAIN: Could not find current user! Assume they already verified after registering...");
             return true;
         }
         currentUser.reload(); //reload user in case they still have the app open when they get verified
 
-        if(currentUser.isEmailVerified()){
+        if (currentUser.isEmailVerified()) {
             return true;
-        }
-        else{
+        } else {
             Toast.makeText(MainActivity.this, check_email,
                     Toast.LENGTH_SHORT).show();
 
@@ -492,7 +548,7 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    private boolean isUserLoggedIn(){
+    private boolean isUserLoggedIn() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         return currentUser != null;
     }
@@ -529,9 +585,9 @@ public class MainActivity extends AppCompatActivity{
         return email.matches(emailRegex);
     }
 
-    private boolean isPasswordValid(String password){
+    private boolean isPasswordValid(String password) {
         //check if is empty
-        if (TextUtils.isEmpty(password)){
+        if (TextUtils.isEmpty(password)) {
             return false;
         }
 
@@ -540,7 +596,7 @@ public class MainActivity extends AppCompatActivity{
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(password);
 
-        if(!m.find() || password.length() < 6 || password.length() > 20)
+        if (!m.find() || password.length() < 6 || password.length() > 20)
             return false;
 
         return true;
@@ -550,7 +606,7 @@ public class MainActivity extends AppCompatActivity{
     private void authentication() {
         String email = getEmail();
         String password = getPassword();
-        if(isEmailValid(email) && isPasswordValid(password)) {
+        if (isEmailValid(email) && isPasswordValid(password)) {
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override

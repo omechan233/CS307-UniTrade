@@ -175,7 +175,7 @@
                 android:layout_toEndOf="@id/address_text"
                 android:visibility="invisible"
                 android:textSize="15sp"
-                android:lines="1" />
+                android:lines="2" />
 
             <EditText
                 android:id="@+id/address_lat"
@@ -185,7 +185,7 @@
                 android:layout_below="@id/PayPal_input"
                 android:visibility="invisible"
                 android:textSize="15sp"
-                android:lines="1" />
+                android:lines="2" />
 
             <EditText
                 android:id="@+id/address_lon"
@@ -195,7 +195,7 @@
                 android:layout_below="@id/PayPal_input"
                 android:visibility="invisible"
                 android:textSize="15sp"
-                android:lines="1" />
+                android:lines="2" />
 
             <fragment
                 android:id="@+id/place_autocomplete_fragment"

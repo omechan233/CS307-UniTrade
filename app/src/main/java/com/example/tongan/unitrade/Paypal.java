@@ -64,7 +64,11 @@ public class Paypal extends AppCompatActivity {
         System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         System.out.println("Buyer's PayPal email is " + temp_email);
 
-        String abc = new Config(temp_email).getClientID();
+        //String abc = new Config(temp_email).getClientID();
+        Config configg = new Config(temp_email);
+        String abc = configg.getClientID();
+        System.out.println("Buyer's PayPal abc is " + abc);
+
         config = new PayPalConfiguration()
                 .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
                 .clientId(abc);

@@ -19,6 +19,7 @@ import com.google.firebase.Timestamp;
  * soldnotify: if the confirm message is send
  * 0: no
  * 1:yes
+ * 2:paid notify is sent
  */
 
 public class Order {
@@ -37,6 +38,8 @@ public class Order {
     private boolean is_paid;
     private boolean is_shipped;
     private String trackingnumber;
+    private boolean paid_notified;
+    private boolean ship_notified;
 
     /**
      * Constructor; Creates an order based on a purchased Item
@@ -45,7 +48,8 @@ public class Order {
     public Order(){}
     public Order(String item_ID, Timestamp order_time, String seller_email, String item_title,
                  Double item_price, boolean is_sold, boolean face_to_face, int methodpending,
-                 String order_ID, boolean commented, int request, int soldnotify, boolean is_paid,boolean is_shipped, String trackingnumber){
+                 String order_ID, boolean commented, int request, int soldnotify, boolean is_paid,
+                 boolean is_shipped, String trackingnumber, boolean paid_notified,boolean ship_notified){
         this.seller_email=seller_email;
         this.is_sold=is_sold;
         this.item_ID=item_ID;
@@ -61,6 +65,8 @@ public class Order {
         this.is_paid = is_paid;
         this.is_shipped = is_shipped;
         this.trackingnumber = trackingnumber;
+        this.paid_notified = paid_notified;
+        this.ship_notified = ship_notified;
     }
 
     public String getOrder_ID() {
@@ -115,7 +121,19 @@ public class Order {
         this.face_to_face = face_to_face;
     }
 
+    public void setPaid_notified(boolean paid_notified) {this.paid_notified = paid_notified; }
+
+    public void setShip_notified(boolean ship_notified) {this.ship_notified = ship_notified; };
+
     public String getTrackingnumber() {
         return trackingnumber;
+    }
+
+    public boolean isPaid_notified() {
+        return paid_notified;
+    }
+
+    public  boolean isShip_notified(){
+        return ship_notified;
     }
 }

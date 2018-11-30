@@ -25,6 +25,9 @@ public class Item {
     private double longitude;
     private String paypal;
     private String trackingnumber;
+    private String shipping_name;
+    private String shipping_address;
+    private String shipping_phone;
 
 
     /******** AT:
@@ -52,7 +55,8 @@ public class Item {
      */
     public Item(String category, String title, String seller_name, double price, String description,
                 String location, int status, Timestamp postTime, int notified,
-                double latitude, double longitude, String paypal, String item_image, String trackingnumber){
+                double latitude, double longitude, String paypal, String item_image, String trackingnumber,
+                String shipping_address,String shipping_name, String shipping_phone){
         this.id=seller_name+postTime.toString();
         this.category=category;
         this.title=title;
@@ -69,6 +73,9 @@ public class Item {
         this.paypal = paypal;
         this.item_image = item_image;
         this.trackingnumber = trackingnumber;
+        this.shipping_address = shipping_address;
+        this.shipping_name = shipping_name;
+        this.shipping_phone = shipping_phone;
     }
 
     /** Getter Methods **/
@@ -102,6 +109,18 @@ public class Item {
     }
     public double getLongitude() {
         return longitude;
+    }
+
+    public String getShipping_address() {
+        return shipping_address;
+    }
+
+    public String getShipping_name() {
+        return shipping_name;
+    }
+
+    public String getShipping_phone() {
+        return shipping_phone;
     }
 
     public String getPaypal() {
@@ -138,6 +157,22 @@ public class Item {
     }
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public void setShipping_address(String shipping_address) {
+        this.shipping_address = shipping_address;
+    }
+
+    public void setSeller_name(String seller_name) {
+        this.seller_name = seller_name;
+    }
+
+    public void setShipping_phone(String shipping_phone) {
+        this.shipping_phone = shipping_phone;
+    }
+
+    public void setShipping_name(String shipping_name) {
+        this.shipping_name = shipping_name;
     }
 
     public void setPaypal(String paypal) {

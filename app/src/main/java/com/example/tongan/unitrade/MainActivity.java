@@ -390,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
                                                         Log.d(TAG, "ship listener data: " + current_order.isIs_shipped() + current_order.getOrder_ID());
                                                         final String ordername = current_order.getItem_title();
 
-                                                        if (current_order.isIs_shipped() && notifi.equals("1") ) {
+                                                        if (current_order.isIs_shipped() && notifi.equals("1") && !current_order.isShip_notified() ) {
                                                             System.out.println("ship not" + current_order.isIs_paid());
                                                             /**
                                                              * notification bar
@@ -408,7 +408,8 @@ public class MainActivity extends AppCompatActivity {
                                                                     .build();
 
                                                             manager.notify(0, notification);
-//
+                                                            db.collection("orders").document(order_doc.getId()).update("ship_notified",true);
+
                                                         }
                                                     }
                                                 });

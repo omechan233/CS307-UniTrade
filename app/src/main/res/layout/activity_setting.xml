@@ -12,14 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/title"
-        android:text="Unitrade Setting Page"
-        android:textSize="20sp"
-        android:background="#21b49d"
-        android:textColor="#000000"
-        android:layout_width="match_parent"
-        android:layout_height="40dp" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#21b49d"
+            android:text="Unitrade Settings Page"
+            android:textColor="#000000"
+            android:textSize="20sp" />
 
         <ImageButton
             android:layout_width="328dp"

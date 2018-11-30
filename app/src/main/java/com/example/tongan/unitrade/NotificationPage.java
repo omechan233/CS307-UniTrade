@@ -137,7 +137,7 @@ public class NotificationPage extends AppCompatActivity {
                 System.out.println(email);
                 if (isChecked){
                     f.change_notification(email, 1);
-                    Toast.makeText(getBaseContext(), "NotificationPage on!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getBaseContext(), "NotificationPage on!", Toast.LENGTH_LONG).show();
                     SharedPreferences.Editor edit = shared.edit();
                     edit.putString("notification","1");
                     edit.apply();
@@ -152,7 +152,7 @@ public class NotificationPage extends AppCompatActivity {
                     edit.apply();
                     f.change_item_soldnotification(email,0);
                     f.change_method_notification(email, 0);
-                    Toast.makeText(getBaseContext(), "NotificationPage off!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getBaseContext(), "NotificationPage off!", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -168,7 +168,7 @@ public class NotificationPage extends AppCompatActivity {
                     if( notification == 1){
                         //Todo: back-end change the ItemSold Notify status to 1;
                         f.change_item_soldnotification(email,1);
-                        Toast.makeText(getBaseContext(), "Item Sold NotificationPage on!", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getBaseContext(), "Item Sold NotificationPage on!", Toast.LENGTH_LONG).show();
                     }else {
                         //do{ front-end pop-up dialog:
                         AlertDialog.Builder builder = new AlertDialog.Builder(NotificationPage.this);
@@ -180,8 +180,7 @@ public class NotificationPage extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(NotificationPage.this, "Got it!",
-                                                Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(NotificationPage.this, "Got it!", Toast.LENGTH_SHORT).show();
 
                                     }
                                 });
@@ -194,7 +193,7 @@ public class NotificationPage extends AppCompatActivity {
                 else {
                     //Todo:back-end change the ItemSold Notify status to 0;
                     f.change_item_soldnotification(email,0);
-                    Toast.makeText(getBaseContext(), "Item Sold NotificationPage off!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getBaseContext(), "Item Sold NotificationPage off!", Toast.LENGTH_LONG).show();
 
 
                 }
@@ -219,8 +218,7 @@ public class NotificationPage extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(NotificationPage.this, "Got it!",
-                                                Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(NotificationPage.this, "Got it!", Toast.LENGTH_SHORT).show();
 
                                     }
                                 });
@@ -230,14 +228,14 @@ public class NotificationPage extends AppCompatActivity {
 
                         //Todo:back-end change the ChangeMethod Notify status to 1;
                         f.change_method_notification(email, 1);
-                        Toast.makeText(getBaseContext(), "ChangeMethod NotificationPage on!", Toast.LENGTH_LONG).show();
+                       // Toast.makeText(getBaseContext(), "ChangeMethod NotificationPage on!", Toast.LENGTH_LONG).show();
                     }
 
                 }
                 else {
                     //Todo:back-end change the ChangeNotify Notify status to 0;
                     f.change_method_notification(email,0);
-                    Toast.makeText(getBaseContext(), "ChangeMethod NotificationPage off!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getBaseContext(), "ChangeMethod NotificationPage off!", Toast.LENGTH_LONG).show();
 
 
                 }

@@ -1,11 +1,14 @@
 package com.example.tongan.unitrade;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -67,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
 
     private Functions f1;
     public String Email = "";
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private void createNotificationChannel(String channelId, String channelName, int importance) {
+        NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(
+                NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(channel);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +169,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-*/
+        */
+        //setContentView(R.layout.activity_sendnotification);
+        //create 2 notification categories in Android System Notification Setting page.
+        //may not be used in our app. Can be ignored.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "ItemSold";
+            String channelName = "Get Notified when Item is sold";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            createNotificationChannel(channelId, channelName, importance);
+
+            channelId = "methodChange";
+            channelName = "Get Notified when trading method changed";
+            importance = NotificationManager.IMPORTANCE_DEFAULT;
+            createNotificationChannel(channelId, channelName, importance);
+
+            channelId = "shipped";
+            channelName = "Get Notified when item is shipped";
+            importance = NotificationManager.IMPORTANCE_DEFAULT;
+            createNotificationChannel(channelId, channelName, importance);
+        }
     }
 
     protected void onStart() {
@@ -297,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 /***
- * paid notification
+ * paid notification for online
  */
             ListenerRegistration registration =  db.collection("orders")
                     .whereEqualTo("seller_email", email)
@@ -316,11 +346,11 @@ public class MainActivity extends AppCompatActivity {
                                 Order current_order = new Order();
                                 current_order = doc.toObject(Order.class);
                                 final String notifi = shared.getString("notification", "");
-                                if(current_order.isIs_paid() && !current_order.isPaid_notified() && notifi.equals("1")) {
+                                if(current_order.isIs_paid() && !current_order.isPaid_notified() && notifi.equals("1") && !current_order.getFace_to_face()) {
                                     /**
                                      * notification bar
                                      */
-                                    //System.out.println("notified????????????  " + current_order.isPaid_notified() + "title" + current_order.getItem_title());
+                                    System.out.println("notified????????????  " + current_order.isPaid_notified() + "title" + current_order.getItem_title());
                                     NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                     Intent intent = new Intent(MainActivity.this, Order.class);
                                     PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
@@ -409,6 +439,94 @@ public class MainActivity extends AppCompatActivity {
 
                                                             manager.notify(0, notification);
                                                             db.collection("orders").document(order_doc.getId()).update("ship_notified",true);
+
+                                                        }
+                                                    }
+                                                });
+                                            } else {
+                                                Log.d(TAG, "Current data: null");
+                                            }
+                                        }
+                                    });
+                                }
+
+
+                            }
+                            //result[0] = (String[])document.getData().get("my_items");
+                            Log.e(TAG, "my order list found");
+
+                        } else {
+                            Log.e(TAG, "my order list not found");
+                        }
+                    } else {
+                        Log.d(TAG, "Current data: null");
+                    }
+                }
+            });
+
+            /***
+             * confirmed notification
+             */
+            //final DocumentReference docRef = db.collection("profiles").document(email);
+            docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+
+                    if (snapshot != null && snapshot.exists()) {
+                        Log.d(TAG, "Current data: " + snapshot.getData());
+                        DocumentSnapshot document = snapshot;
+                        if (document.exists()) {
+                            List<String> my_orders = (List<String>) document.getData().get("my_orders");
+                            if (my_orders == null || my_orders.isEmpty()) {
+                                System.out.println("Nothing on the my order list!");
+                            } else {
+                                for (int i = 0; i < my_orders.size(); i++) {
+                                    final DocumentReference order_doc = db.collection("orders").document(my_orders.get(i));
+                                    final int finalI = i;
+                                    order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                                            @Nullable FirebaseFirestoreException e) {
+                                            if (e != null) {
+                                                Log.w(TAG, "Listen failed.", e);
+                                                return;
+                                            }
+                                            final String notifi = shared.getString("notification", "");
+                                            if (snapshot != null && snapshot.exists() && notifi.equals("1")) {
+                                                Log.d(TAG, "Current order shiptest : " + snapshot.getData());
+                                                order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                        Order current_order = new Order();
+                                                        current_order = documentSnapshot.toObject(Order.class);
+                                                        final String notifi = shared.getString("notification", "");
+                                                        Log.d(TAG, "ship listener data: " + current_order.isIs_shipped() + current_order.getOrder_ID());
+                                                        final String ordername = current_order.getItem_title();
+
+                                                        if (current_order.isIs_sold() && !current_order.isConfirm()) {
+                                                            System.out.println("confirm not" + current_order.isIs_paid());
+                                                            /**
+                                                             * notification bar
+                                                             */
+                                                            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                            Intent intent = new Intent(MainActivity.this, Order.class);
+                                                            PendingIntent ma = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+                                                            Notification notification = new NotificationCompat.Builder(MainActivity.this, "ItemSold")
+                                                                    .setContentTitle("UniTrade:")
+                                                                    .setContentText("your order named: " + ordername + " is confirmed by the seller")
+                                                                    .setWhen(System.currentTimeMillis())
+                                                                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                                                                    .setAutoCancel(true)
+                                                                    .setContentIntent(ma)
+                                                                    .build();
+
+                                                            manager.notify(0, notification);
+                                                            db.collection("orders").document(order_doc.getId()).update("confirm",true);
 
                                                         }
                                                     }

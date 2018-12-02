@@ -791,7 +791,7 @@ public class HomePageActivity extends AppCompatActivity {
         if (keyword != null) {
             real_keyword = keyword;
         }
-        final String final_real_keyword = real_keyword;
+        final String final_real_keyword = real_keyword.toLowerCase().trim();
 
         String criterion = "title";
         switch (sort_by) {
@@ -822,7 +822,7 @@ public class HomePageActivity extends AppCompatActivity {
                                 Log.d(TAG, ItemDoc.getId() + "=> " + ItemDoc.getData());
 
                                 //Get Map of Item
-                                Map<String, Object> itemMap = ItemDoc.getData();
+                                final Item itemObj = ItemDoc.toObject(Item.class);
 
                                 if (ItemDoc.getDouble("status").intValue() != 1) { //if item not available, don't display it
                                     continue;
@@ -831,8 +831,8 @@ public class HomePageActivity extends AppCompatActivity {
                                     continue;
                                 }
 
-                                String itemTitle = (String) itemMap.get("title");
-                                String itemDesc = (String) itemMap.get("description:");
+                                String itemTitle = itemObj.getTitle();
+                                String itemDesc = itemObj.getDescription();
 
                                 boolean contains_keyword = false;
                                 try {
@@ -844,7 +844,7 @@ public class HomePageActivity extends AppCompatActivity {
                                 if (contains_keyword) { //only display items that contain keyword in their title or description
                                     try {
                                         //Construct Item Object from each DocSnapshot
-                                        final Item itemObj = ItemDoc.toObject(Item.class);
+                                        //final Item itemObj = ItemDoc.toObject(Item.class);
 
                                         //CONSTRUCT LINEAR LAYOUT FOR OBJECT ===============
                                         final LinearLayout item = new LinearLayout(getBaseContext());

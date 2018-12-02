@@ -120,95 +120,95 @@ public class OrderDetail extends AppCompatActivity {
                 }
             }
         });
-        /***
-         * item sold notification to seller
-         */
-        //get users sold notification setting
-        DocumentReference userDocRef = db.collection("users").document(email);
-        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    if (doc.exists()) {
-                        //update text boxes with user info from database
-                        String notification = doc.get("notification").toString();
-                        if (notification.equals("0")) {
-                        } else {
-                            //get order list from profile
-                            final DocumentReference profiles = db.collection("profiles").document(email);
-
-                            profiles.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        List<String> my_order = new ArrayList<String>();
-                                        my_order = (List<String>) document.getData().get("my_orders");
-                                        if (my_order == null || my_order.isEmpty()) {
-                                            System.out.println("Nothing on the list!");
-                                        } else {
-                                            for (int i = 0; i < my_order.size(); i++) {
-                                                //get item from order list
-                                                final DocumentReference order_doc = db.collection("orders").document(my_order.get(i));
-                                                final int finalI = i;
-                                                order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                                                        @Nullable FirebaseFirestoreException e) {
-                                                        if (e != null) {
-                                                            Log.w(TAG, "Listen failed.", e);
-                                                            return;
-                                                        }
-
-                                                        if (snapshot != null && snapshot.exists()) {
-                                                            order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                                @Override
-                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                                    Order current_order = new Order();
-                                                                    current_order = documentSnapshot.toObject(Order.class);
-                                                                    if (current_order.isIs_sold() && current_order.getSoldnotify()!= 1) {
-                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                                                        Intent intent = new Intent(OrderDetail.this, Order.class);
-                                                                        PendingIntent ma = PendingIntent.getActivity(OrderDetail.this, 0, intent, 0);
-                                                                        Notification notification = new NotificationCompat.Builder(OrderDetail.this, "ItemSold")
-                                                                                .setContentTitle("UniTrade:")
-                                                                                .setContentText("Your order " + current_order.getItem_title() + "is confirmed by the seller")
-                                                                                .setWhen(System.currentTimeMillis())
-                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
-                                                                                .setAutoCancel(true)
-                                                                                .setContentIntent(ma)
-                                                                                .build();
-
-                                                                        manager.notify(1, notification);
-                                                                        order_doc.update("soldnotify",1);
-                                                                    }
-                                                                }
-                                                            });
-                                                        } else {
-                                                            Log.d(TAG, "Current data: null");
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        }
-                                        //result[0] = (String[])document.getData().get("my_items");
-                                        Log.e(TAG, "my order list found");
-
-                                    } else {
-                                        Log.e(TAG, "my order list not found");
-                                    }
-                                }
-                            });
-                        }
-                    } else {
-                        Log.d(TAG, "No such document...");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
+//        /***
+//         * item sold notification to seller
+//         */
+//        //get users sold notification setting
+//        DocumentReference userDocRef = db.collection("users").document(email);
+//        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot doc = task.getResult();
+//                    if (doc.exists()) {
+//                        //update text boxes with user info from database
+//                        String notification = doc.get("notification").toString();
+//                        if (notification.equals("0")) {
+//                        } else {
+//                            //get order list from profile
+//                            final DocumentReference profiles = db.collection("profiles").document(email);
+//
+//                            profiles.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                    DocumentSnapshot document = task.getResult();
+//                                    if (document.exists()) {
+//                                        List<String> my_order = new ArrayList<String>();
+//                                        my_order = (List<String>) document.getData().get("my_orders");
+//                                        if (my_order == null || my_order.isEmpty()) {
+//                                            System.out.println("Nothing on the list!");
+//                                        } else {
+//                                            for (int i = 0; i < my_order.size(); i++) {
+//                                                //get item from order list
+//                                                final DocumentReference order_doc = db.collection("orders").document(my_order.get(i));
+//                                                final int finalI = i;
+//                                                order_doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                                                    @Override
+//                                                    public void onEvent(@Nullable DocumentSnapshot snapshot,
+//                                                                        @Nullable FirebaseFirestoreException e) {
+//                                                        if (e != null) {
+//                                                            Log.w(TAG, "Listen failed.", e);
+//                                                            return;
+//                                                        }
+//
+//                                                        if (snapshot != null && snapshot.exists()) {
+//                                                            order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                                                                @Override
+//                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                                                                    Order current_order = new Order();
+//                                                                    current_order = documentSnapshot.toObject(Order.class);
+//                                                                    if (current_order.isIs_sold() && current_order.getSoldnotify()!= 1) {
+//                                                                        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                                                                        Intent intent = new Intent(OrderDetail.this, Order.class);
+//                                                                        PendingIntent ma = PendingIntent.getActivity(OrderDetail.this, 0, intent, 0);
+//                                                                        Notification notification = new NotificationCompat.Builder(OrderDetail.this, "ItemSold")
+//                                                                                .setContentTitle("UniTrade:")
+//                                                                                .setContentText("Your order " + current_order.getItem_title() + "is confirmed by the seller")
+//                                                                                .setWhen(System.currentTimeMillis())
+//                                                                                .setSmallIcon(R.mipmap.ic_launcher_round)
+//                                                                                .setAutoCancel(true)
+//                                                                                .setContentIntent(ma)
+//                                                                                .build();
+//
+//                                                                        manager.notify(1, notification);
+//                                                                        order_doc.update("soldnotify",1);
+//                                                                    }
+//                                                                }
+//                                                            });
+//                                                        } else {
+//                                                            Log.d(TAG, "Current data: null");
+//                                                        }
+//                                                    }
+//                                                });
+//                                            }
+//                                        }
+//                                        //result[0] = (String[])document.getData().get("my_items");
+//                                        Log.e(TAG, "my order list found");
+//
+//                                    } else {
+//                                        Log.e(TAG, "my order list not found");
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    } else {
+//                        Log.d(TAG, "No such document...");
+//                    }
+//                } else {
+//                    Log.d(TAG, "get failed with ", task.getException());
+//                }
+//            }
+//        });
 
         Button return_button = (Button)findViewById(R.id.order_detail_previous_page);
         return_button.setOnClickListener(new View.OnClickListener() {

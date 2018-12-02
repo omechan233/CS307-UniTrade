@@ -434,13 +434,13 @@ public class ItemDetail extends AppCompatActivity {
                     f.add_wishlist(item_id, email);
                     Toast.makeText(getBaseContext(), "item is added to wishlist!", Toast.LENGTH_LONG).show();
                     wishListBtn.setText(remove);
-                    finish();
+
                 } else {
                     Functions f = new Functions();
                     f.delete_wishlist(item_id, email);
                     Toast.makeText(getBaseContext(), "item removed!", Toast.LENGTH_LONG).show();
                     wishListBtn.setText(add);
-                    finish();
+
                 }
             }
         });

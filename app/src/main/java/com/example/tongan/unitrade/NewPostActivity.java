@@ -122,7 +122,7 @@ public class NewPostActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String text = parent.getItemAtPosition(position).toString();
                 category = text;
-               // Toast.makeText(parent.getContext(), text, Toast.LENGTH_LONG).show();
+                // Toast.makeText(parent.getContext(), text, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -174,7 +174,7 @@ public class NewPostActivity extends AppCompatActivity {
                 final Functions f = new Functions();
 
                 //check if the user input is empty
-                if (!itemName.equals("") && !description.equals("") && !price_edit.getText().toString().equals("")) {
+                if (!itemName.equals("") && !price_edit.getText().toString().equals("") && !price_edit.getText().toString().equals(".") && !description.equals("") && !price_edit.getText().toString().equals("")) {
 
                     price = Double.parseDouble(price_edit.getText().toString());
                     final double lon = Double.parseDouble(address_lon.getText().toString());
@@ -197,7 +197,7 @@ public class NewPostActivity extends AppCompatActivity {
                         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                              //  Toast.makeText(NewPostActivity.this, "Image added to Firebase Storage", Toast.LENGTH_LONG).show();
+                                //  Toast.makeText(NewPostActivity.this, "Image added to Firebase Storage", Toast.LENGTH_LONG).show();
                                 //add reference to user's profile in the database
                                 int ret = f.create_post(itemName,email,price,category,address,description,status, postTime, notified, lat, lon, paypal, imageRef.getPath(),tracking_number);
 
@@ -206,12 +206,12 @@ public class NewPostActivity extends AppCompatActivity {
                                 Intent intent = new Intent(NewPostActivity.this, HomePageActivity.class);
                                 startActivity(intent);
 
-                               // addImageToPost(itemID, imageRef);
+                                // addImageToPost(itemID, imageRef);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                            //    Toast.makeText(NewPostActivity.this, "Image was not added to Firebase Storage :(", Toast.LENGTH_LONG).show();
+                                //    Toast.makeText(NewPostActivity.this, "Image was not added to Firebase Storage :(", Toast.LENGTH_LONG).show();
                                 Log.e(TAG, "Error uploading image to Firebase Storage! Message: " + e.getLocalizedMessage());
                             }
                         });

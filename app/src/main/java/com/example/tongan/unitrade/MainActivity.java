@@ -194,7 +194,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //check if user is already logged in, if so then forward to HomePage
-        if (isUserLoggedIn() && isEmailVerified()) {
+        mAuth = FirebaseAuth.getInstance(); //reload Instance
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null && currentUser.isEmailVerified()) {
 
             /***
              * paid notification start
@@ -202,14 +204,11 @@ public class MainActivity extends AppCompatActivity {
             final String email = shared.getString("email", "");
             final String notification = shared.getString("notification", "");
 
-            if (email == null || email.isEmpty())
+            if (email.isEmpty())
                 return;
 
             DocumentReference userDocRef = db.collection("users").document(email);
             System.out.println("______________________________________email in main" + email);
-
-
-
 
             /***
              * method notification test same way as sold
@@ -635,7 +634,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isEmailVerified() {
         mAuth = FirebaseAuth.getInstance(); //reload Instance
-        final FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             System.out.println("MAIN: Could not find current user! Assume they already verified after registering...");
             return true;
@@ -724,6 +723,8 @@ public class MainActivity extends AppCompatActivity {
     private void authentication() {
         String email = getEmail();
         String password = getPassword();
+        System.out.println(email);
+        System.out.println(password);
         if (isEmailValid(email) && isPasswordValid(password)) {
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

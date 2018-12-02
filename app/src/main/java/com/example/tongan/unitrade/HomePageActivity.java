@@ -688,7 +688,7 @@ public class HomePageActivity extends AppCompatActivity {
                                                             String picPath = itemSnapshot.getString("item_image");
 
                                                             StorageReference picRef = null;
-                                                            if(picPath != null)
+                                                            if(picPath != null && !picPath.equals(""))
                                                                 picRef = storageRef.child(picPath);
 
                                                             if(picRef != null){

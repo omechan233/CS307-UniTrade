@@ -140,6 +140,7 @@ public class NotificationPage extends AppCompatActivity {
                     //Toast.makeText(getBaseContext(), "NotificationPage on!", Toast.LENGTH_LONG).show();
                     SharedPreferences.Editor edit = shared.edit();
                     edit.putString("notification","1");
+                    notification = 1;
                     edit.apply();
 
                 }
@@ -150,6 +151,7 @@ public class NotificationPage extends AppCompatActivity {
                     SharedPreferences.Editor edit = shared.edit();
                     edit.putString("notification","0");
                     edit.apply();
+                    notification = 0;
                     f.change_item_soldnotification(email,0);
                     f.change_method_notification(email, 0);
                     //Toast.makeText(getBaseContext(), "NotificationPage off!", Toast.LENGTH_LONG).show();
@@ -228,7 +230,7 @@ public class NotificationPage extends AppCompatActivity {
 
                         //Todo:back-end change the ChangeMethod Notify status to 1;
                         f.change_method_notification(email, 1);
-                       // Toast.makeText(getBaseContext(), "ChangeMethod NotificationPage on!", Toast.LENGTH_LONG).show();
+                        // Toast.makeText(getBaseContext(), "ChangeMethod NotificationPage on!", Toast.LENGTH_LONG).show();
                     }
 
                 }

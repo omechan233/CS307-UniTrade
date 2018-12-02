@@ -82,7 +82,8 @@ public class Purchase extends AppCompatActivity {
                                     startActivity(new Intent(Purchase.this, Shipment.class));
                             }
                             else {
-                                finish();
+                                startActivity(new Intent(Purchase.this, HomePageActivity.class));
+
                             }
 
 

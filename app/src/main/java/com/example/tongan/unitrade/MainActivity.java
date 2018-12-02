@@ -496,8 +496,8 @@ public class MainActivity extends AppCompatActivity {
                                                 Log.w(TAG, "Listen failed.", e);
                                                 return;
                                             }
-
-                                            if (snapshot != null && snapshot.exists()) {
+                                            final String notifi = shared.getString("notification", "");
+                                            if (snapshot != null && snapshot.exists() && notifi.equals("1")) {
                                                 Log.d(TAG, "Current order shiptest : " + snapshot.getData());
                                                 order_doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                                     @Override

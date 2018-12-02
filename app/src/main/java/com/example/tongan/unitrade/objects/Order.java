@@ -40,6 +40,7 @@ public class Order {
     private String trackingnumber;
     private boolean paid_notified;
     private boolean ship_notified;
+    private boolean confirm;
 
     /**
      * Constructor; Creates an order based on a purchased Item
@@ -49,7 +50,7 @@ public class Order {
     public Order(String item_ID, Timestamp order_time, String seller_email, String item_title,
                  Double item_price, boolean is_sold, boolean face_to_face, int methodpending,
                  String order_ID, boolean commented, int request, int soldnotify, boolean is_paid,
-                 boolean is_shipped, String trackingnumber, boolean paid_notified,boolean ship_notified){
+                 boolean is_shipped, String trackingnumber, boolean paid_notified,boolean ship_notified,boolean confirm){
         this.seller_email=seller_email;
         this.is_sold=is_sold;
         this.item_ID=item_ID;
@@ -67,6 +68,7 @@ public class Order {
         this.trackingnumber = trackingnumber;
         this.paid_notified = paid_notified;
         this.ship_notified = ship_notified;
+        this.confirm = confirm;
     }
 
     public String getOrder_ID() {
@@ -123,7 +125,11 @@ public class Order {
 
     public void setPaid_notified(boolean paid_notified) {this.paid_notified = paid_notified; }
 
-    public void setShip_notified(boolean ship_notified) {this.ship_notified = ship_notified; };
+    public void setShip_notified(boolean ship_notified) {this.ship_notified = ship_notified; }
+
+    public void setConfirm(boolean confirm) {
+        this.confirm = confirm;
+    }
 
     public String getTrackingnumber() {
         return trackingnumber;
@@ -135,5 +141,9 @@ public class Order {
 
     public  boolean isShip_notified(){
         return ship_notified;
+    }
+
+    public boolean isConfirm() {
+        return confirm;
     }
 }

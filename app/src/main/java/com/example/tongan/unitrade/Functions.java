@@ -443,7 +443,7 @@ public class Functions {
                              boolean face_to_face, int methodpending, boolean paid){
         final String order_ID = buyer_email+order_time.toString();
         final Order order = new Order(item_ID, order_time, seller_email,item_title, item_price,
-                false, face_to_face, methodpending,order_ID, false, 0,0,paid,false,"",false, false);
+                false, face_to_face, methodpending,order_ID, false, 0,0,paid,false,"",false, false,false);
 
         final String final_item_ID = item_ID;
         final String final_seller_email = seller_email;

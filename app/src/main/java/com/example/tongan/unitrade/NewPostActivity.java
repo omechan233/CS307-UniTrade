@@ -289,11 +289,11 @@ public class NewPostActivity extends AppCompatActivity {
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                Toast.makeText(NewPostActivity.this, "Something went wrong! :(", Toast.LENGTH_LONG).show();
+               // Toast.makeText(NewPostActivity.this, "Something went wrong! :(", Toast.LENGTH_LONG).show();
             }
 
         }else {
-            Toast.makeText(NewPostActivity.this, "You haven't picked Image",Toast.LENGTH_LONG).show();
+          //  Toast.makeText(NewPostActivity.this, "You haven't picked Image",Toast.LENGTH_LONG).show();
         }
     }
 

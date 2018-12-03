@@ -65,7 +65,7 @@ public class OrderList extends AppCompatActivity {
         myOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getBaseContext(), "Order Page", Toast.LENGTH_LONG).show();
+              //  Toast.makeText(getBaseContext(), "Order Page", Toast.LENGTH_LONG).show();
 
                 final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.list_area);
                 linearLayout.removeAllViews();
@@ -198,7 +198,7 @@ public class OrderList extends AppCompatActivity {
         myItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getBaseContext(), "Posted Item Page", Toast.LENGTH_LONG).show();
+             //   Toast.makeText(getBaseContext(), "Posted Item Page", Toast.LENGTH_LONG).show();
 
                 final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.list_area);
                 linearLayout.removeAllViews();

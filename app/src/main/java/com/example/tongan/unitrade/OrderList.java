@@ -99,10 +99,10 @@ public class OrderList extends AppCompatActivity {
 
                                                 //get item's image from storage
                                                 StorageReference storageRef = storage.getReference();
-                                                String picPath = documentSnapshot.getString("item_image");
+                                                String picPath = current_order.getItem_image();
 
                                                 StorageReference picRef = null;
-                                                if(picPath != null)
+                                                if(picPath != null && !picPath.isEmpty())
                                                     picRef = storageRef.child(picPath);
 
                                                 if(picRef != null){

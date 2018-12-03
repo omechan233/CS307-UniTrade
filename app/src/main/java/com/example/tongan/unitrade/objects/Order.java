@@ -41,6 +41,8 @@ public class Order {
     private boolean paid_notified;
     private boolean ship_notified;
     private boolean confirm;
+    private String item_image; //based on Firebase Storage
+
 
     /**
      * Constructor; Creates an order based on a purchased Item
@@ -50,7 +52,7 @@ public class Order {
     public Order(String item_ID, Timestamp order_time, String seller_email, String item_title,
                  Double item_price, boolean is_sold, boolean face_to_face, int methodpending,
                  String order_ID, boolean commented, int request, int soldnotify, boolean is_paid,
-                 boolean is_shipped, String trackingnumber, boolean paid_notified,boolean ship_notified,boolean confirm){
+                 boolean is_shipped, String trackingnumber, boolean paid_notified,boolean ship_notified,boolean confirm, String item_image){
         this.seller_email=seller_email;
         this.is_sold=is_sold;
         this.item_ID=item_ID;
@@ -69,7 +71,10 @@ public class Order {
         this.paid_notified = paid_notified;
         this.ship_notified = ship_notified;
         this.confirm = confirm;
+        this.item_image = item_image;
     }
+
+    public String getItem_image(){return this.item_image; }
 
     public String getOrder_ID() {
         return order_ID;
@@ -130,6 +135,8 @@ public class Order {
     public void setConfirm(boolean confirm) {
         this.confirm = confirm;
     }
+
+    public void setItem_image(String path){ this.item_image = path; }
 
     public String getTrackingnumber() {
         return trackingnumber;

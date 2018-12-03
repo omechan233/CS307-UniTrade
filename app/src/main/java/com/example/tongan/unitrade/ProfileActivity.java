@@ -409,26 +409,26 @@ public class ProfileActivity extends AppCompatActivity {
                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(ProfileActivity.this, "Image added to Firebase Storage", Toast.LENGTH_LONG).show();
+                       // Toast.makeText(ProfileActivity.this, "Image added to Firebase Storage", Toast.LENGTH_LONG).show();
                         //add reference to user's profile in the database
                         if(addImageToProfile(sharedPreferences.getString("email", ""), profileRef)){
-                            Toast.makeText(ProfileActivity.this, "Image was not added to Firebase Storage :(", Toast.LENGTH_LONG).show();
+                       //     Toast.makeText(ProfileActivity.this, "Image was not added to Firebase Storage :(", Toast.LENGTH_LONG).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ProfileActivity.this, "Image was not added to Firebase Storage :(", Toast.LENGTH_LONG).show();
+                     //   Toast.makeText(ProfileActivity.this, "Image was not added to Firebase Storage :(", Toast.LENGTH_LONG).show();
                         Log.e(TAG, "Error uploading image to Firebase Storage! Message: " + e.getLocalizedMessage());
                     }
                 });
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                Toast.makeText(ProfileActivity.this, "Something went wrong! :(", Toast.LENGTH_LONG).show();
+          //      Toast.makeText(ProfileActivity.this, "Something went wrong! :(", Toast.LENGTH_LONG).show();
             }
 
         }else {
-            Toast.makeText(ProfileActivity.this, "You haven't picked Image",Toast.LENGTH_LONG).show();
+        //    Toast.makeText(ProfileActivity.this, "You haven't picked Image",Toast.LENGTH_LONG).show();
         }
     }
 

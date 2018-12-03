@@ -122,7 +122,7 @@ public class OrderDetail extends AppCompatActivity {
                     //set up image to display
                     StorageReference storageRef = storage.getReference();
                     String picPath = current_order.getItem_image();
-                    if(!picPath.isEmpty()){
+                    if(picPath != null && !picPath.isEmpty()){
                         StorageReference picRef = storageRef.child(picPath);
 
                         try {

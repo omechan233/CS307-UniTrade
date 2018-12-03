@@ -122,9 +122,10 @@ public class OrderList extends AppCompatActivity {
                                                                     imageView.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
 
 
-                                                                    params = new LinearLayout.LayoutParams(180, 180);
+                                                                    params = new LinearLayout.LayoutParams(500, 200);
                                                                     params.setMargins(20, 20, 0, 20);
                                                                     TextView tv = new TextView(getBaseContext());
+                                                                    tv.setLayoutParams(params);
                                                                     //todo : the String below is getting information from a hard coding ArrayList<Item>, change it to adapt the actual data retrieved from backend
                                                                     String text = "\n" + current_order.getItem_title() + "\n" + current_order.getItem_price();
                                                                     tv.setText(text);
@@ -155,6 +156,9 @@ public class OrderList extends AppCompatActivity {
                                                     TextView tv = new TextView(getBaseContext());
                                                     String text = "\n" + current_order.getItem_title() + "\n" + current_order.getItem_price() + "\n" + current_order.getSeller_email() + "\n" + current_order.getOrder_time() + "\n" + current_order.getFace_to_face();
                                                     tv.setText(text);
+                                                    params = new LinearLayout.LayoutParams(500, 200);
+                                                    item.setLayoutParams(params);
+                                                    params.setMargins(20, 20, 0, 20);
                                                     item.addView(tv);
                                                 }
                                                 final Order finalCurrent_Order = current_order;

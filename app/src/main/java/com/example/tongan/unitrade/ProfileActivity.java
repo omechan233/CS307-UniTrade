@@ -249,7 +249,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                                     //todo : Set the text here to actual comment
                                     String text = "<font color='#21b49d'>Sender: " + current_com.getSender_name() + "</font>" + "\nComment: " +
-                                            current_com.getContent() + "\n" +
+                                            current_com.getContent() + "<p>" +
                                             posted_time + "\n";
                                     tv.setText(Html.fromHtml(text));
                                     tv.setTextColor(Color.parseColor("#000000"));

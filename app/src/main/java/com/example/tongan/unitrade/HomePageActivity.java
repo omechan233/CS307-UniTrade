@@ -522,7 +522,7 @@ public class HomePageActivity extends AppCompatActivity {
 
                                                                         // user clicks button:
                                                                         builder.setPositiveButton(
-                                                                                "Go Enter your shipping info",
+                                                                                "accept",
                                                                                 new DialogInterface.OnClickListener() {
                                                                                     @Override
                                                                                     public void onClick(DialogInterface dialog, int which) {
@@ -533,6 +533,7 @@ public class HomePageActivity extends AppCompatActivity {
 
                                                                                     }
                                                                                 });
+                                                                        builder.show();
                                                                         //Pop-up dialog code ends.
                                                                         db.collection("orders").document(orders_doc.getId())
                                                                                 .update("methodpending", 0);

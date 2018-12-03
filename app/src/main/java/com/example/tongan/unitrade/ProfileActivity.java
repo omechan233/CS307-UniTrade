@@ -244,7 +244,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     //format post date
                                     SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
                                     format.setTimeZone(TimeZone.getTimeZone("EDT"));
-                                    String posted_time = "Posted: " + format.format(time_stamp.toDate());
+                                    String posted_time = "\nPosted: " + format.format(time_stamp.toDate());
 
 
                                     //todo : Set the text here to actual comment

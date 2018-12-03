@@ -79,7 +79,7 @@ public class ItemDetail extends AppCompatActivity {
                 DocumentSnapshot doc = task.getResult();
                 if(doc.exists()){
                     Item item = doc.toObject(Item.class);
-                    boolean is_paid = item.getShipping_name()!=null;
+                    boolean is_paid = item.getShipping_name()!=null && !item.getShipping_name().equals("");
                     if(item.getSeller_name().equals(email) && is_paid){
                         tracking_number.setVisibility(View.VISIBLE);
                         tracking_number.setClickable(true);
@@ -98,7 +98,7 @@ public class ItemDetail extends AppCompatActivity {
                 DocumentSnapshot doc = task.getResult();
                 if(doc.exists()){
                     Item item = doc.toObject(Item.class);
-                    ship_info.setText(("Name: " + item.getShipping_name() + "\nAddress" + item.getShipping_address() + "\nPhone: " + item.getShipping_phone()));
+                    ship_info.setText(("Name: " + item.getShipping_name() + "\nAddress: " + item.getShipping_address() + "\nPhone: " + item.getShipping_phone()));
                 }
             }
         });

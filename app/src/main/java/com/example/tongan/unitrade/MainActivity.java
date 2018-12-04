@@ -644,8 +644,8 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser.isEmailVerified()) {
             return true;
         } else {
-            Toast.makeText(MainActivity.this, check_email,
-                    Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(MainActivity.this, check_email,
+            //        Toast.LENGTH_SHORT).show();
 
             currentUser.sendEmailVerification()
                     .addOnCompleteListener(this, new OnCompleteListener<Void>() {
